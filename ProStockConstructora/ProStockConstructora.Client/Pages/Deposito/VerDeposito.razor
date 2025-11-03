@@ -1,0 +1,61 @@
+﻿@page "/deposito"
+@inject HttpClient Http
+
+
+
+<h3>Depositos</h3>
+<br />
+@if (depositos == null)
+{
+    <p>Cargando...</p>
+}
+else if (depositos.Count == 0)
+{
+    <p>No hay depósitos disponibles.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CodigoDeposito</th>
+                <th>NombreDeposito</th>
+                <th>TipoDeposito</th>
+                <th>Ubicación</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var deposito in depositos)
+            {
+                <tr>
+                    <td>@deposito.Id</td>
+                    <td>@deposito.CodigoDeposito</td>
+                    <td>@deposito.NombreDeposito</td>
+                    <td>@deposito.TipoDeposito</td>
+                    <td>@deposito.Ubicacion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<VerDepositoDTO> depositos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await VerDepositos();
+    }
+
+    private async Task VerDepositos()
+    {
+        var resp = await Http.GetFromJsonAsync<List<VerDepositoDTO>>("api/deposito");
+        if (resp != null)
+        {
+            depositos = resp;
+        }
+       
+
+    }
+}
