@@ -14,14 +14,17 @@ namespace BD.Modelos
     public class Remito
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public required string NumeroRemito { get; set; }
 
-        public required int NotaDePedidoId { get; set; }
+        public required long NotaDePedidoId { get; set; }
         public NotaDePedido NotaDePedido { get; set; }
 
-        public required int DepositoOrigenId { get; set; }
+        public required long DepositoOrigenId { get; set; }
         public Deposito Deposito { get; set; }
+
+        public required long DepositoDestinoId { get; set; }
+        public Deposito Destino { get; set; }
 
         public EstadoRemito EstadoRemito { get; set; } = EstadoRemito.Pendiente;
 
@@ -29,12 +32,7 @@ namespace BD.Modelos
 
         public required DateTime FechaEmision { get; set; }
         public required DateTime FechaLimite { get; set; }
-
-        public DateTime? FechaSalida { get; set; }
         public DateTime? FechaRecepcion { get; set; }
-
-        public string? RecibidoPor { get; set; }
-        public Usuario Usuario { get; set; }
 
         // HACER EN DTO
         //public List<DetalleRemito>? ListaDelRemito { get; }

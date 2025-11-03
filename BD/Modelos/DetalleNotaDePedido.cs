@@ -10,12 +10,12 @@ namespace BD.Modelos
     public class DetalleNotaDePedido
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public required int NotaDePedidoId { get; set; }
+        public required long NotaDePedidoId { get; set; }
         public NotaDePedido NotaDePedido { get; set; }
 
-        public required int MaterialesyMaquinasId { get; set; }
+        public required long MaterialesyMaquinasId { get; set; }
         public Recursos MaterialesyMaquinas { get; set; }
 
         public required int Cantidad { get; set; } 

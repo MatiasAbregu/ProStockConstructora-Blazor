@@ -13,7 +13,7 @@ namespace BD.Modelos
     public class Obra
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string CodigoObra { get; set; }
 
@@ -22,7 +22,7 @@ namespace BD.Modelos
 
         public EnumEstadoObra Estado { get; set; } = EnumEstadoObra.EnProceso;
 
-        public required int EmpresaId { get; set; }
+        public required long EmpresaId { get; set; }
         public Empresa Empresa { get; set; }
 
     }

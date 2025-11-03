@@ -11,7 +11,7 @@ namespace BD.Modelos
     public class Provincia
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         
         [Required(ErrorMessage = "Nombre de provincia obligatorio.")]
         [Column(TypeName = "varchar(80)")]

@@ -11,14 +11,20 @@ namespace BD.Modelos
 {
     public class Usuario
     {
+        [Key]
+        public long Id { get; set; }
+
         [Required]
-        public string NombreUsuario { get; set; }
+        public required string NombreUsuario { get; set; }
+
+        [Required]
+        public required string Contrasena { get; set; }
 
         [Required]
         public bool Estado { get; set; }
 
         [Required]
-        public int EmpresaId { get; set; }
+        public long EmpresaId { get; set; }
         public Empresa Empresa { get; set; }
     }
 }
