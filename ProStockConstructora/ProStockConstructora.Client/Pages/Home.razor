@@ -1,7 +1,25 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Iniciar Sesión - ProStock</PageTitle>
 
-<h1>Hello, world!</h1>
+<article class="usuario-form container-fluid">   
+    <EditForm Model="usuario" class="d-flex flex-column">
+        <DataAnnotationsValidator />
+        <h4 class="mb-5">Inicie sesión para continuar</h4>
+        <div class="mb-3">
+            <label for="nombreUsuarioInput" class="form-label">Nombre de usuario</label>
+            <InputText @bind-Value="usuario.NombreUsuario" type="text" class="form-control" id="nombreUsuarioInput"/>
+            <ValidationMessage For="@(() => usuario.NombreUsuario)" />
+        </div>
+        <div class="mb-3">
+            <label for="contrasenaInput" class="form-label">Contraseña</label>
+            <InputText @bind-Value="usuario.Contrasena" type="password" class="form-control" id="contrasenaInput" />
+            <ValidationMessage For="@(() => usuario.Contrasena)" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-submit align-self-center px-4">Iniciar Sesión</button>
+    </EditForm>
+</article>
 
-Welcome to your new app.
+@code {
+    private IniciarSesionDTO usuario = new IniciarSesionDTO();
+}

@@ -17,11 +17,19 @@
 
 .top-row {
     min-height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: #10171C !important;
 }
 
 .navbar-brand {
     font-size: 1.1rem;
+}
+
+.navbar-brand img {
+    width: 35%;
+    height: 40px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 100%;
 }
 
 .bi {
@@ -83,6 +91,7 @@
 
 .nav-scrollable {
     display: none;
+    background-color: #1C2732;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {
@@ -99,7 +108,7 @@
         display: block;
 
         /* Allow sidebar to scroll for tall menus */
-        height: calc(100vh - 3.5rem);
+        height: calc(100vh - 4.1rem);
         overflow-y: auto;
     }
 }

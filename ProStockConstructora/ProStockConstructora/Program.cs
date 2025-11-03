@@ -1,7 +1,19 @@
+using BD;
+using Microsoft.EntityFrameworkCore;
 using ProStockConstructora.Client.Pages;
 using ProStockConstructora.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Estableciendo conexión 
+builder.Services.AddDbContext<AppDbContext>(options =>
+       options.UseMySql(builder.Configuration.GetConnectionString("ConexionDB"),
+       new MariaDbServerVersion(new Version(10, 4, 32))));
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -14,6 +26,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
