@@ -22,6 +22,8 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
+        public async Task<>
+
         public async Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores()
         {
             //try
