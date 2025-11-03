@@ -549,11 +549,14 @@ namespace BD.Migrations
 
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmpresaId");
+
+                    b.HasIndex("NombreUsuario", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("Usuarios");
                 });

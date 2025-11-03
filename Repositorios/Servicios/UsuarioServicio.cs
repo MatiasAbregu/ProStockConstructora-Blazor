@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BD;
 using BD.Modelos;
 using DTO.DTOs_Usuarios;
+using DTO.DTOs_Response;
 using Repositorios.Implementaciones;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,10 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        public async Task<>
+        //public async Task<Response<string>> IniciarSesion(IniciarSesionDTO usuarioDTO)
+        //{
+        //    baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.NombreUsuario);
+        //}
 
         public async Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores()
         {

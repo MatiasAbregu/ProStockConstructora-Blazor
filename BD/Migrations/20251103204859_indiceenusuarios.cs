@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class basededatosdesdeblazor : Migration
+    public partial class indiceenusuarios : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -134,7 +134,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NombreUsuario = table.Column<string>(type: "longtext", nullable: false)
+                    NombreUsuario = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contrasena = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -651,6 +651,12 @@ namespace BD.Migrations
                 name: "IX_Usuarios_EmpresaId",
                 table: "Usuarios",
                 column: "EmpresaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_NombreUsuario_EmpresaId",
+                table: "Usuarios",
+                columns: new[] { "NombreUsuario", "EmpresaId" },
+                unique: true);
         }
 
         /// <inheritdoc />

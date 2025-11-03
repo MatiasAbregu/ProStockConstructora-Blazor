@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BD.Modelos
 {
+    [Index(nameof(NombreUsuario), nameof(EmpresaId), IsUnique = true)]
     public class Usuario
     {
         [Key]
