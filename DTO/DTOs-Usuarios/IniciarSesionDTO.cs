@@ -9,8 +9,9 @@ namespace DTO.DTOs_Usuarios
 {
     public class IniciarSesionDTO
     {
-        [Required(ErrorMessage = "Ingrese el nombre de usuario antes de continuar.")]
-        public string NombreUsuario { get; set; }
+        [Required(ErrorMessage = "Ingrese el correo antes de continuar.")]
+        [EmailAddress(ErrorMessage = "Dirección de correo no válida.")]
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Ingrese la contraseña antes de continuar.")]
         public string Contrasena { get; set; }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class indiceenusuarios : Migration
+    public partial class denuevoindicesconusuario : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -134,7 +134,11 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NombreUsuario = table.Column<string>(type: "varchar(255)", nullable: false)
+                    NombreUsuario = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Telefono = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contrasena = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -648,15 +652,15 @@ namespace BD.Migrations
                 column: "ProvinciaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_Email",
+                table: "Usuarios",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_EmpresaId",
                 table: "Usuarios",
                 column: "EmpresaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_NombreUsuario_EmpresaId",
-                table: "Usuarios",
-                columns: new[] { "NombreUsuario", "EmpresaId" },
-                unique: true);
         }
 
         /// <inheritdoc />

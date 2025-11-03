@@ -49,6 +49,13 @@ namespace ProStockConstructora.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
+        {
+            var res = await usuarioServicio.IniciarSesion(usuario);
+
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
         //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)
         //{
         //    IdentityResult resultado = await usuarioServicio.CrearUsuario(usuario);

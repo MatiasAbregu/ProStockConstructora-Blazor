@@ -9,14 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BD.Modelos
 {
-    [Index(nameof(NombreUsuario), nameof(EmpresaId), IsUnique = true)]
+    [Index(nameof(Email), IsUnique = true)]
     public class Usuario
     {
         [Key]
         public long Id { get; set; }
 
-        [Required]
         public required string NombreUsuario { get; set; }
+        public required string Email { get; set; }
+        public string? Telefono { get; set; }
 
         [Required]
         public required string Contrasena { get; set; }

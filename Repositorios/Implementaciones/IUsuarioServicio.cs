@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BD.Modelos;
+using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BD.Modelos;
-using DTO.DTOs_Usuarios;
 
 namespace Repositorios.Implementaciones
 {
@@ -19,6 +20,7 @@ namespace Repositorios.Implementaciones
         public Task<Usuario> ObtenerUsuarioPorNombreUsuario();
 
         // POSTs
+        public Task<Response<VerUsuarioDTO>> IniciarSesion(IniciarSesionDTO usuarioDTO);
         //public Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario);
 
         // PUTs

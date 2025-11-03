@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251103204859_indiceenusuarios")]
-    partial class indiceenusuarios
+    [Migration("20251103211021_denuevoindicesconusuario")]
+    partial class denuevoindicesconusuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -544,6 +544,10 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<long>("EmpresaId")
                         .HasColumnType("bigint");
 
@@ -552,14 +556,17 @@ namespace BD.Migrations
 
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpresaId");
-
-                    b.HasIndex("NombreUsuario", "EmpresaId")
+                    b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("EmpresaId");
 
                     b.ToTable("Usuarios");
                 });

@@ -8,12 +8,13 @@ namespace DTO.DTOs_Usuarios
 {
     public class VerUsuarioDTO
     {
-        public string Id { get; set; }
+        public long Id { get; set; }
         public string NombreUsuario { get; set; }
         public string Email { get; set; }
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
         public string Estado { get; set; }
-
         public List<string> Roles { get; set; }
+        public List<long>? ObrasId { get; set; }
+        public List<long>? DepositosId { get; set; }
     }
 }
