@@ -8,7 +8,7 @@ namespace DTO.DTOs_Ubicacion
 {
     public class ProvinciaDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string? NombreProvincia { get; set; }
     }
 }

@@ -45,7 +45,7 @@ namespace Repositorios.Servicios
                 return (false, "Error al asignar el usuario a la obra.");
             }
         }
-        public async Task<(bool, string)> RemoverUsuarioDeObra(int obraId, string usuarioId)
+        public async Task<(bool, string)> RemoverUsuarioDeObra(int obraId, long usuarioId)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Repositorios.Servicios
                 return (false, "Error al remover el usuario de la obra.");
             }
         }
-        public async Task<(bool, List<string>)> ObtenerUsuariosDeObra(int obraId)
+        public async Task<(bool, List<long>)> ObtenerUsuariosDeObra(int obraId)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace Repositorios.Servicios
                 return (false, null);
             }
         }
-        public async Task<(bool, List<int>)> ObtenerObrasConUsuario(string usuarioId)
+        public async Task<(bool, List<long>)> ObtenerObrasConUsuario(long usuarioId)
         {
             try
             {

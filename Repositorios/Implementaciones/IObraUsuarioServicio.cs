@@ -10,8 +10,8 @@ namespace Repositorios.Implementaciones
     public interface IObraUsuarioServicio
     {
         Task<(bool, string)> AsignarUsuarioAObra(ObraAsociarUsuarioDTO ObraUsuarioDTO);
-        Task<(bool, string)> RemoverUsuarioDeObra(int obraId, string usuarioId);
-        Task<(bool, List<string>)> ObtenerUsuariosDeObra(int obraId);
-        Task<(bool, List<int>)> ObtenerObrasConUsuario(string usuarioId);
+        Task<(bool, string)> RemoverUsuarioDeObra(int obraId, long usuarioId);
+        Task<(bool, List<long>)> ObtenerUsuariosDeObra(int obraId);
+        Task<(bool, List<long>)> ObtenerObrasConUsuario(long usuarioId);
     }
 }

@@ -9,7 +9,7 @@ namespace DTO.DTOs_Depositos
 {
     public class VerDepositoDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string CodigoDeposito { get; set; }
         public string NombreDeposito { get; set; }
         public string TipoDeposito { get; set; }

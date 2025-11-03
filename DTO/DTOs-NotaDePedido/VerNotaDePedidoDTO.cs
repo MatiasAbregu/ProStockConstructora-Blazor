@@ -9,9 +9,9 @@ namespace DTO.DTOs_NotaDePedido
 {
     public class VerNotaDePedidoDTO
     {
-        public int NotaPedidoId { get; set; }
+        public long NotaPedidoId { get; set; }
         public string NumeroNotaPedido { get; set; }
-        public int DepositoDestinoId { get; set; }
+        public long DepositoDestinoId { get; set; }
         public DateTime FechaEmision { get; set; }
         public EnumEstadoNotaPedido Estado { get; set; }= EnumEstadoNotaPedido.Pendiente;
 

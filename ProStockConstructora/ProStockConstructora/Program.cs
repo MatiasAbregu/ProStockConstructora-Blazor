@@ -2,10 +2,14 @@ using BD;
 using Microsoft.EntityFrameworkCore;
 using ProStockConstructora.Client.Pages;
 using ProStockConstructora.Components;
+using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7283/") });
+
+
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
 
 // Estableciendo conexión 
 builder.Services.AddDbContext<AppDbContext>(options =>

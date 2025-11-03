@@ -43,7 +43,7 @@ namespace Repositorios.Servicios
                 if (existeRecurso)
                 {
                     // Buscar el recurso existente
-                    var recursoExistente = await baseDeDatos.MaterialesyMaquinas
+                    var recursoExistente = await baseDeDatos.Recursos
                         .FirstOrDefaultAsync(r => r.CodigoISO == codigoISO);
 
                     if (recursoExistente == null)
@@ -125,14 +125,13 @@ namespace Repositorios.Servicios
                 var nuevoRecurso = new Recursos
                 {
                     CodigoISO = codigoISO,
-                    Nombre = materialYmaquinaDTO.Nombre,
-                    Tipo = (EnumTipoMaterialOMaquina)materialYmaquinaDTO.Tipo,
+                    Nombre = materialYmaquinaDTO.Nombre,      
                     Descripcion = materialYmaquinaDTO.Descripcion,
-                    TipoMaterialId = tipoMaterial?.Id,
+                    TipoMaterialId = tipoMaterial.Id,
                     UnidadMedidaId = unidadMedida?.Id
                 };
 
-                await baseDeDatos.MaterialesyMaquinas.AddAsync(nuevoRecurso);
+                await baseDeDatos.Recursos.AddAsync(nuevoRecurso);
                 await baseDeDatos.SaveChangesAsync();
 
                 // Crear stock inicial
@@ -160,7 +159,7 @@ namespace Repositorios.Servicios
         {
             try
             {
-                var recurso = await baseDeDatos.MaterialesyMaquinas
+                var recurso = await baseDeDatos.Recursos
                     .Include(r => r.UnidadMedida).Include(r => r.TipoMaterial)
                     .FirstOrDefaultAsync(r => r.CodigoISO.ToUpper() == CodigoISO.ToUpper());
                 if (recurso != null)
@@ -171,7 +170,6 @@ namespace Repositorios.Servicios
                         IdMaterial = recurso.Id,
                         CodigoISO = recurso.CodigoISO,
                         Nombre = recurso.Nombre,
-                        TipoRecurso = (EnumTipoMaterialoMaquina)recurso.Tipo,
                         TipoMaterial = recurso.TipoMaterial != null ? recurso.TipoMaterial.Nombre : "N/A",
                         UnidadDeMedida = recurso.UnidadMedida != null ? recurso.UnidadMedida.Nombre : "",
                         Descripcion = recurso.Descripcion,
@@ -200,7 +198,7 @@ namespace Repositorios.Servicios
                 bool depositoDestinoExiste = await baseDeDatos.Depositos.AnyAsync(d => d.Id == materialYmaquinaTransladarDeposito.DepositoDestinoId);
                 if (!depositoDestinoExiste)
                     return (false, "El deposito destino no existe");
-                bool materialoMaquinaExiste = await baseDeDatos.MaterialesyMaquinas.AnyAsync(m => m.Id == materialYmaquinaTransladarDeposito.MaterialYmaquinaId);
+                bool materialoMaquinaExiste = await baseDeDatos.Recursos.AnyAsync(m => m.Id == materialYmaquinaTransladarDeposito.MaterialYmaquinaId);
                 if (!materialoMaquinaExiste)
                     return (false, "El material o maquina no existe");
                 bool cantidadMaterialoMaquina = materialYmaquinaTransladarDeposito.Cantidad > 0;
@@ -258,7 +256,7 @@ namespace Repositorios.Servicios
                        Id = s.Id,
                        CodigoISO = s.MaterialesyMaquinas.CodigoISO,
                        Nombre = s.MaterialesyMaquinas.Nombre,
-                       TipoRecursoTipoMaterial = $"{s.MaterialesyMaquinas.Tipo.ToString()} - {(s.MaterialesyMaquinas.TipoMaterial != null ? s.MaterialesyMaquinas.TipoMaterial.Nombre : "N/A")}",
+                       TipoRecursoTipoMaterial = $"{(s.MaterialesyMaquinas.TipoMaterial != null ? s.MaterialesyMaquinas.TipoMaterial.Nombre : "N/A")}",
                        UnidadMedida = s.MaterialesyMaquinas.UnidadMedida.Nombre,
                        Cantidad = s.Cantidad
                    })
@@ -318,7 +316,6 @@ namespace Repositorios.Servicios
                     IdMaterial = recurso.MaterialesyMaquinasId,
                     CodigoISO = recurso.MaterialesyMaquinas.CodigoISO,
                     Nombre = recurso.MaterialesyMaquinas.Nombre,
-                    TipoRecurso = (EnumTipoMaterialoMaquina)recurso.MaterialesyMaquinas.Tipo,
                     TipoMaterial =
                     recurso.MaterialesyMaquinas.TipoMaterial != null ? recurso.MaterialesyMaquinas.TipoMaterial.Nombre : "N/A",
                     UnidadDeMedida =
@@ -333,85 +330,83 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> RecursosActualizarStock(RecursosActualizarDTO dto, int depositoId)
-        {
-            if (string.IsNullOrWhiteSpace(dto.Nombre))
-                return (false, "El nombre del recurso no puede estar vacío.");
+        //public async Task<(bool, string)> RecursosActualizarStock(RecursosActualizarDTO dto, int depositoId)
+        //{
+        //    if (string.IsNullOrWhiteSpace(dto.Nombre))
+        //        return (false, "El nombre del recurso no puede estar vacío.");
 
-            if (string.IsNullOrWhiteSpace(dto.CodigoISO))
-                return (false, "El código ISO no puede estar vacío.");
+        //    if (string.IsNullOrWhiteSpace(dto.CodigoISO))
+        //        return (false, "El código ISO no puede estar vacío.");
 
-            if (dto.Cantidad < 0)
-                return (false, "La cantidad no puede ser negativa.");
+        //    if (dto.Cantidad < 0)
+        //        return (false, "La cantidad no puede ser negativa.");
 
-            var stock = await baseDeDatos.Stocks
-                .FirstOrDefaultAsync(s => s.DepositoId == depositoId &&
-                                          s.MaterialesyMaquinasId == dto.RecursoId);
+        //    var stock = await baseDeDatos.Stocks
+        //        .FirstOrDefaultAsync(s => s.DepositoId == depositoId &&
+        //                                  s.MaterialesyMaquinasId == dto.RecursoId);
 
-            if (stock == null)
-                return (false, "El recurso no existe en ese depósito.");
+        //    if (stock == null)
+        //        return (false, "El recurso no existe en ese depósito.");
 
-            var recurso = await baseDeDatos.MaterialesyMaquinas
-                .FirstOrDefaultAsync(r => r.Id == dto.RecursoId);
+        //    var recurso = await baseDeDatos.MaterialesyMaquinas
+        //        .FirstOrDefaultAsync(r => r.Id == dto.RecursoId);
 
-            if (recurso == null)
-                return (false, "El recurso no existe.");
+        //    if (recurso == null)
+        //        return (false, "El recurso no existe.");
 
-            recurso.Nombre = dto.Nombre;
-            recurso.CodigoISO = dto.CodigoISO.ToUpper();
-            recurso.Descripcion = dto.Descripcion;
+        //    recurso.Nombre = dto.Nombre;
+        //    recurso.CodigoISO = dto.CodigoISO.ToUpper();
+        //    recurso.Descripcion = dto.Descripcion;
 
-            recurso.Tipo = (EnumTipoMaterialOMaquina)dto.Tipo;
+        //    TipoMaterial? tipoMaterial = null;
+        //    UnidadMedida? unidadMedida = null;
+        //    if (recurso.Tipo == EnumTipoMaterialOMaquina.Material)
+        //    {
 
-            TipoMaterial? tipoMaterial = null;
-            UnidadMedida? unidadMedida = null;
-            if (recurso.Tipo == EnumTipoMaterialOMaquina.Material)
-            {
+        //        tipoMaterial = await baseDeDatos.TipoMateriales
+        //        .FirstOrDefaultAsync(t => t.Nombre.ToLower() == dto.TipoMaterial.ToLower());
 
-                tipoMaterial = await baseDeDatos.TipoMateriales
-                .FirstOrDefaultAsync(t => t.Nombre.ToLower() == dto.TipoMaterial.ToLower());
+        //        if (tipoMaterial == null)
+        //        {
+        //            tipoMaterial = new TipoMaterial
+        //            {
+        //                Nombre = dto.TipoMaterial
+        //            };
+        //            baseDeDatos.TipoMateriales.Add(tipoMaterial);
+        //            await baseDeDatos.SaveChangesAsync();
+        //        }
 
-                if (tipoMaterial == null)
-                {
-                    tipoMaterial = new TipoMaterial
-                    {
-                        Nombre = dto.TipoMaterial
-                    };
-                    baseDeDatos.TipoMateriales.Add(tipoMaterial);
-                    await baseDeDatos.SaveChangesAsync();
-                }
+        //        unidadMedida = await baseDeDatos.UnidadMedidas
+        //            .FirstOrDefaultAsync(u => u.Nombre.ToLower() == dto.UnidadDeMedida.ToLower());
 
-                unidadMedida = await baseDeDatos.UnidadMedidas
-                    .FirstOrDefaultAsync(u => u.Nombre.ToLower() == dto.UnidadDeMedida.ToLower());
+        //        if (unidadMedida == null)
+        //        {
+        //            unidadMedida = new UnidadMedida
+        //            {
+        //                Nombre = dto.UnidadDeMedida,
+        //                Simbolo = dto.UnidadDeMedida
+        //            };
+        //            baseDeDatos.UnidadMedidas.Add(unidadMedida);
+        //            await baseDeDatos.SaveChangesAsync();
+        //        }
 
-                if (unidadMedida == null)
-                {
-                    unidadMedida = new UnidadMedida
-                    {
-                        Nombre = dto.UnidadDeMedida,
-                        Simbolo = dto.UnidadDeMedida
-                    };
-                    baseDeDatos.UnidadMedidas.Add(unidadMedida);
-                    await baseDeDatos.SaveChangesAsync();
-                }
+        //        recurso.UnidadMedida = unidadMedida;
+        //        recurso.TipoMaterial = tipoMaterial;
+        //    }
+        //    else
+        //    {
+        //        recurso.TipoMaterial = null;
+        //        recurso.TipoMaterialId = null;
+        //        recurso.UnidadMedida = null;
+        //        recurso.UnidadMedidaId = null;
+        //    }
+        //    stock.Cantidad = dto.Cantidad;
 
-                recurso.UnidadMedida = unidadMedida;
-                recurso.TipoMaterial = tipoMaterial;
-            }
-            else
-            {
-                recurso.TipoMaterial = null;
-                recurso.TipoMaterialId = null;
-                recurso.UnidadMedida = null;
-                recurso.UnidadMedidaId = null;
-            }
-            stock.Cantidad = dto.Cantidad;
-
-            baseDeDatos.MaterialesyMaquinas.Update(recurso);
-            baseDeDatos.Stocks.Update(stock);
-            await baseDeDatos.SaveChangesAsync();
-            return (true, "Stock actualizado con éxito.");
-        }
+        //    baseDeDatos.MaterialesyMaquinas.Update(recurso);
+        //    baseDeDatos.Stocks.Update(stock);
+        //    await baseDeDatos.SaveChangesAsync();
+        //    return (true, "Stock actualizado con éxito.");
+        //}
 
         public async Task<(bool, string)> RecursoEliminarStock(int StockId)
         {

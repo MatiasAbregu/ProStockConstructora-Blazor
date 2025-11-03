@@ -10,12 +10,12 @@ namespace BD.Modelos
     public class DetalleRemito
     {
         [Key]
-        public int Id { get; set; } 
+        public long Id { get; set; } 
 
-        public required int RemitoId { get; set; }
+        public required long RemitoId { get; set; }
         public Remito Remito { get; set; }
 
-        public required int DetalleNotaDePedidoId { get; set; }
+        public required long DetalleNotaDePedidoId { get; set; }
         public DetalleNotaDePedido DetalleNotaDePedido { get; set; }
 
         public required int CantidadDespachada { get; set; }

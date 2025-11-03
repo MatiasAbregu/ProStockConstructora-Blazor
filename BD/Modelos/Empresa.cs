@@ -13,7 +13,7 @@ namespace BD.Modelos
     public class Empresa
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Column(TypeName = "varchar(150)")]
         public required string NombreEmpresa { get; set; }

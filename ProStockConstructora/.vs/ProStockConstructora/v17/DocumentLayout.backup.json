@@ -3,12 +3,19 @@
   "WorkspaceRootPath": "C:\\ProStockConstrucciones\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\pages\\deposito\\verdeposito.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\deposito\\verdeposito.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\prostockconstrucciones\\dto\\dtos-depositos\\verdepositodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -20,9 +27,6 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\servicios\\depositoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\prostockconstrucciones\\dto\\dtos-depositos\\verdepositodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\implementaciones\\idepositoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -38,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -74,7 +78,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Program.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Program.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Program.cs",
+              "RelativeToolTip": "ProStockConstructora.Client\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T21:28:15.727Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Program.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora\\Program.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Program.cs",
+              "RelativeToolTip": "ProStockConstructora\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T21:28:02.868Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "ControladorDeposito.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
@@ -82,12 +112,11 @@
               "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAAACsAAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T20:20:10.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T20:20:10.285Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "_Imports.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\_Imports.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\_Imports.razor",
@@ -95,12 +124,11 @@
               "RelativeToolTip": "ProStockConstructora.Client\\_Imports.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T20:18:47.381Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T20:18:47.381Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "VerDepositoDTO.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
               "RelativeDocumentMoniker": "..\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
@@ -108,11 +136,12 @@
               "RelativeToolTip": "..\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T19:51:14.311Z"
+              "WhenOpened": "2025-11-03T19:51:14.311Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "DepositoServicio.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\Repositorios\\Servicios\\DepositoServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\DepositoServicio.cs",
@@ -124,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "IDepositoServicio.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\Repositorios\\Implementaciones\\IDepositoServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IDepositoServicio.cs",
@@ -136,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Deposito.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\BD\\Modelos\\Deposito.cs",
               "RelativeDocumentMoniker": "..\\BD\\Modelos\\Deposito.cs",
@@ -148,28 +177,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "VerDeposito.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
-              "ViewState": "AgIAACcAAAAAAAAAAAAgwCsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-03T19:40:23.064Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T21:02:33.688Z",
               "EditorCaption": ""
             }
           ]
