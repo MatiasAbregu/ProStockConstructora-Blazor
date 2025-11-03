@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navManager;
 
 <div class="page">
     <div class="sidebar">
@@ -6,7 +7,7 @@
     </div>
 
     <main>
-        <article class="content px-4">
+        <article class="content @ClassForPage">
             @Body
         </article>
     </main>
@@ -17,3 +18,13 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private string ClassForPage = "";
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        ClassForPage = navManager.Uri.ToLower().EndsWith("/") ? "log-in" : "";
+    }
+}

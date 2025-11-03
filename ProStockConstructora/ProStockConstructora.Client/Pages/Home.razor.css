@@ -1,0 +1,12 @@
+﻿.usuario-form{
+    background-color: white;
+    width: 60%;
+    box-shadow: gray 0 0 8px;
+    padding: 3.5% 2.5%;
+}
+
+@media screen and (max-width: 700px){
+    .usuario-form {
+        width: 80%;
+    }
+}
