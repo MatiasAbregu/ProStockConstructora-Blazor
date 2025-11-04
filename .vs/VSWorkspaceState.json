@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ProStockConstructora",
+    "\\ProStockConstructora\\ProStockConstructora",
+    "\\ProStockConstructora\\ProStockConstructora\\Components",
+    "\\ProStockConstructora\\ProStockConstructora\\Components\\Pages",
+    "\\ProStockConstructora\\ProStockConstructora\\Controllers",
+    "\\ProStockConstructora\\ProStockConstructora\\Properties",
+    "\\ProStockConstructora\\ProStockConstructora\\wwwroot",
+    "\\Servicios",
+    "\\Servicios\\ServiciosHttp"
+  ],
+  "PreviewInSolutionExplorer": false
+}
