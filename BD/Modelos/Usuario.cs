@@ -9,16 +9,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BD.Modelos
 {
+    [Index(nameof(Email), IsUnique = true)]
     public class Usuario
     {
+        [Key]
+        public long Id { get; set; }
+
+        public required string NombreUsuario { get; set; }
+        public required string Email { get; set; }
+        public string? Telefono { get; set; }
+
         [Required]
-        public string NombreUsuario { get; set; }
+        public required string Contrasena { get; set; }
 
         [Required]
         public bool Estado { get; set; }
 
         [Required]
-        public int EmpresaId { get; set; }
+        public long EmpresaId { get; set; }
         public Empresa Empresa { get; set; }
     }
 }

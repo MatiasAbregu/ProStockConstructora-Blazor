@@ -10,7 +10,7 @@ namespace BD.Modelos
     public class UnidadMedida
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public required string Nombre { get; set; } 
         public required string Simbolo { get; set; } 
     }

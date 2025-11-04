@@ -37,17 +37,17 @@ namespace ProStockConstructora.Controllers
               return Ok(respuesta);
         }
 
-        [HttpPost("crear-notapedido")]
-        public async Task<ActionResult> CrearNotaDePedido([FromBody] CrearNotaDePedidoDTO crearNotaDePedidoDTO)
-        {
-           if (crearNotaDePedidoDTO == null)
-             return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-           var exito = await notaDePedidoServicio.CrearNotaDePedido(crearNotaDePedidoDTO);
-            if (!exito.Item1)
-                return StatusCode(500, exito.Item2);
-            return Ok("Nota de pedido creada exitosamente.");
+        //[HttpPost("crear-notapedido")]
+        //public async Task<ActionResult> CrearNotaDePedido([FromBody] CrearNotaDePedidoDTO crearNotaDePedidoDTO)
+        //{
+        //   if (crearNotaDePedidoDTO == null)
+        //     return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+        //   var exito = await notaDePedidoServicio.CrearNotaDePedido(crearNotaDePedidoDTO);
+        //    if (!exito.Item1)
+        //        return StatusCode(500, exito.Item2);
+        //    return Ok("Nota de pedido creada exitosamente.");
 
-        }
+        //}
         
 
         //[HttpPut("actualizar-notapedido/{id:int}")]

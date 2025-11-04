@@ -9,7 +9,7 @@ namespace DTO.DTOs_MaterialesYmaquinarias
 {
     public class RecursosVerDepositoDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string CodigoISO { get; set; }   
         public string Nombre { get; set; }
         public string TipoRecursoTipoMaterial { get; set; }

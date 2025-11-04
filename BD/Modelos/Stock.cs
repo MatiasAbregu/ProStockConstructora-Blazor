@@ -10,12 +10,12 @@ namespace BD.Modelos
     public class Stock
     {
         [Key]   
-        public int Id { get; set; } 
+        public long Id { get; set; } 
 
-        public required int MaterialesyMaquinasId { get; set; }
+        public required long MaterialesyMaquinasId { get; set; }
         public Recursos MaterialesyMaquinas { get; set; }
 
-        public required int DepositoId { get; set; }
+        public required long DepositoId { get; set; }
         public Deposito Deposito { get; set; }
 
         public required int Cantidad { get; set; }

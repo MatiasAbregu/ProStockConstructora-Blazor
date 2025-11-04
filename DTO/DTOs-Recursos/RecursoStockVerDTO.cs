@@ -10,7 +10,7 @@ namespace DTO.DTOs_Recursos
     public class RecursoStockVerDTO
     {
         public int StockId { get; set; }
-        public int IdMaterial { get; set; }
+        public long IdMaterial { get; set; }
         public string CodigoISO { get; set; }
         public EnumTipoMaterialoMaquina TipoRecurso { get; set; }
         public string Nombre { get; set; }

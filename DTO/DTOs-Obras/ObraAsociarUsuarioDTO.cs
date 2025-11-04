@@ -8,9 +8,9 @@ namespace DTO.DTOs_Obras
 {
     public class ObraAsociarUsuarioDTO
     {
-        public int ObraId { get; set; }
-        public int EmpresaId { get; set; }
+        public long ObraId { get; set; }
+        public long EmpresaId { get; set; }
         public string NombreObra { get; set; }
-        public required string UsuarioId { get; set; }
+        public required long UsuarioId { get; set; }
     }
 }

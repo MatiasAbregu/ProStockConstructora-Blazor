@@ -8,7 +8,7 @@ namespace DTO.DTOs_Obras
 {
     public class VerObraDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string CodigoObra { get; set; }
         public string NombreObra { get; set; }
         public required string Estado { get; set; }

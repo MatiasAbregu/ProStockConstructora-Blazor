@@ -14,16 +14,15 @@ namespace BD.Modelos
     public class Recursos
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public required string CodigoISO { get; set; }
 
         public required string Nombre { get; set; }
-        public EnumTipoMaterialOMaquina Tipo { get; set; }
 
-        public int? UnidadMedidaId { get; set; }
+        public long? UnidadMedidaId { get; set; }
         public UnidadMedida UnidadMedida { get; set; }
 
-        public int? TipoMaterialId { get; set; }
+        public long TipoMaterialId { get; set; }
         public TipoMaterial TipoMaterial { get; set; }
 
         public string? Descripcion { get; set; }

@@ -14,17 +14,17 @@ namespace BD.Modelos
     public class NotaDePedido
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public required string NumeroNotaPedido { get; set; }
-        public required int DepositoDestinoId { get; set; }
-        public Deposito DepositoDestino { get; set; }
+
+        public required long DepositoOrigenId { get; set; }
+        public Deposito DepositoOrigen { get; set; }
+
+        public required long DepositoDestinoId { get; set; }
+        public Deposito DepositoDestino {  get; set; }
 
         public required DateTime FechaEmision { get; set; }
         public EstadoNotaPedido Estado { get; set; } = EstadoNotaPedido.Pendiente;
-
-        public required string UsuarioId {  get; set; }
-
-        public Usuario Usuario { get; set; }
 
         // HACER EN DTO
         //public List<DetalleNotaDePedido>? ListaDePedido { get; }

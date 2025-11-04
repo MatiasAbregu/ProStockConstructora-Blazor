@@ -1,4 +1,7 @@
-﻿<div class="top-row navbar navbar-dark">
+﻿@inject DatosSesion datosUsuario;
+@inject NavigationManager navManager;
+
+<div class="top-row navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href=""> <img src="LogoPSC.png" /> ProStock</a>
     </div>
@@ -7,8 +10,9 @@
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
+    <nav class="nav bg-dark flex-column">
         <div class="nav-item px-3">
+<<<<<<< HEAD
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
@@ -18,7 +22,30 @@
             <NavLink class="nav-link" href="recursos">
                 <span class="bi bi-box-seam-fill-nav-menu" aria-hidden="true"></span> Recursos
             </NavLink>
+=======
+            @if(datosUsuario.Usuario != null)
+            {
+                <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </NavLink>
+                <NavLink class="nav-link" href="usuarios">
+                    <i class="bi bi-people-fill"></i> Usuarios
+                </NavLink>
+            }
+>>>>>>> 8821a784540f9c58f633fd168bee6b91953e97f8
         </div>
     </nav>
 </div>
 
+@code {
+    protected override void OnInitialized()
+    {
+        datosUsuario.OnChange += StateHasChanged;
+    }
+
+    private void CerrarSesion()
+    {
+        datosUsuario.LimpiarDatos();
+        navManager.NavigateTo("/");
+    }
+}

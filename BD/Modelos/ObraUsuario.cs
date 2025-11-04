@@ -1,4 +1,5 @@
 ﻿using BD.Modelos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace BD.Modelos
 {
+    [Index(nameof(ObraId), nameof(UsuarioId), IsUnique = true)]
     public class ObraUsuario
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Required]
-        public int ObraId { get; set; }
+        public long ObraId { get; set; }
         public Obra Obra { get; set; }
 
         [Required]
-        public string UsuarioId { get; set; }
+        public long UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
     } 
 }
