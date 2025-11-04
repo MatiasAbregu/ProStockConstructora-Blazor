@@ -14,7 +14,7 @@
     <div class="row mb-3">
         <div class="col-12 col-md-6 d-flex gap-2 align-items-center">
 
-            <!-- EmpresaId: para cargar las obras de la empresa -->
+            
             <label class="me-2" for="empresaId">Empresa ID</label>
             <input id="empresaId" class="form-control w-50" @bind="EmpresaId" type="number" />
 
@@ -22,12 +22,13 @@
         </div>
 
         <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
-            <!-- Botón para mostrar el formulario de creación -->
+           
             <button class="btn btn-success" @onclick="CrearObra">+ Nueva Obra</button>
         </div>
     </div>
 
-    <!-- Mensajes simples -->
+    
+
     @if (!string.IsNullOrEmpty(Mensaje))
     {
         <div class="alert @AlertaClase">@Mensaje</div>
@@ -354,17 +355,12 @@
     }
 
     // Editar: similar a ver, pero título distinto
+
     async Task EditarObra(long id)
     {
         await VerObra(id);
         FormularioTitulo = "Editar obra";
     }
 
-    // ---------- Clases DTO locales (si tu cliente ya tiene referencias a DTOs compartidos,
-    // puedes eliminar estas definiciones y usar las de tu proyecto "DTOs") ----------
-    // (Si ya tienes las clases en un proyecto compartido, borra el bloque siguiente.)
-
-    // Nota: si en tu cliente ya existe "DTO.DTOs_Obras", ignora / elimina estas clases duplicadas.
-
-    // --- Fin código ---
+   
 }

@@ -3,15 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9ED0833F-600F-40E9-8442-3AA99CBD9FF6}|..\\BD\\BD.csproj|c:\\users\\admin\\desktop\\back-end2\\prostockconstructora-blazor\\bd\\modelos\\obra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\admin\\desktop\\back-end2\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\obra.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\obra.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\admin\\desktop\\back-end2\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9ED0833F-600F-40E9-8442-3AA99CBD9FF6}|..\\BD\\BD.csproj|c:\\users\\admin\\desktop\\back-end2\\prostockconstructora-blazor\\bd\\modelos\\obra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,11 +21,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Obra.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\BD\\Modelos\\Obra.cs",
               "RelativeDocumentMoniker": "..\\BD\\Modelos\\Obra.cs",
@@ -38,7 +38,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "NavMenu.razor",
               "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
@@ -51,13 +51,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Obra.razor",
               "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obra.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Obra.razor",
-              "ToolTip": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obra.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Obra.razor",
-              "ViewState": "AgIAAOsAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Back-End2\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obra.razor*",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Obra.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-04T17:47:34.678Z",
               "EditorCaption": ""
