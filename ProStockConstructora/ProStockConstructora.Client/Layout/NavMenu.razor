@@ -12,6 +12,11 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
         <div class="nav-item px-3">
+
+            <NavLink class="nav-link" href="obra">
+                <i class="bi bi-people-fill"></i> Obras
+            </NavLink>
+
             @if(datosUsuario.Usuario != null)
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
