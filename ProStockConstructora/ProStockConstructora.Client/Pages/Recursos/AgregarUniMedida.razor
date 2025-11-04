@@ -1,0 +1,35 @@
+﻿@page "/recursos/agregarunimedida" 
+@inject NavigationManager navManager;
+
+<h3>Agregar Unidad de Medidad</h3>
+
+<EditForm Model="UnidadMedida" OnValidSubmit="CargarUnidadMedida"> 
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Nombre de la Unidad de Medida</label>
+        <InputText class="form-control" @bind-Value="UnidadMedida.Nombre" />
+        <ValidationMessage For="@(() => UnidadMedida.Nombre)" />
+    </div>
+    <div class="form-group">
+        <label>Abreviatura</label>
+        <InputText class="form-control" @bind-Value="UnidadMedida.Abreviacion" />
+        <ValidationMessage For="@(() => UnidadMedida.Abreviacion)" />
+    </div>
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="Cancelar">Volver</button>
+</EditForm>
+
+@code {
+   private UnidadDeMedidaDTO UnidadMedida = new UnidadDeMedidaDTO();
+    
+    private async Task CargarUnidadMedida()
+    {
+        
+    }
+
+    private void Cancelar()
+    {
+        navManager.NavigateTo("/recursos");
+    }
+
+}

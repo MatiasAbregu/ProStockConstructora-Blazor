@@ -1,0 +1,63 @@
+﻿@page "/recursos/agregar"
+@inject NavigationManager navManager;
+
+<h3>AgregarRecurso</h3>
+
+<EditForm Model="Recursos" OnValidSubmit="CargarRecurso"> 
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Código ISO</label>
+        <InputText class="form-control" @bind-Value="Recursos.CodigoISO" />
+        <ValidationMessage For="@(() => Recursos.CodigoISO)" />
+    </div>
+    <div class="form-group">
+        <label>Nombre del recurso</label>
+        <InputText class="form-control" @bind-Value="Recursos.Nombre" />
+        <ValidationMessage For="@(() => Recursos.Nombre)" />
+    </div>
+    <div class="form-group">
+        <label>Tipo de material</label>
+        <InputSelect class="form-control" @bind-Value="Recursos.TipoMaterial" />
+        <ValidationMessage For="@(() => Recursos.TipoMaterial)" />
+    </div>
+    <div class="form-group">
+        <label>Unidad de Medida</label>
+        <InputSelect class="form-control" @bind-Value="Recursos.UnidadDeMedida" />
+        <ValidationMessage For="@(() => Recursos.UnidadDeMedida)" />
+    </div>
+    <div class="form-group">
+        <label>Cantidad Disponible</label>
+        <InputNumber class="form-control" @bind-Value="Recursos.Cantidad" />
+        <ValidationMessage For="@(() => Recursos.Cantidad)" />
+    </div>
+    <div class="form-group">
+        <label>Descripción</label>
+        <InputText class="form-control" @bind-Value="Recursos.Descripcion" />
+        <ValidationMessage For="@(() => Recursos.Descripcion)" />
+    </div>
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="Cancelar">Volver</button>
+</EditForm>
+
+@code {
+    private RecursosCargarDTO Recursos = new RecursosCargarDTO();
+    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CargarRecurso();
+    }
+
+
+    private async Task CargarRecurso()
+    {
+        //mock
+        
+    }
+
+    private void Cancelar()
+    {
+        navManager.NavigateTo("/recursos");
+    }
+}
