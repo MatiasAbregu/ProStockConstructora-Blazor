@@ -1,0 +1,52 @@
+﻿@page "/"
+@inject IHttpServicio http;
+@inject DatosSesion sesionUsuario;
+@inject NavigationManager navManager;
+
+<PageTitle>Iniciar Sesión - ProStock</PageTitle>
+
+<article class="usuario-form container-fluid">
+    <EditForm Model="usuario" class="d-flex flex-column" OnValidSubmit="IniciarSesion">
+        <DataAnnotationsValidator />
+        <h4 class="mb-5">Inicie sesión para continuar</h4>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Correo</label>
+            <InputText @bind-Value="usuario.Email" type="email" class="form-control" id="emailInput" />
+            <ValidationMessage For="@(() => usuario.Email)" />
+        </div>
+        <div class="mb-3">
+            <label for="contrasenaInput" class="form-label">Contraseña</label>
+            <InputText @bind-Value="usuario.Contrasena" type="password" class="form-control" id="contrasenaInput" />
+            <ValidationMessage For="@(() => usuario.Contrasena)" />
+        </div>
+        @if (response != null)
+        {
+            <div class="alert @(response.Mensaje.Contains("éxitoso") ? "alert-success" : "alert-danger") text-center">
+                @response.Mensaje
+            </div>
+        }
+        <button type="submit" class="btn btn-primary btn-submit align-self-center px-4">Iniciar Sesión</button>
+    </EditForm>
+</article>
+
+@code {
+    private IniciarSesionDTO usuario = new IniciarSesionDTO();
+    private Response<VerUsuarioDTO> response;
+
+    private async Task IniciarSesion()
+    {
+        var res = await http.Post<IniciarSesionDTO, Response<VerUsuarioDTO>>("api/usuario/iniciar-sesion", usuario);
+        if (res.Respuesta != null)
+        {
+            response = new Response<VerUsuarioDTO>();
+            response.Mensaje = res.Respuesta.Mensaje;
+            response.Estado = res.Respuesta.Estado;
+
+            if(res.Respuesta.Objeto != null)
+            {
+                sesionUsuario.Usuario = res.Respuesta.Objeto;
+                navManager.NavigateTo("/inicio");
+            }
+        }
+    }
+}

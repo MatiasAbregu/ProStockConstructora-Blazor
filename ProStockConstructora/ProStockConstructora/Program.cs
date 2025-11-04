@@ -1,8 +1,12 @@
 using BD;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using ProStockConstructora.Client;
 using ProStockConstructora.Client.Pages;
 using ProStockConstructora.Components;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
+using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
+builder.Services.AddScoped<IObraServicio, ObraServicio>();
+builder.Services.AddScoped<IDepositoServicio, DepositoServicio>();
+builder.Services.AddScoped<IRolesServicio, RolesServicio>();
+builder.Services.AddScoped<IRecursosServicio, RecursosServicio>();
+builder.Services.AddScoped<INotaDePedidoServicio, NotaDePedidoServicio>();
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+
 builder.Services.AddScoped<HttpClient>(sp =>
 {
     var navigationManager = sp.GetRequiredService<NavigationManager>();
@@ -28,6 +40,8 @@ builder.Services.AddScoped<HttpClient>(sp =>
 });
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(opt => { opt.DetailedErrors = true; });
+
+builder.Services.AddScoped<DatosSesion>();
 
 var app = builder.Build();
 
@@ -46,10 +60,8 @@ else
 }
 
 app.UseHttpsRedirection();
-
-
 app.UseAntiforgery();
-
+app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
