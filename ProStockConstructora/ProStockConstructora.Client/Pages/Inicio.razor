@@ -1,0 +1,16 @@
+﻿@page "/inicio";
+@inject DatosSesion datosSesion;
+@inject NavigationManager navManager;
+
+@if(datosSesion.Usuario != null)
+{
+    <PageTitle>Inicio - ProStock</PageTitle>
+    <p>Te saluda la caca de Algorry 💩💩💩💩💩</p>
+} else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+
+}

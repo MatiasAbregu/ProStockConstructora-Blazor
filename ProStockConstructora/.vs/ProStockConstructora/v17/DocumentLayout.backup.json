@@ -3,22 +3,35 @@
   "WorkspaceRootPath": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\usuarios\\listausuarios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\usuarios\\listausuarios.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\usuarios\\actualizarusuario.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\usuarios\\actualizarusuario.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\usuarios\\crearusuario.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\usuarios\\crearusuario.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\layout\\navmenu.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora\\controllers\\controladorusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\repositorios\\servicios\\usuarioservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\inicio.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\inicio.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\dto\\dtos-usuarios\\verusuariodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\repositorios\\servicios\\usuarioservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\repositorios\\implementaciones\\iusuarioservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -31,60 +44,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 10,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Program.cs",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Program.cs",
-              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Program.cs",
-              "RelativeToolTip": "ProStockConstructora.Client\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T21:38:59.481Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Home.razor",
-              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Home.razor",
-              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Home.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Home.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T21:36:05.635Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ControladorUsuario.cs",
-              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUsuario.cs",
-              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorUsuario.cs",
-              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUsuario.cs",
-              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorUsuario.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAwwDgAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T21:34:16.223Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "VerUsuarioDTO.cs",
-              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\DTO\\DTOs-Usuarios\\VerUsuarioDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Usuarios\\VerUsuarioDTO.cs",
-              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\DTO\\DTOs-Usuarios\\VerUsuarioDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Usuarios\\VerUsuarioDTO.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T21:22:43.982Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -119,29 +80,114 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "IUsuarioServicio.cs",
-              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
-              "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
-              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
-              "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABYAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T20:51:49.734Z",
+              "DocumentIndex": 2,
+              "Title": "ActualizarUsuario.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\ActualizarUsuario.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Usuarios\\ActualizarUsuario.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\ActualizarUsuario.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Usuarios\\ActualizarUsuario.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T17:40:33.68Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "CrearUsuario.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\CrearUsuario.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Usuarios\\CrearUsuario.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\CrearUsuario.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Usuarios\\CrearUsuario.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T17:40:20.09Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ListaUsuarios.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\ListaUsuarios.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Usuarios\\ListaUsuarios.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Usuarios\\ListaUsuarios.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Usuarios\\ListaUsuarios.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T17:40:08.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NavMenu.razor.css",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor.css",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Layout\\NavMenu.razor.css",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor.css",
+              "RelativeToolTip": "ProStockConstructora.Client\\Layout\\NavMenu.razor.css",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAEwAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-11-04T17:27:36.469Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T17:14:16.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Inicio.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Inicio.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Inicio.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Inicio.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Inicio.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T16:50:40.945Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ControladorUsuario.cs",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUsuario.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorUsuario.cs",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUsuario.cs",
+              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorUsuario.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAIwDIAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T21:34:16.223Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IUsuarioServicio.cs",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
+              "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
+              "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IUsuarioServicio.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAewBYAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T20:51:49.734Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "UsuarioServicio.cs",
               "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Servicios\\UsuarioServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\UsuarioServicio.cs",
               "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Servicios\\UsuarioServicio.cs",
               "RelativeToolTip": "..\\Repositorios\\Servicios\\UsuarioServicio.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAUwLoAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACYAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T20:36:34.265Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T20:36:34.265Z"
             }
           ]
         }

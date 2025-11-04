@@ -27,7 +27,8 @@ namespace Repositorios.Servicios
         {
             try
             {
-                Usuario? usuario = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Email == usuarioDTO.Email);
+                Usuario? usuario = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Email == usuarioDTO.Email
+                                                              && u.Contrasena == usuarioDTO.Contrasena);
 
                 if (usuario == null)
                 {
@@ -35,51 +36,43 @@ namespace Repositorios.Servicios
                     {
                         Objeto = null,
                         Estado = true,
-                        Mensaje = "Usuario no registrado con ese correo."
+                        Mensaje = "Correo o contraseña incorrectos."
                     };
                 }
-                else if (!usuario.Estado) {
+                else if (!usuario.Estado)
+                {
                     return new Response<VerUsuarioDTO>()
                     {
                         Objeto = null,
                         Estado = true,
-                        Mensaje = "Usuario no disponible."
+                        Mensaje = "El usuario no está disponible."
                     };
                 }
 
-                if (BCrypt.Net.BCrypt.Verify(usuarioDTO.Contrasena, usuario.Contrasena))
+                var roles = await baseDeDatos.RolesUsuarios.Where(u => u.UsuarioId == usuario.Id)
+                                .Include(u => u.Rol).Select(r => r.Rol.NombreRol).ToListAsync();
+
+                var obrasId = await baseDeDatos.ObraUsuarios.Where(u => u.UsuarioId == usuario.Id)
+                                    .Select(o => o.ObraId).ToListAsync();
+
+                var depositosId = await baseDeDatos.DepositosUsuario.Where(u => u.UsuarioId == usuario.Id)
+                                        .Select(d => d.DepositoId).ToListAsync();
+
+                return new Response<VerUsuarioDTO>()
                 {
-                    var roles = await baseDeDatos.RolesUsuarios.Where(u => u.UsuarioId == usuario.Id)
-                                    .Include(u => u.Rol).Select(r => r.Rol.NombreRol).ToListAsync();
-
-                    var obrasId = await baseDeDatos.ObraUsuarios.Where(u => u.UsuarioId == usuario.Id)
-                                        .Select(o => o.ObraId).ToListAsync();
-
-                    var depositosId = await baseDeDatos.DepositosUsuario.Where(u => u.UsuarioId == usuario.Id)
-                                            .Select(d => d.DepositoId).ToListAsync();
-
-                    return new Response<VerUsuarioDTO>()
+                    Objeto = new VerUsuarioDTO()
                     {
-                        Objeto = new VerUsuarioDTO()
-                        {
-                            Id = usuario.Id,
-                            Email = usuario.Email,
-                            NombreUsuario = usuario.NombreUsuario,
-                            Estado = "Activo",
-                            Telefono = usuario.Telefono,
-                            Roles = roles,
-                            ObrasId = obrasId,
-                            DepositosId = depositosId
-                        },
-                        Estado = true,
-                        Mensaje = "¡Inicio de sesión éxitoso!"
-                    };
-                }
-                else return new Response<VerUsuarioDTO>()
-                {
-                    Objeto = null,
+                        Id = usuario.Id,
+                        Email = usuario.Email,
+                        NombreUsuario = usuario.NombreUsuario,
+                        Estado = "Activo",
+                        Telefono = usuario.Telefono,
+                        Roles = roles,
+                        ObrasId = obrasId,
+                        DepositosId = depositosId
+                    },
                     Estado = true,
-                    Mensaje = "Correo o contraseña incorrectos."
+                    Mensaje = "¡Inicio de sesión éxitoso!"
                 };
             }
             catch (Exception ex)
@@ -90,7 +83,7 @@ namespace Repositorios.Servicios
                     Estado = false,
                     Mensaje = $"¡Hubo un error desde el servidor! Error: {ex.Message}"
                 };
-            } 
+            }
         }
 
         public async Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores()

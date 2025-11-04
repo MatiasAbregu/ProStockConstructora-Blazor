@@ -48,7 +48,7 @@ namespace ProStockConstructora.Controllers
             return StatusCode(404, "Ese usuario no existe.");
         }
 
-        [HttpPost]
+        [HttpPost("iniciar-sesion")]
         public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
         {
             var res = await usuarioServicio.IniciarSesion(usuario);
