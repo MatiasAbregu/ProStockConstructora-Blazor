@@ -23,10 +23,75 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        //public async Task<Response<string>> IniciarSesion(IniciarSesionDTO usuarioDTO)
-        //{
-        //    baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.NombreUsuario);
-        //}
+        public async Task<Response<VerUsuarioDTO>> IniciarSesion(IniciarSesionDTO usuarioDTO)
+        {
+            try
+            {
+                Usuario? usuario = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Email == usuarioDTO.Email);
+
+                if (usuario == null)
+                {
+                    return new Response<VerUsuarioDTO>()
+                    {
+                        Objeto = null,
+                        Estado = true,
+                        Mensaje = "Usuario no registrado con ese correo."
+                    };
+                }
+                else if (!usuario.Estado) {
+                    return new Response<VerUsuarioDTO>()
+                    {
+                        Objeto = null,
+                        Estado = true,
+                        Mensaje = "Usuario no disponible."
+                    };
+                }
+
+                if (BCrypt.Net.BCrypt.Verify(usuarioDTO.Contrasena, usuario.Contrasena))
+                {
+                    var roles = await baseDeDatos.RolesUsuarios.Where(u => u.UsuarioId == usuario.Id)
+                                    .Include(u => u.Rol).Select(r => r.Rol.NombreRol).ToListAsync();
+
+                    var obrasId = await baseDeDatos.ObraUsuarios.Where(u => u.UsuarioId == usuario.Id)
+                                        .Select(o => o.ObraId).ToListAsync();
+
+                    var depositosId = await baseDeDatos.DepositosUsuario.Where(u => u.UsuarioId == usuario.Id)
+                                            .Select(d => d.DepositoId).ToListAsync();
+
+                    return new Response<VerUsuarioDTO>()
+                    {
+                        Objeto = new VerUsuarioDTO()
+                        {
+                            Id = usuario.Id,
+                            Email = usuario.Email,
+                            NombreUsuario = usuario.NombreUsuario,
+                            Estado = "Activo",
+                            Telefono = usuario.Telefono,
+                            Roles = roles,
+                            ObrasId = obrasId,
+                            DepositosId = depositosId
+                        },
+                        Estado = true,
+                        Mensaje = "¡Inicio de sesión éxitoso!"
+                    };
+                }
+                else return new Response<VerUsuarioDTO>()
+                {
+                    Objeto = null,
+                    Estado = true,
+                    Mensaje = "Correo o contraseña incorrectos."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<VerUsuarioDTO>()
+                {
+                    Objeto = null,
+                    Estado = false,
+                    Mensaje = $"¡Hubo un error desde el servidor! Error: {ex.Message}"
+                };
+            } 
+        }
 
         public async Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores()
         {

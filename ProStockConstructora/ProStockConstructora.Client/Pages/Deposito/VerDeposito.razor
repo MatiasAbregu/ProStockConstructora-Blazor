@@ -1,7 +1,6 @@
 ﻿@page "/deposito"
 @inject IHttpServicio Http
-
-
+@inject NavigationManager Navigation
 
 <h3>Depositos</h3>
 <br />
@@ -22,7 +21,12 @@ else
                 <th>CodigoDeposito</th>
                 <th>NombreDeposito</th>
                 <th>TipoDeposito</th>
-                <th></th>
+                <th>Domicilio</th>
+                  <td>
+                    <a class="btn btn-primary" href="/depositos/editar{deposito.Id}">Editar</a>
+                    <a class="btn btn-danger" href="/depositos/eliminar{deposito.Id}">Eliminar</a>
+                  </td>
+                
             </tr>
         </thead>
         <tbody>
@@ -41,7 +45,7 @@ else
 }
 
 @code {
-    List<VerDepositoDTO> depositos;
+    List<VerDepositoDTO>? depositos;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,12 +54,10 @@ else
 
     private async Task VerDepositos()
     {
-        var resp = await Http.GetFromJsonAsync<List<VerDepositoDTO>>("api/deposito");
+        var resp = await Http.Get<List<VerDepositoDTO>>("api/deposito");
         if (resp != null)
         {
-            depositos = resp;
+            depositos = resp.Respuesta;
         }
-       
-
     }
 }

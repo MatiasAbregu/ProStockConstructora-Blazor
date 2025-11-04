@@ -541,6 +541,10 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<long>("EmpresaId")
                         .HasColumnType("bigint");
 
@@ -549,14 +553,17 @@ namespace BD.Migrations
 
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpresaId");
-
-                    b.HasIndex("NombreUsuario", "EmpresaId")
+                    b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("EmpresaId");
 
                     b.ToTable("Usuarios");
                 });

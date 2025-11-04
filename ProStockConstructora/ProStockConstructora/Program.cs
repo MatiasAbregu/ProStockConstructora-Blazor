@@ -1,4 +1,5 @@
 using BD;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using ProStockConstructora.Client.Pages;
 using ProStockConstructora.Components;
@@ -25,6 +26,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddScoped<HttpClient>(sp =>
+{
+    var navigationManager = sp.GetRequiredService<NavigationManager>();
+    return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };
+});
+
+builder.Services.AddServerSideBlazor().AddCircuitOptions(opt => { opt.DetailedErrors = true; });
 
 var app = builder.Build();
 
