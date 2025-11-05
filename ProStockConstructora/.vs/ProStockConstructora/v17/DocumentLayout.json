@@ -7,11 +7,7 @@
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\deposito\\verdeposito.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\prostockconstrucciones\\dto\\dtos-depositos\\verdepositodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AF14A609-3B77-4ADB-B47A-814F07DC0FA4}|..\\Servicios\\Servicios.csproj|c:\\prostockconstrucciones\\servicios\\servicioshttp\\httpservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\servicios\\depositoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -21,10 +17,10 @@
       "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladordeposito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\implementaciones\\idepositoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AF14A609-3B77-4ADB-B47A-814F07DC0FA4}|..\\Servicios\\Servicios.csproj|c:\\prostockconstrucciones\\servicios\\servicioshttp\\httprespuesta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9ED0833F-600F-40E9-8442-3AA99CBD9FF6}|..\\BD\\BD.csproj|c:\\prostockconstrucciones\\bd\\modelos\\deposito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\implementaciones\\idepositoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -71,51 +67,51 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "HttpRespuesta.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\Servicios\\ServiciosHttp\\HttpRespuesta.cs",
+              "RelativeDocumentMoniker": "..\\Servicios\\ServiciosHttp\\HttpRespuesta.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\Servicios\\ServiciosHttp\\HttpRespuesta.cs",
+              "RelativeToolTip": "..\\Servicios\\ServiciosHttp\\HttpRespuesta.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-04T23:16:04.791Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HttpServicio.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\Servicios\\ServiciosHttp\\HttpServicio.cs",
+              "RelativeDocumentMoniker": "..\\Servicios\\ServiciosHttp\\HttpServicio.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\Servicios\\ServiciosHttp\\HttpServicio.cs",
+              "RelativeToolTip": "..\\Servicios\\ServiciosHttp\\HttpServicio.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAAADsAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-04T19:39:32.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "ControladorDeposito.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAABTAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T20:20:10.285Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_Imports.razor",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\_Imports.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\_Imports.razor",
-              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\_Imports.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\_Imports.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T20:18:47.381Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "VerDepositoDTO.cs",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
-              "ToolTip": "C:\\ProStockConstrucciones\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Depositos\\VerDepositoDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T19:51:14.311Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "DepositoServicio.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\Repositorios\\Servicios\\DepositoServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\DepositoServicio.cs",
               "ToolTip": "C:\\ProStockConstrucciones\\Repositorios\\Servicios\\DepositoServicio.cs",
               "RelativeToolTip": "..\\Repositorios\\Servicios\\DepositoServicio.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAM4AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T19:50:52.896Z",
               "EditorCaption": ""
@@ -128,21 +124,10 @@
               "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IDepositoServicio.cs",
               "ToolTip": "C:\\ProStockConstrucciones\\Repositorios\\Implementaciones\\IDepositoServicio.cs",
               "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IDepositoServicio.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T19:50:43.556Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Deposito.cs",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\BD\\Modelos\\Deposito.cs",
-              "RelativeDocumentMoniker": "..\\BD\\Modelos\\Deposito.cs",
-              "ToolTip": "C:\\ProStockConstrucciones\\BD\\Modelos\\Deposito.cs",
-              "RelativeToolTip": "..\\BD\\Modelos\\Deposito.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T19:50:31.462Z"
+              "WhenOpened": "2025-11-03T19:50:43.556Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -152,7 +137,7 @@
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
-              "ViewState": "AgIAABAAAAAAAAAAAAAkwCcAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAAADYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-03T19:40:23.064Z",
               "EditorCaption": ""

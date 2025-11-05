@@ -5,6 +5,7 @@ using Repositorios.Implementaciones;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using DTO.DTOs_Response;
 
 namespace ProStockConstructora.Controllers
 {
@@ -18,35 +19,40 @@ namespace ProStockConstructora.Controllers
         {
             this.depositoServicio = depositoServicio;
         }
-        
+
+        [HttpGet]
+        public async Task<ActionResult<List<VerDepositoDTO>>> ObtenerDepositos()
+        {
+            Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositos();
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<VerDepositoDTO>> ObtenerDepositoPorId([FromRoute] int id)
         {
-            ValueTuple<bool, VerDepositoDTO> res = await depositoServicio.ObtenerDepositoPorId(id);
-            if (res.Item1 && res.Item2 != null) return StatusCode(200, res.Item2);
-            else if (res.Item1 && res.Item2 == null) return StatusCode(404, "No existe un depósito con ese ID.");
-            else return StatusCode(500, res.Item2);
+            Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositoPorId(id);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
         }
+       
 
         [HttpGet("obra/{obraId:int}")]
         public async Task<ActionResult<List<VerDepositoDTO>>> ObtenerDepositosPorObraId([FromRoute] int obraId)
         {
-            var res = await depositoServicio.ObtenerDepositosPorObraId(obraId);
-            if (res.Item1 && res.Item2 != null) return StatusCode(200, res.Item2);
-            else if (res.Item1) return StatusCode(200, "No existen depósitos aún.");
-            else return StatusCode(500, "Ocurrió un error en el servidor.");
+           Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositosPorObraId(obraId);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
 
         }
 
         [HttpPost("crear")]
-        public async Task<ActionResult<string>> CrearDeposito([FromBody] DepositoAsociarDTO e)
+        public async Task<ActionResult<int>> CrearDeposito([FromBody] DepositoAsociarDTO e)
         {
-            ValueTuple<bool, string> res = await depositoServicio.CrearDeposito(e);
-            if (res.Item1) return StatusCode(201, res.Item2);
-            else if (res.Item2.Contains("existe")) return StatusCode(409, res.Item2);
-            else return StatusCode(500, res.Item2);
+            Response<int> res = await depositoServicio.CrearDeposito(e);
+            return res.Estado ? StatusCode(201, res.Objeto) : StatusCode(500, res.Mensaje);
         }
-
+        
         [HttpPut("actualizar/{id:int}")]
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
         {

@@ -14,30 +14,29 @@ else if (depositos.Count == 0)
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>CodigoDeposito</th>
                 <th>NombreDeposito</th>
                 <th>TipoDeposito</th>
                 <th>Domicilio</th>
-                  <td>
-                    <a class="btn btn-primary" href="/depositos/editar{deposito.Id}">Editar</a>
-                    <a class="btn btn-danger" href="/depositos/eliminar{deposito.Id}">Eliminar</a>
-                  </td>
-                
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var deposito in depositos)
             {
                 <tr>
-                    <td>@deposito.Id</td>
                     <td>@deposito.CodigoDeposito</td>
                     <td>@deposito.NombreDeposito</td>
                     <td>@deposito.TipoDeposito</td>
-                    <td>@deposito.Ubicacion</td>
+                    <td>@deposito.Ubicacion?.UbicacionDomicilio</td>
+                    <td>
+                        <a class="btn btn-primary"
+                           href="/depositos/editar @deposito.Id">Editar</a>
+                        <a class="btn btn-danger" href="/depositos/eliminar @deposito.Id">Eliminar</a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -49,15 +48,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await VerDepositos();
-    }
+        await ObtenerDepositos();
+    }  
 
-    private async Task VerDepositos()
+    private async Task ObtenerDepositos()
     {
-        var resp = await Http.Get<List<VerDepositoDTO>>("api/deposito");
-        if (resp != null)
+        depositos = new List<VerDepositoDTO>()
         {
-            depositos = resp.Respuesta;
-        }
+            new VerDepositoDTO()
+            { 
+                Id = 1,
+                CodigoDeposito = "D001",
+                NombreDeposito = "Deposito Central",
+                TipoDeposito = "Almacenamiento",
+                Ubicacion = new UbicacionDTO
+                {
+                    UbicacionDomicilio = "Ruta 9 km 15, Cordoba, Argentina"
+                }
+            }
+        };
     }
 }

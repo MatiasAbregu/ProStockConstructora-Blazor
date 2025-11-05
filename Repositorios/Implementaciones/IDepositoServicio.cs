@@ -1,4 +1,5 @@
 ﻿using DTO.DTOs_Depositos;
+using DTO.DTOs_Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,11 @@ namespace Repositorios.Implementaciones
 {
     public interface IDepositoServicio
     {
-        public Task<(bool, List<VerDepositoDTO>)> ObtenerDepositosPorObraId(int obraId);
-        public Task<(bool, VerDepositoDTO)> ObtenerDepositoPorId(int id);
-        public Task<(bool, string)> CrearDeposito(DepositoAsociarDTO e);
-        public Task<(bool, string)> ActualizarDeposito(DepositoAsociarDTO e);
+        public Task<Response<List<VerDepositoDTO>>> ObtenerDepositos();
+        public Task<Response<List<VerDepositoDTO>>> ObtenerDepositosPorObraId(int obraId);
+        public Task<Response<List<VerDepositoDTO>>> ObtenerDepositoPorId(int id);
+        public Task<Response<int>>CrearDeposito(DepositoAsociarDTO e);
+        public Task<(bool,string)> ActualizarDeposito(DepositoAsociarDTO e);
         public Task<(bool, string)> EliminarDeposito(int id);
 
     }
