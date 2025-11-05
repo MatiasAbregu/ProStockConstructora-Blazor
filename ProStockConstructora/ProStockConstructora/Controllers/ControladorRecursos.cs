@@ -10,6 +10,7 @@ using System.Diagnostics;
 using BD.Enums;
 using DTO.DTOs_MaterialesYmaquinarias;
 using DTO.DTOs_Recursos;
+using DTO.DTOs_Response;
 
 namespace ProStockConstructora.Controllers
 {
@@ -42,13 +43,13 @@ namespace ProStockConstructora.Controllers
         [HttpGet("materialesYmaquinarias/{EmpresaId}")]
         public async Task<IActionResult> ObtenerTotalRecursos(int EmpresaId)
         {
-            ValueTuple<bool, List<RecursosPagPrincipalDTO>>
+            Response<List<RecursosPagPrincipalDTO>>
             resultado = await recursosServicio.RecursosVerDTO(EmpresaId);
-            if (!resultado.Item1)
-                return StatusCode(200, "No hay recursos disponibles");
-            else if (resultado.Item2 == null || resultado.Item2.Count == 0)
+            if (!resultado.Estado)
+                return StatusCode(500, resultado);
+            else if (resultado.Objeto == null || resultado.Objeto.Count == 0)
                 return StatusCode(200, "No hay materiales y maquinarias registradas.");
-            return Ok(resultado.Item2);
+            return Ok(resultado.Objeto);
         }
 
         [HttpGet("deposito/{DepositoId}")]
@@ -86,14 +87,12 @@ namespace ProStockConstructora.Controllers
 
 
         [HttpPost("{DepositoId:int}")]
-        public async Task<IActionResult> RecursoCargar([FromBody] RecursosCargarDTO recursoCargarDTO, int DepositoId)
+        public async Task<IActionResult> RecursoCargar([FromBody] RecursosCargarDTO recursoCargarDTO, int depositoId)
         {
-            if (recursoCargarDTO == null)
-                return BadRequest("El recurso no puede ser nulo.");
-            var exito = await recursosServicio.RecursoCargar(recursoCargarDTO, DepositoId);
-            if (!exito.Item1)
-                return StatusCode(500, exito.Item2);
-            return Ok("Recurso cargado con exito.");
+            Response<string> resultado = await recursosServicio.RecursoCargar(recursoCargarDTO, depositoId);
+            if (!resultado.Estado)
+                return StatusCode(500, resultado.Mensaje);
+            return Ok(resultado.Mensaje);
         }
 
         [HttpPut("deposito/movimiento")]

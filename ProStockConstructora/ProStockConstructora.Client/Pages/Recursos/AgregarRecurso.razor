@@ -1,5 +1,6 @@
 ﻿@page "/recursos/agregar"
 @inject NavigationManager navManager;
+@inject IHttpServicio http;
 
 <h3>AgregarRecurso</h3>
 
@@ -43,6 +44,8 @@
     private RecursosCargarDTO Recursos = new RecursosCargarDTO();
     List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
 
+   
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -52,7 +55,16 @@
 
     private async Task CargarRecurso()
     {
-        //mock
+        var res = await http.Post<RecursosCargarDTO, Response<string>>("api/recursos", Recursos);
+        if (res.Respuesta != null)
+        {
+            navManager.NavigateTo("/recursos");
+        }
+        else
+        {
+            // Manejar el error apropiadamente
+            Console.WriteLine(res);
+        }
         
     }
 
