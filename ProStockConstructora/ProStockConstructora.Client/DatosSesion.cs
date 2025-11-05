@@ -5,8 +5,8 @@ namespace ProStockConstructora.Client
     public class DatosSesion
     {
         public event Action OnChange;
-        private VerUsuarioDTO _Usuario;
-        public VerUsuarioDTO Usuario { 
+        private DatosUsuario _Usuario;
+        public DatosUsuario Usuario { 
             get => _Usuario; 
             set
             {

@@ -1,7 +1,135 @@
 ﻿@page "/usuarios"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion;
+@inject NavigationManager navManager;
 
-<h3>ListaUsuarios</h3>
+@if (datosSesion.Usuario != null)
+{
+    <PageTitle>Lista de usuarios - ProStock</PageTitle>
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Usuarios</p>
+            <div class="botonera">
+                <a class="btn btn-add btn-success" href="/usuarios/crear">+</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Correo</th>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @if (!String.IsNullOrEmpty(mensaje) && !mensaje.Contains("éxito"))
+                {
+                    <p>@mensaje</p>
+                }
+                else if (usuarios == null)
+                {
+                    <p>@mensaje</p>
+                }
+                else if (usuarios != null && usuarios.Count > 0)
+                {
+                    <tbody>
+                        @foreach (var usuario 
+                        in usuarios.Skip(numeroPagina == 1 ? 0 : numeroPagina * 10).Take(10))
+                        {
+                            <tr>
+                                <td>@usuario.Email</td>
+                                <td>@usuario.NombreUsuario</td>
+                                <td>@usuario.Roles[0]</td>
+                                <td class="col-editar">
+                                    <a class="btn btn-outline-warning" href="/usuarios/@usuario.Id">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <button class="btn @(usuario.Estado == "Activo" ? "btn-outline-danger" : "btn-outline-success")">
+                                        @if (usuario.Estado == "Activo")
+                                        {
+                                            <i class="bi bi-trash-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-plus-circle-fill"></i>
+                                        }
+                                    </button>
+                                    @if (usuario.ObrasId?.Count > 0)
+                                    {
+                                        <button type="button" class="btn btn-outline-info">
+                                            <i class="bi bi-buildings-fill"></i>
+                                        </button>
+                                    }
+                                    @if (usuario.DepositosId?.Count > 0)
+                                    {
+                                        <button type="button" class="btn btn-outline-info">
+                                            <i class="bi bi-houses-fill"></i>
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@usuarios?.Count registros totales</p>
+            </div>
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
 
 @code {
+    private DatosSesion datosDeUsuario;
+    private List<DatosUsuario> usuarios;
+    private string mensaje;
+    private int numeroPagina = 1;
+    // @onclick="() => CambiarEstado(usuario.Id)"
 
+    protected async override void OnInitialized()
+    {
+        base.OnInitialized();
+        datosDeUsuario = datosSesion;
+        await CargarUsuarios();
+    }
+
+    private async Task CargarUsuarios()
+    {
+        var res = await http.Get<Response<List<DatosUsuario>>>($"api/usuario/{datosDeUsuario.Usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            mensaje = res.Respuesta.Mensaje;
+            usuarios = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SiguientePagina()
+    {
+        if(usuarios.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnteriorPagina()
+    {
+        if(numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
+    }
 }

@@ -31,14 +31,14 @@
 
 @code {
     private IniciarSesionDTO usuario = new IniciarSesionDTO();
-    private Response<VerUsuarioDTO> response;
+    private Response<DatosUsuario> response;
 
     private async Task IniciarSesion()
     {
-        var res = await http.Post<IniciarSesionDTO, Response<VerUsuarioDTO>>("api/usuario/iniciar-sesion", usuario);
+        var res = await http.Post<IniciarSesionDTO, Response<DatosUsuario>>("api/usuario/iniciar-sesion", usuario);
         if (res.Respuesta != null)
         {
-            response = new Response<VerUsuarioDTO>();
+            response = new Response<DatosUsuario>();
             response.Mensaje = res.Respuesta.Mensaje;
             response.Estado = res.Respuesta.Estado;
 

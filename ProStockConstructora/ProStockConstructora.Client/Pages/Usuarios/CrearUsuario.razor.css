@@ -1,0 +1,19 @@
+﻿.material-symbols-outlined
+{
+    font-variation-settings: 
+        'FILL' 0, 
+        'wght' 400, 
+        'GRAD' 0, 
+        'opsz' 24
+}
+
+.cabecera {
+    display: flex;
+
+    width: 100%;
+}
+
+    .cabecera p {
+        margin: 0;
+        font-size: 1.1rem;
+    }
