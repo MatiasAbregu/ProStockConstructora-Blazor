@@ -14,14 +14,14 @@ else if (depositos.Count == 0)
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
             <tr>
                 <th>CodigoDeposito</th>
                 <th>NombreDeposito</th>
                 <th>TipoDeposito</th>
                 <th>Domicilio</th>
-                <th>Acciones</th>
+                <th style="width: 150px;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -33,9 +33,11 @@ else
                     <td>@deposito.TipoDeposito</td>
                     <td>@deposito.Ubicacion?.UbicacionDomicilio</td>
                     <td>
-                        <a class="btn btn-primary"
-                           href="/depositos/editar @deposito.Id">Editar</a>
-                        <a class="btn btn-danger" href="/depositos/eliminar @deposito.Id">Eliminar</a>
+                        <button class="btn btn-sm btn-warning me-2"
+                           title="Editar" @onclick="() => EditarDeposito(deposito.Id)"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-danger" 
+                        title="Eliminar" @onclick="() => EliminarDeposito(deposito.Id)"><i class="bi bi-trash"></i>
+                    </button>
                     </td>
                 </tr>
             }
@@ -45,12 +47,20 @@ else
 
 @code {
     List<VerDepositoDTO>? depositos;
+    string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
     {
         await ObtenerDepositos();
     }  
-
+    // private async Task ObtenerDepositos()
+    // {
+    //     var res = await Http.Get<Response<List<VerDepositoDTO>>>($"api/deposito");
+    //     if (res != null && res.Respuesta != null)
+    //     {
+    //         Mensaje = res.Respuesta.Mensaje;
+    //     }
+    // }
     private async Task ObtenerDepositos()
     {
         depositos = new List<VerDepositoDTO>()
@@ -68,4 +78,20 @@ else
             }
         };
     }
+
+    private void EditarDeposito(long id)
+    {
+        Navigation.NavigateTo($"/depositos/editar/{id}");
+    }
+
+    private async Task EliminarDeposito(long id)
+    {
+        var res = await Http.Delete<Response<string>>($"api/deposito/{id}");
+        if (res != null && res.Respuesta != null)
+        {
+            Mensaje = "Deposito eliminado correctamente";
+            await ObtenerDepositos();
+        }
+    }   
+
 }

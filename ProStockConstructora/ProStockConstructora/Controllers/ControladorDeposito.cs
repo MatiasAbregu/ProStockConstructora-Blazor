@@ -63,14 +63,13 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res.Item2);
         }
 
-        //[HttpDelete("eliminar/{id:int}")]
-        //public async Task<ActionResult<string>> EliminarDeposito([FromRoute] int id)
-        //{
-        //    ValueTuple<bool, string> res = await depositoServicio.EliminarDeposito(id);
-        //    if (res.Item1) return StatusCode(200, res.Item2);
-        //    else if (res.Item2.Contains("No existe")) return StatusCode(404, res.Item2);
-        //    else return StatusCode(500, res.Item2);
-        //}
+        [HttpDelete("eliminar/{id:long}")]
+        public async Task<ActionResult<string>> EliminarDeposito(long id)
+        {
+            Response<string> res = await depositoServicio.EliminarDeposito(id);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
+        }
 
     }
 }

@@ -15,7 +15,7 @@ namespace Repositorios.Implementaciones
         public Task<Response<List<VerDepositoDTO>>> ObtenerDepositoPorId(int id);
         public Task<Response<int>>CrearDeposito(DepositoAsociarDTO e);
         public Task<(bool,string)> ActualizarDeposito(DepositoAsociarDTO e);
-        public Task<(bool, string)> EliminarDeposito(int id);
+        public Task<Response<string>> EliminarDeposito(long id);
 
     }
 }

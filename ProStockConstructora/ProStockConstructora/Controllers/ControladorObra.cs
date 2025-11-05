@@ -68,16 +68,16 @@ namespace ProStockConstructora.Controllers
             return Ok("Obra actualizada exitosamente.");
         }
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> EliminarObra(int id)
-        //{
-        //    var obra = await baseDeDatos.Obras.FindAsync(id);
-        //    if (obra == null)
-        //        return NotFound("No se encontró la obra con el ID proporcionado.");
-        //    baseDeDatos.Obras.Remove(obra);
-        //    await baseDeDatos.SaveChangesAsync();
-        //    return Ok("Obra eliminada exitosamente.");
-        //}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarObra(int id)
+        {
+            var obra = await baseDeDatos.Obras.FindAsync(id);
+            if (obra == null)
+                return NotFound("No se encontró la obra con el ID proporcionado.");
+            baseDeDatos.Obras.Remove(obra);
+            await baseDeDatos.SaveChangesAsync();
+            return Ok("Obra eliminada exitosamente.");
+        }
     }
 }
    

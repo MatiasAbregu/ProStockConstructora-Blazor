@@ -241,20 +241,39 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> EliminarDeposito(int id)
+        public async Task<Response<string>> EliminarDeposito(long id)
         {
             try
             {
-                BD.Modelos.Deposito deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
-                if (deposito == null) return (false, "No existe un depósito con ese ID.");
+                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
+                if (deposito == null)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Estado = false
+                    };
+                }
+
                 baseDeDatos.Depositos.Remove(deposito);
                 await baseDeDatos.SaveChangesAsync();
-                return (true, "Depósito eliminado exitosamente.");
+
+                return new Response<string>
+                {
+                    Objeto = deposito.Id.ToString(),
+                    Mensaje = "Depósito eliminado exitosamente.",
+                    Estado = true
+                };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return (false, "Error al eliminar el depósito.");
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al eliminar el depósito.",
+                    Estado = false
+                };
             }
         }
 

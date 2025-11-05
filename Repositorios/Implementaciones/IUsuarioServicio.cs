@@ -12,15 +12,13 @@ namespace Repositorios.Implementaciones
     public interface IUsuarioServicio
     {
         // GETs
-        public Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores();
-        public Task<List<Usuario>> ObtenerTodosLosAdministradoresDeEmpresa(string nombreEmpresa);
-        public Task<(bool, List<VerUsuarioDTO>)> ObtenerUsuariosPorEmpresaId(int id);
-        public Task<(bool, VerUsuarioDTO)> ObtenerUsuarioPorId(string id);
+        public Task<Response<List<DatosUsuario>>> ObtenerUsuariosPorEmpresaId(int id);
+        public Task<(bool, DatosUsuario)> ObtenerUsuarioPorId(string id);
         public Task<List<Usuario>> ObtenerUsuariosPorCategoria(); // Obra o Rol
         public Task<Usuario> ObtenerUsuarioPorNombreUsuario();
 
         // POSTs
-        public Task<Response<VerUsuarioDTO>> IniciarSesion(IniciarSesionDTO usuarioDTO);
+        public Task<Response<DatosUsuario>> IniciarSesion(IniciarSesionDTO usuarioDTO);
         //public Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario);
 
         // PUTs
