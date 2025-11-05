@@ -1,11 +1,13 @@
-﻿using System.Diagnostics;
-using BD.Modelos;
+﻿using BD.Modelos;
+using DTO.DTOs_Response;
 using DTO.DTOs_Usuarios;
-using Repositorios.Implementaciones;
-using Repositorios.Servicios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ProStockConstructora.Controllers
 {
@@ -29,25 +31,7 @@ namespace ProStockConstructora.Controllers
             if (res.Item1) return StatusCode(200, res.Item2);
             else return StatusCode(500, "Error al cargar los datos desde el servidor.");
         }
-        */    
-
-        [HttpGet("{EmpresaId:int}")]
-        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(int EmpresaId)
-        {
-            ValueTuple<bool, List<VerUsuarioDTO>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
-
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(204, "Todavía no hay usuarios añadidos a la empresa.");
-        }
-
-        [HttpGet("obtener-usuario/{id}")]
-        public async Task<ActionResult> ObtenerUsuarioPorId(string id)
-        {
-            ValueTuple<bool, VerUsuarioDTO> res = await usuarioServicio.ObtenerUsuarioPorId(id);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(404, "Ese usuario no existe.");
-        }
-
+        */
         [HttpPost("iniciar-sesion")]
         public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
         {
@@ -56,6 +40,24 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
+
+        [HttpGet("{EmpresaId:int}")]
+        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(int EmpresaId)
+        {
+            Response<List<DatosUsuario>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
+
+            if (res.Estado) return StatusCode(200, res);
+            return StatusCode(500, res);
+        }
+
+        [HttpGet("obtener-usuario/{id}")]
+        public async Task<ActionResult> ObtenerUsuarioPorId(string id)
+        {
+            ValueTuple<bool, DatosUsuario> res = await usuarioServicio.ObtenerUsuarioPorId(id);
+            if (res.Item1) return StatusCode(200, res.Item2);
+            return StatusCode(404, "Ese usuario no existe.");
+        }
+        
         //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)
         //{
         //    IdentityResult resultado = await usuarioServicio.CrearUsuario(usuario);
