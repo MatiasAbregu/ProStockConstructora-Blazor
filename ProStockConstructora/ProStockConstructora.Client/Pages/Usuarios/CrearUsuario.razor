@@ -1,5 +1,77 @@
-﻿<h3>CrearUsuario</h3>
+﻿@page "/usuarios/crear"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion;
+@inject NavigationManager navManager;
+
+@if (datosSesion.Usuario != null)
+{
+    <PageTitle>Crear usuario - ProStock</PageTitle>
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="cabecera fw-bolder">Crear Usuario</p>
+            <button class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i> Atrás</button>
+        </div>
+        <div class="card">
+            <EditForm Model="usuario">
+                <div class="my-3">
+                    <label for="emailInput" class="form-label">Correo</label>
+                    <InputText @bind-Value="usuario.Email" type="email" class="form-control" id="emailInput" />
+                    <ValidationMessage For="@(() => usuario.Email)" />
+                </div>
+                <div class="mb-3">
+                    <label for="usernameInput" class="form-label">Nombre de usuario</label>
+                    <InputText @bind-Value="usuario.NombreUsuario" type="text" class="form-control" id="usernameInput" />
+                    <ValidationMessage For="@(() => usuario.NombreUsuario)" />
+                </div>
+                <div class="mb-3">
+                    <label for="telInput" class="form-label">Teléfono (opcional)</label>
+                    <InputText @bind-Value="usuario.Celular" type="text" class="form-control" id="telInput" />
+                    <ValidationMessage For="@(() => usuario.Celular)" />
+                </div>
+                <div class="my-3">
+                    <label>Escoja el rol del usuario:</label>
+                    <div>
+                        @if (roles != null)
+                        {
+                            <InputSelect class="form-select" @bind-Value="RolSeleccionado">
+                                @foreach (var rol in roles)
+                                {
+                                    <option value="@rol.NombreRol">@FormatearTexto(rol.NombreRol)</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => usuario.Roles)" />
+                        }
+                        else
+                        {
+                            <p>Hubo un error al cargar los roles desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                        }
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
 
 @code {
+    private CrearUsuarioDTO usuario;
+    private List<string> Roles;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        usuario = new CrearUsuarioDTO()
+        {
+            EmpresaId = datosSesion.Usuario.EmpresaId
+        };
+    }
+
+    private async Task CargarRoles()
+    {
+        var res = await http.Get<object>("");
+    }
 
 }
