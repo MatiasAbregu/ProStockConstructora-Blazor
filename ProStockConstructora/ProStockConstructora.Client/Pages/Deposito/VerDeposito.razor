@@ -4,6 +4,7 @@
 
 <h3>Depositos</h3>
 <br />
+<button class="btn btn-success mb-3" @onclick="DepositoCrear"><i class="bi bi-plus-circle"></i>Agregar</button>
 @if (depositos == null)
 {
     <p>Cargando...</p>
@@ -30,7 +31,7 @@ else
                 <tr>
                     <td>@deposito.CodigoDeposito</td>
                     <td>@deposito.NombreDeposito</td>
-                    <td>@deposito.TipoDeposito</td>
+                    <td>@deposito.TipoDeposito.ToString()</td>
                     <td>@deposito.Ubicacion?.UbicacionDomicilio</td>
                     <td>
                         <button class="btn btn-sm btn-warning me-2"
@@ -81,7 +82,7 @@ else
 
     private void EditarDeposito(long id)
     {
-        Navigation.NavigateTo($"/depositos/editar/{id}");
+        Navigation.NavigateTo($"/deposito/editar/{id}");
     }
 
     private async Task EliminarDeposito(long id)
@@ -94,4 +95,8 @@ else
         }
     }   
 
+    private void DepositoCrear()
+    {
+        Navigation.NavigateTo("/depositos/crear");
+    }
 }

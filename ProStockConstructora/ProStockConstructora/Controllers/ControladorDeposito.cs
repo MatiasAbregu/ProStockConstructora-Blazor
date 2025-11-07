@@ -56,11 +56,9 @@ namespace ProStockConstructora.Controllers
         [HttpPut("actualizar/{id:int}")]
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
         {
-            if (id != e.Id) return StatusCode(409, "No se pudo realizar la operación");
-            ValueTuple<bool, string> res = await depositoServicio.ActualizarDeposito(e);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            else if (res.Item2.Contains("ya")) return StatusCode(409, res.Item2);
-            else return StatusCode(500, res.Item2);
+            Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
         }
 
         [HttpDelete("eliminar/{id:long}")]

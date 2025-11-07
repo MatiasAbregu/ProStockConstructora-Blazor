@@ -211,33 +211,59 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> ActualizarDeposito(DepositoAsociarDTO e)
+        public async Task<Response<string>> ActualizarDeposito(int id,DepositoAsociarDTO e)
         {
             try
             {
                 Deposito? deposito = await baseDeDatos.Depositos
                     .FirstOrDefaultAsync(d => d.Id == e.Id);
-                if (deposito == null) return (false, "El depósito no existe.");
+                if (deposito == null)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "El depósito no existe.",
+                        Estado = false
+                    };
+                }
 
                 bool existeCodigo = await baseDeDatos.Depositos
                             .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito && d.Id != e.Id);
 
-                if (existeCodigo) return (false, "Ese código ya está en uso");
+                if (existeCodigo)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "Ese código ya está en uso",
+                        Estado = false
+                    };
+                }
 
                 deposito.CodigoDeposito = e.CodigoDeposito;
                 deposito.NombreDeposito = e.NombreDeposito;
                 deposito.ObraId = e.ObraId;
-                deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;   
+                deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;
                 deposito.Ubicacion = await BuscarUbicacion(e.Ubicacion);
 
                 baseDeDatos.Depositos.Update(deposito);
                 await baseDeDatos.SaveChangesAsync();
-                return (true, "Depósito actualizado exitosamente.");
+                return new Response<string>
+                {
+                    Objeto = deposito.Id.ToString(),
+                    Mensaje = "Depósito actualizado exitosamente.",
+                    Estado = true
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return (false, "Error al actualizar el depósito.");
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al actualizar el depósito.",
+                    Estado = false
+                };
             }
         }
 
