@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.DTOs_Response;
 
 namespace Repositorios.Servicios
 {
@@ -19,20 +20,40 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        public (bool, List<VerRol>) ObtenerRoles()
+        public async Task<Response<List<VerRol>>> ObtenerRoles()
         {
-            //var rolesListado = gestorRoles.Roles.Where(r => r.NormalizedName != "SUPERADMINISTRADOR")
-            //    .Select(r =>
-            //    new VerRol()
-            //    {
-            //        NormalizedName = r.NormalizedName,
-            //        Name = r.Name    
-            //    }).ToList();
-            //if (rolesListado == null || rolesListado.Count == 0)
-            //{
-            //    return (false, null);
-            //} else return (true, rolesListado);
-            throw new NotImplementedException();
+            try
+            {
+                var rolesNormalizado = new Dictionary<string, string>()
+                {
+                    { "ADMINISTRADOR", "Administrador" },
+                    { "JEFEDEDEPOSITO", "Jefe de depósito" },
+                    { "JEFEDEOBRA", "Jefe de obra" }
+                };
+                
+                var roles = await baseDeDatos.Roles.Select(r => new VerRol()
+                {
+                    Id = r.Id,
+                    NombreRol = rolesNormalizado[r.NombreRol]
+                }).ToListAsync();
+
+                return new Response<List<VerRol>>()
+                {
+                    Objeto = roles,
+                    Estado = true,
+                    Mensaje = "¡Roles cargados con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new Response<List<VerRol>>()
+                {
+                    Objeto = null,
+                    Estado = false,
+                    Mensaje = "¡Hubo un error desde el servidor al cargar los roles!"
+                };
+            }
         }
     }
 }

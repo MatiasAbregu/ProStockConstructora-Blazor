@@ -8,35 +8,36 @@
     <PageTitle>Crear usuario - ProStock</PageTitle>
     <article class="p-4">
         <div class="cabecera">
-            <p class="cabecera fw-bolder">Crear Usuario</p>
-            <button class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i> Atrás</button>
+            <p class="fw-bolder">Crear Usuario</p>
+            <button class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</button>
         </div>
         <div class="card">
-            <EditForm Model="usuario">
-                <div class="my-3">
+            <EditForm Model="usuario" class="d-flex flex-column">
+                <DataAnnotationsValidator />
+                <div class="my-3 px-4">
                     <label for="emailInput" class="form-label">Correo</label>
                     <InputText @bind-Value="usuario.Email" type="email" class="form-control" id="emailInput" />
                     <ValidationMessage For="@(() => usuario.Email)" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 px-4">
                     <label for="usernameInput" class="form-label">Nombre de usuario</label>
                     <InputText @bind-Value="usuario.NombreUsuario" type="text" class="form-control" id="usernameInput" />
                     <ValidationMessage For="@(() => usuario.NombreUsuario)" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 px-4">
                     <label for="telInput" class="form-label">Teléfono (opcional)</label>
                     <InputText @bind-Value="usuario.Celular" type="text" class="form-control" id="telInput" />
                     <ValidationMessage For="@(() => usuario.Celular)" />
                 </div>
-                <div class="my-3">
+                <div class="my-3 px-4">
                     <label>Escoja el rol del usuario:</label>
-                    @* <div>
+                    <div>
                         @if (roles != null)
                         {
                             <InputSelect class="form-select" @bind-Value="RolSeleccionado">
                                 @foreach (var rol in roles)
                                 {
-                                    <option value="@rol.NombreRol">@FormatearTexto(rol.NombreRol)</option>
+                                    <option value="@rol.Id">@rol.NombreRol</option>
                                 }
                             </InputSelect>
                             <ValidationMessage For="@(() => usuario.Roles)" />
@@ -45,8 +46,11 @@
                         {
                             <p>Hubo un error al cargar los roles desde el servidor. Reintente más tarde o contacte con un administrador.</p>
                         }
-                    </div> *@
+                    </div>
                 </div>
+                <button class="btn btn-success mb-2 btn-submit" type="submit">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
             </EditForm>
         </div>
     </article>
@@ -58,20 +62,39 @@ else
 
 @code {
     private CrearUsuarioDTO usuario;
-    private List<string> Roles;
+    private List<VerRol> roles;
+    private string mensaje;
+    private string RolSeleccionado;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
         usuario = new CrearUsuarioDTO()
         {
             EmpresaId = datosSesion.Usuario.EmpresaId
         };
+        await CargarRoles();
+        StateHasChanged();
     }
 
     private async Task CargarRoles()
     {
-        var res = await http.Get<object>("");
+        var res = await http.Get<Response<List<VerRol>>>("api/roles");
+
+        if (res.Respuesta != null)
+        {
+            mensaje = res.Respuesta.Mensaje;
+            roles = res.Respuesta.Objeto;
+        }
     }
 
+    private async Task CargarObras()
+    {
+
+    }
+
+    private async Task CargarDepositos()
+    {
+
+    }
 }

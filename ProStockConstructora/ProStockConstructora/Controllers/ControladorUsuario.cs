@@ -22,16 +22,6 @@ namespace ProStockConstructora.Controllers
             this.usuarioServicio = usuarioServicio;
         }
 
-        // EN DEUSO
-        /*[HttpGet("obtener-administradores")]
-        public async Task<ActionResult<List<VerAdministradorDTO>>> ObtenerTodosLosAdministradores()
-        {
-            ValueTuple<bool, List<VerAdministradorDTO>> res = await usuarioServicio.ObtenerTodosLosAdministradores();
-
-            if (res.Item1) return StatusCode(200, res.Item2);
-            else return StatusCode(500, "Error al cargar los datos desde el servidor.");
-        }
-        */
         [HttpPost("iniciar-sesion")]
         public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
         {

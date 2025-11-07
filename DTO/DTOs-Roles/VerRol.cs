@@ -8,7 +8,7 @@ namespace DTO.DTOs_Roles
 {
     public class VerRol
     {
-        public string NormalizedName { get; set; }
-        public string Name { get; set; }
+        public long Id { get; set; }
+        public string NombreRol { get; set; }
     }
 }
