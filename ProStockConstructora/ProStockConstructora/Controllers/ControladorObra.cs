@@ -1,12 +1,13 @@
 using BD;
-using Repositorios.Implementaciones;
-using Repositorios.Servicios;
+using DTO.DTOs_Obras;
+using DTO.DTOs_Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
 using System.Diagnostics;
-using DTO.DTOs_Obras;
 
 namespace ProStockConstructora.Controllers
 {
@@ -23,16 +24,15 @@ namespace ProStockConstructora.Controllers
             this.baseDeDatos = baseDeDatos;
             this.obraServicio = obraServicio;
         }
-        [HttpGet("empresa/{EmpresaId:int}")]
-        public async Task<IActionResult> ObtenerObras(int EmpresaId)
+
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
         {
-            ValueTuple<bool, List<VerObraDTO>>
-            resultado = await obraServicio.ObtenerObras(EmpresaId);
-            if (!resultado.Item1)
+            Response<List<VerObraDTO>>
+            resultado = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
+            if (!resultado.Estado)
                 return StatusCode(500, "Error al obtener las obras.");
-            else if (resultado.Item2 == null || resultado.Item2.Count == 0)
-                return StatusCode(200, "No hay obras registradas.");
-            return Ok(resultado.Item2);
+            else return Ok(resultado);
         }
 
         [HttpGet("{id:int}")]
@@ -68,16 +68,16 @@ namespace ProStockConstructora.Controllers
             return Ok("Obra actualizada exitosamente.");
         }
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> EliminarObra(int id)
-        //{
-        //    var obra = await baseDeDatos.Obras.FindAsync(id);
-        //    if (obra == null)
-        //        return NotFound("No se encontró la obra con el ID proporcionado.");
-        //    baseDeDatos.Obras.Remove(obra);
-        //    await baseDeDatos.SaveChangesAsync();
-        //    return Ok("Obra eliminada exitosamente.");
-        //}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarObra(int id)
+        {
+            var obra = await baseDeDatos.Obras.FindAsync(id);
+            if (obra == null)
+                return NotFound("No se encontró la obra con el ID proporcionado.");
+            baseDeDatos.Obras.Remove(obra);
+            await baseDeDatos.SaveChangesAsync();
+            return Ok("Obra eliminada exitosamente.");
+        }
     }
 }
    

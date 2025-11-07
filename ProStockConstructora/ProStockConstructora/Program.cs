@@ -10,6 +10,11 @@ using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7283/") });
+
+
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+
 // Estableciendo conexión 
 builder.Services.AddDbContext<AppDbContext>(options =>
        options.UseMySql(builder.Configuration.GetConnectionString("ConexionDB"),

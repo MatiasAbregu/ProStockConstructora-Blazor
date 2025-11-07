@@ -11,7 +11,6 @@ namespace DTO.DTOs_Obras
         public long Id { get; set; }
         public string CodigoObra { get; set; }
         public string NombreObra { get; set; }
-        public required string Estado { get; set; }
     }
 }
 

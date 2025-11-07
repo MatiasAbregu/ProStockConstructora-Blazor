@@ -20,24 +20,24 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        public async Task<Response<List<VerRol>>> ObtenerRoles()
+        public async Task<Response<List<VerRolDTO>>> ObtenerRoles()
         {
             try
             {
-                var rolesNormalizado = new Dictionary<string, string>()
+                var rolesPresentacion = new Dictionary<string, string>()
                 {
                     { "ADMINISTRADOR", "Administrador" },
                     { "JEFEDEDEPOSITO", "Jefe de depósito" },
                     { "JEFEDEOBRA", "Jefe de obra" }
                 };
                 
-                var roles = await baseDeDatos.Roles.Select(r => new VerRol()
+                var roles = await baseDeDatos.Roles.Select(r => new VerRolDTO()
                 {
-                    Id = r.Id,
-                    NombreRol = rolesNormalizado[r.NombreRol]
+                    NombreNormalizado = r.NombreRol,
+                    NombreRol = rolesPresentacion[r.NombreRol]
                 }).ToListAsync();
 
-                return new Response<List<VerRol>>()
+                return new Response<List<VerRolDTO>>()
                 {
                     Objeto = roles,
                     Estado = true,
@@ -47,7 +47,7 @@ namespace Repositorios.Servicios
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new Response<List<VerRol>>()
+                return new Response<List<VerRolDTO>>()
                 {
                     Objeto = null,
                     Estado = false,

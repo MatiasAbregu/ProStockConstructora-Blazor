@@ -31,8 +31,8 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpGet("{EmpresaId:int}")]
-        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(int EmpresaId)
+        [HttpGet("{EmpresaId:long}")]
+        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(long EmpresaId)
         {
             Response<List<DatosUsuario>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
 

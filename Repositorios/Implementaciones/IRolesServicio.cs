@@ -10,6 +10,6 @@ namespace Repositorios.Implementaciones
 {
     public interface IRolesServicio
     {
-        public Task<Response<List<VerRol>>> ObtenerRoles();
+        public Task<Response<List<VerRolDTO>>> ObtenerRoles();
     }
 }

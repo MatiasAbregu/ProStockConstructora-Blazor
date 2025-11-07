@@ -89,7 +89,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<List<DatosUsuario>>> ObtenerUsuariosPorEmpresaId(int id)
+        public async Task<Response<List<DatosUsuario>>> ObtenerUsuariosPorEmpresaId(long id)
         {
             try
             {
