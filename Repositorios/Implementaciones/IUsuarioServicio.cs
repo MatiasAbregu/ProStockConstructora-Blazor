@@ -13,7 +13,7 @@ namespace Repositorios.Implementaciones
     {
         // GETs
         public Task<Response<List<DatosUsuario>>> ObtenerUsuariosPorEmpresaId(long id);
-        public Task<(bool, DatosUsuario)> ObtenerUsuarioPorId(string id);
+        public Task<Response<DatosUsuario>> ObtenerUsuarioPorId(long id);
         public Task<List<Usuario>> ObtenerUsuariosPorCategoria(); // Obra o Rol
         public Task<Usuario> ObtenerUsuarioPorNombreUsuario();
 

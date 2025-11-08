@@ -20,12 +20,13 @@ namespace ProStockConstructora.Controllers
             this.depositoServicio = depositoServicio;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<VerDepositoDTO>>> ObtenerDepositos()
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<ActionResult<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId)
         {
-            Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositos();
-            if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
+            var res = await depositoServicio.ObtenerDepositosDeEmpresa(EmpresaId);
+
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpGet("{id:int}")]
@@ -56,11 +57,9 @@ namespace ProStockConstructora.Controllers
         [HttpPut("actualizar/{id:int}")]
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
         {
-            if (id != e.Id) return StatusCode(409, "No se pudo realizar la operación");
-            ValueTuple<bool, string> res = await depositoServicio.ActualizarDeposito(e);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            else if (res.Item2.Contains("ya")) return StatusCode(409, res.Item2);
-            else return StatusCode(500, res.Item2);
+            Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res.Mensaje);
         }
 
         [HttpDelete("eliminar/{id:long}")]

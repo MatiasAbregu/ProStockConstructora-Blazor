@@ -21,30 +21,32 @@ namespace Repositorios.Servicios
         {
             this.baseDeDatos = baseDeDatos;
         }
-        public async Task<(bool, string)> AsignarUsuarioAObra(ObraAsociarUsuarioDTO ObraUsuarioDTO)
-        {
-            try
-            {
-                var existeAsignacion = await baseDeDatos.Obras.AnyAsync(ou => ObraUsuarioDTO.NombreObra.ToLower() == ObraUsuarioDTO.NombreObra.ToLower() && ou.EmpresaId == ObraUsuarioDTO.EmpresaId);
-                if (existeAsignacion)
-                {
-                    return (false, "El usuario ya está asignado a esta obra.");
-                }
-                var nuevaAsignacion = new ObraUsuario
-                {
-                    ObraId = ObraUsuarioDTO.ObraId,
-                    UsuarioId = ObraUsuarioDTO.UsuarioId
-                };
-                await baseDeDatos.ObraUsuarios.AddAsync(nuevaAsignacion);
-                await baseDeDatos.SaveChangesAsync();
-                return (true, "Usuario asignado a la obra exitosamente.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.InnerException?.Message ?? ex.Message}");
-                return (false, "Error al asignar el usuario a la obra.");
-            }
-        }
+
+        //public async Task<(bool, string)> AsignarUsuarioAObra(ObraAsociarUsuarioDTO ObraUsuarioDTO)
+        //{
+        //    try
+        //    {
+        //        var existeAsignacion = await baseDeDatos.Obras.AnyAsync(ou => ObraUsuarioDTO.NombreObra.ToLower() == ObraUsuarioDTO.NombreObra.ToLower() && ou.EmpresaId == ObraUsuarioDTO.EmpresaId);
+        //        if (existeAsignacion)
+        //        {
+        //            return (false, "El usuario ya está asignado a esta obra.");
+        //        }
+        //        var nuevaAsignacion = new ObraUsuario
+        //        {
+        //            ObraId = ObraUsuarioDTO.ObraId,
+        //            UsuarioId = ObraUsuarioDTO.UsuarioId
+        //        };
+        //        await baseDeDatos.ObraUsuarios.AddAsync(nuevaAsignacion);
+        //        await baseDeDatos.SaveChangesAsync();
+        //        return (true, "Usuario asignado a la obra exitosamente.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.InnerException?.Message ?? ex.Message}");
+        //        return (false, "Error al asignar el usuario a la obra.");
+        //    }
+        //}
+
         public async Task<(bool, string)> RemoverUsuarioDeObra(int obraId, long usuarioId)
         {
             try

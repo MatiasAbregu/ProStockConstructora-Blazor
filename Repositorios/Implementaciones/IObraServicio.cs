@@ -13,7 +13,7 @@ namespace Repositorios.Implementaciones
         Task<(bool, string)> CrearObra(CrearObraDTO obraDTO);
         Task<(bool, string)> ActualizarObra(int id, ObraActualizarDTO o);
         Task<(bool, VerObraDTO)> ObtenerObraPorId(int id);
-        Task<Response<List<VerObraDTO>>> ObtenerObrasDeEmpresa(long EmpresaId);
+        Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId);
     }
 }
 

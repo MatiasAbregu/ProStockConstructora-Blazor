@@ -143,25 +143,61 @@ namespace Repositorios.Servicios
             {
                 Console.WriteLine(ex.Message);
                 return new Response<List<DatosUsuario>>()
-                { Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar usuarios!", Objeto = null};
+                { Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar usuarios!", Objeto = null };
             }
         }
 
-        public async Task<(bool, DatosUsuario)> ObtenerUsuarioPorId(string id)
+        public async Task<Response<DatosUsuario>> ObtenerUsuarioPorId(long Id)
         {
-            //Usuario? usuarioBBDD = await gestorUsuarios.FindByIdAsync(id);
-            //if (usuarioBBDD == null) return (false, null);
-            //var roles = await gestorUsuarios.GetRolesAsync(usuarioBBDD);
-            //return (true, new VerUsuarioDTO()
-            //{
-            //    Id = usuarioBBDD.Id,
-            //    NombreUsuario = usuarioBBDD.UserName,
-            //    Estado = usuarioBBDD.Estado ? "Activo" : "Desactivado",
-            //    Email = usuarioBBDD.Email,
-            //    Telefono = usuarioBBDD.PhoneNumber,
-            //    Roles = roles.ToList()
-            //});
-            throw new NotImplementedException();
+            try
+            {
+                var usuariosBD = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Id == Id && u.Estado);
+
+                if (usuariosBD == null) return new Response<DatosUsuario>()
+                {
+                    Objeto = null,
+                    Mensaje = "Ese usuario no existe en el sistema o no está disponible.",
+                    Estado = true
+                };
+
+                var roles = await baseDeDatos.RolesUsuarios
+                            .Include(r => r.Rol)
+                            .Where(r => r.UsuarioId == usuariosBD.Id)
+                            .Select(r => r.Rol.NombreRol)
+                            .ToListAsync();
+
+                var obrasId = await baseDeDatos.ObraUsuarios
+                                    .Where(o => o.UsuarioId == usuariosBD.Id)
+                                    .Select(o => o.ObraId)
+                                    .ToListAsync();
+
+                var depositosId = await baseDeDatos.DepositosUsuario
+                                        .Where(d => d.UsuarioId == usuariosBD.Id)
+                                        .Select(d => d.DepositoId)
+                                        .ToListAsync();
+
+                var usuario = new DatosUsuario()
+                {
+                    Id = usuariosBD.Id,
+                    Email = usuariosBD.Email,
+                    NombreUsuario = usuariosBD.NombreUsuario,
+                    Estado = "Activo",
+                    Telefono = usuariosBD.Telefono,
+                    EmpresaId = usuariosBD.EmpresaId,
+                    Roles = roles,
+                    ObrasId = obrasId,
+                    DepositosId = depositosId
+                };
+
+                return new Response<DatosUsuario>()
+                { Estado = true, Mensaje = "¡Usuario cargado con éxito!", Objeto = usuario };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new Response<DatosUsuario>()
+                { Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar el usuario!", Objeto = null };
+            }
         }
 
         public Task<Usuario> ObtenerUsuarioPorNombreUsuario()

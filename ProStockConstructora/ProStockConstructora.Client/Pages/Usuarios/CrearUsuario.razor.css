@@ -22,3 +22,13 @@
 .btn-submit {
     margin: 0 1.3rem 0 auto;
 }
+
+.contenedorAnadir {
+    display: flex;
+    align-items: center;
+}
+
+    .contenedorAnadir p {
+        margin: 0 1% 0 0;
+        padding: 0;
+    }

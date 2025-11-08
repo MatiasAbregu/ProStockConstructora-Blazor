@@ -23,22 +23,22 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        public async Task<Response<List<VerObraDTO>>> ObtenerObrasDeEmpresa(long EmpresaId)
+        public async Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId)
         {
             try
             {
                 List<Obra> obras = await baseDeDatos.Obras.
                     Where(o => o.EmpresaId == EmpresaId).ToListAsync();
 
-                if (obras.Count > 0)
+                if (obras.Count == 0)
                 {
-                    return new Response<List<VerObraDTO>>()
-                    { Objeto = null, Mensaje = "Aún no existen obras para esta empresa.", Estado = true };
+                    return new Response<List<ObraEmpresaDTO>>()
+                    { Objeto = [], Mensaje = "Aún no existen obras para esta empresa.", Estado = true };
                 }
 
-                return new Response<List<VerObraDTO>>()
+                return new Response<List<ObraEmpresaDTO>>()
                 {
-                    Objeto = obras.Select(o => new VerObraDTO()
+                    Objeto = obras.Select(o => new ObraEmpresaDTO()
                     {
 
                         Id = o.Id,
@@ -52,13 +52,18 @@ namespace Repositorios.Servicios
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return new Response<List<VerObraDTO>>()
+                return new Response<List<ObraEmpresaDTO>>()
                 {
                     Objeto = null,
                     Estado = false,
                     Mensaje = $"¡Hubo un error desde el servidor al cargar las obras!"
                 };
             }
+        }
+
+        public async Task<Response<List<object>>> ObtenerObrasPorUsuario(long usuarioId)
+        {
+
         }
 
         public async Task<(bool, VerObraDTO)> ObtenerObraPorId(int id)

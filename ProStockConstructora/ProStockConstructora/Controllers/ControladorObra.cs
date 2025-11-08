@@ -28,7 +28,7 @@ namespace ProStockConstructora.Controllers
         [HttpGet("empresa/{EmpresaId:long}")]
         public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
         {
-            Response<List<VerObraDTO>>
+            Response<List<ObraEmpresaDTO>>
             resultado = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
             if (!resultado.Estado)
                 return StatusCode(500, "Error al obtener las obras.");

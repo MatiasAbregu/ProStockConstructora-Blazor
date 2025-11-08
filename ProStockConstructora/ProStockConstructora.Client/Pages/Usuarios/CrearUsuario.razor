@@ -34,7 +34,8 @@
                     <div>
                         @if (rolesBD != null)
                         {
-                            <InputSelect class="form-select" @bind-Value="RolSeleccionado">
+                            <InputSelect class="form-select" TValue="string" Value="RolSeleccionado"
+                                         ValueChanged="CambioDeRol" ValueExpression="@(() => RolSeleccionado)">
                                 @foreach (var rol in rolesBD)
                                 {
                                     <option value="@rol.NombreNormalizado">@rol.NombreRol</option>
@@ -48,20 +49,67 @@
                         }
                     </div>
                 </div>
-                @if(RolSeleccionado == "JEFEDEDEPOSITO")
+                @if (RolSeleccionado == "JEFEDEDEPOSITO")
                 {
                     <div class="my-3 px-4">
                         <label>Asigne los depósitos a los que el usuario estará a cargo:</label>
                         <div>
-                            
+                            @if (depositosBD?.Count > 0)
+                            {
+                                @foreach (var deposito in depositosBD)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                        <label class="form-check-label" for="checkDefault">
+                                            @deposito.NombreDeposito (@deposito.CodigoDeposito - @deposito.TipoDeposito)
+                                        </label>
+                                    </div>
+                                }
+                                <a class="btn btn-success" href="/obra">+</a>
+                            }
+                            else if (depositosBD?.Count == 0)
+                            {
+                                <div class="contenedorAnadir">
+                                    <p>No existen depósitos aún agregados en el sistema. ¡Añada uno!</p>
+                                    <a class="btn btn-success" href="/obra">+</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Hubo un error al cargar los depósitos desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                            }
                         </div>
                     </div>
-                } else if(RolSeleccionado == "JEFEDEOBRA")
+                }
+                else if (RolSeleccionado == "JEFEDEOBRA")
                 {
                     <div class="my-3 px-4">
                         <label>Asigne las obras a las que el usuario estará a cargo:</label>
                         <div>
-                            
+                            @if (obrasBD?.Count > 0)
+                            {
+                                @foreach (var obra in obrasBD)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                        <label class="form-check-label" for="checkDefault">
+                                            @obra.NombreObra
+                                        </label>
+                                    </div>
+                                }
+                                <button class="btn btn-success">+</button>
+                            }
+                            else if (obrasBD?.Count == 0)
+                            {
+                                <div class="contenedorAnadir">
+                                    <p>No existen obras aún agregadas en el sistema. ¡Añada una!</p>
+                                    <button class="btn btn-success">+</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Hubo un error al cargar las obras desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                            }
                         </div>
                     </div>
                 }
@@ -77,20 +125,15 @@ else
     navManager.NavigateTo("/");
 }
 
-@* <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-    <label class="form-check-label" for="inlineCheckbox1">1</label>
-</div>
-<div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-    <label class="form-check-label" for="inlineCheckbox2">2</label>
-</div> *@
 
 @code {
     private CrearUsuarioDTO usuario;
     private List<VerRolDTO> rolesBD;
+    private List<ObraEmpresaDTO> obrasBD;
+    private List<DepositoEmpresaDTO> depositosBD;
+
     private bool Autenticado = true;
-    private string mensaje;
+
     private string RolSeleccionado
     {
         get => usuario.Roles?.FirstOrDefault() ?? "";
@@ -102,9 +145,9 @@ else
         if (datosSesion.Usuario?.EmpresaId != null)
         {
             usuario = new CrearUsuarioDTO()
-                {
-                    EmpresaId = datosSesion.Usuario.EmpresaId
-                };
+            {
+                EmpresaId = datosSesion.Usuario.EmpresaId
+            };
         }
         else Autenticado = false;
         await CargarRoles();
@@ -113,7 +156,7 @@ else
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        if(firstRender && !Autenticado) navManager.NavigateTo("/");
+        if (firstRender && !Autenticado) navManager.NavigateTo("/");
     }
 
     private async Task CargarRoles()
@@ -122,19 +165,46 @@ else
 
         if (res.Respuesta != null)
         {
-            mensaje = res.Respuesta.Mensaje;
+            //mensaje = res.Respuesta.Mensaje;
             rolesBD = res.Respuesta.Objeto;
-            RolSeleccionado = rolesBD[0].NombreNormalizado;
+            CambioDeRol(rolesBD[0].NombreNormalizado);
+        }
+    }
+
+    private async Task CambioDeRol(string valor)
+    {
+        RolSeleccionado = valor;
+        if (RolSeleccionado == "JEFEDEOBRA")
+        {
+            await CargarObras();
+        }
+        else if (RolSeleccionado == "JEFEDEDEPOSITO")
+        {
+            await CargarDepositos();
         }
     }
 
     private async Task CargarObras()
     {
+        var res = await http.Get<Response<List<ObraEmpresaDTO>>>($"api/obra/empresa/{usuario.EmpresaId}");
 
+        if (res.Respuesta != null)
+        {
+            Console.WriteLine(res.Respuesta.Mensaje);
+            obrasBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
     }
 
     private async Task CargarDepositos()
     {
+        var res = await http.Get<Response<List<DepositoEmpresaDTO>>>($"api/deposito/empresa/{usuario.EmpresaId}");
 
+        if (res.Respuesta != null)
+        {
+            Console.WriteLine(res.Respuesta.Mensaje);
+            depositosBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
     }
 }
