@@ -44,24 +44,27 @@
             <button type="submit" class="btn btn-primary">
                 <i class="bi bi-save"></i> Guardar
             </button>
-            <button type="button" class="btn btn-secondary" @onclick="Cancelar">
-                <i class="bi bi-x-circle"></i> Cancelar
+            <button type="button" class="btn btn-secondary" @onclick="Volver">
+                <i class="bi bi-x-circle"></i> Volver
             </button>
         </div>
     </EditForm>
 </div>
 
 @code {
+    [Parameter]
+    public long Id { get; set; }
     private DepositoAsociarDTO deposito = new DepositoAsociarDTO
     {
-        Ubicacion = new UbicacionDTO()
+        Ubicacion = new UbicacionDTO(),
+        
     };
     string Mensaje = "";
 
     private async Task Guardar()
     {
-        var res = await Http.Post<DepositoAsociarDTO, int>("api/deposito", deposito);
-        if (res.Respuesta > 0)
+        var res = await Http.Post<DepositoAsociarDTO, int>("api/deposito/crear", deposito);
+        if (res.Respuesta != null)
         {
             Navigation.NavigateTo("/deposito");
         }
@@ -72,7 +75,7 @@
         }
     }
 
-    private void Cancelar()
+    private void Volver()
     {
         Navigation.NavigateTo("/deposito");
     }
