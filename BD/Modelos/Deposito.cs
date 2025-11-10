@@ -25,7 +25,6 @@ namespace BD.Modelos
         public Obra Obra { get; set; }
 
         [Required(ErrorMessage = "La ubicacion del deposito es obligatorio.")]
-        public required long UbicacionId { get; set; }
-        public Ubicacion Ubicacion { get; set; }
+        public string Domicilio { get; set; }
     }
 }

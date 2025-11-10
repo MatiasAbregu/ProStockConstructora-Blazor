@@ -40,12 +40,12 @@ namespace ProStockConstructora.Controllers
             return StatusCode(500, res);
         }
 
-        [HttpGet("obtener-usuario/{id}")]
-        public async Task<ActionResult> ObtenerUsuarioPorId(string id)
+        [HttpGet("obtener-usuario/{id:long}")]
+        public async Task<ActionResult> ObtenerUsuarioPorId(long id)
         {
-            ValueTuple<bool, DatosUsuario> res = await usuarioServicio.ObtenerUsuarioPorId(id);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(404, "Ese usuario no existe.");
+            var res = await usuarioServicio.ObtenerUsuarioPorId(id);
+            if (res.Estado) return StatusCode(200, res);
+            return StatusCode(500, res);
         }
         
         //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)

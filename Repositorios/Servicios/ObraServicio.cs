@@ -3,6 +3,7 @@ using BD.Enums;
 using BD.Modelos;
 using DTO.DTOs_Obras;
 using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using Microsoft.EntityFrameworkCore;
 using Repositorios.Implementaciones;
 using System;
@@ -61,9 +62,55 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<List<object>>> ObtenerObrasPorUsuario(long usuarioId)
+        public async Task<Response<List<VerObraDTO>>> ObtenerObrasPorUsuario(DatosUsuario usuario)
         {
+            try
+            {
+                if (usuario == null) return new Response<List<VerObraDTO>>()
+                { Objeto = null, Estado = true, Mensaje = "No hay un usuario logueado." };
 
+                if (usuario.Roles.Contains("ADMINISTRADOR"))
+                {
+                    var obras = await baseDeDatos.Obras.
+                       Where(o => o.EmpresaId == usuario.EmpresaId)
+                       .Select(o => new VerObraDTO()
+                       {
+                           Id = o.Id,
+                           CodigoObra = o.CodigoObra,
+                           NombreObra = o.NombreObra,
+                           Estado = o.Estado.ToString() == "EnProceso" ? "En proceso" : o.Estado.ToString()
+                       }).ToListAsync();
+
+                    return new Response<List<VerObraDTO>>()
+                    { Objeto = obras, Estado = true, Mensaje = "¡Obras cargadas con éxito!" };
+                }
+                else if (usuario.Roles.Contains("JEFEDEOBRA"))
+                {
+                    var obras = await baseDeDatos.Obras.
+                       Where(o => usuario.ObrasId.Contains(o.Id))
+                       .Select(o => new VerObraDTO()
+                       {
+                           Id = o.Id,
+                           CodigoObra = o.CodigoObra,
+                           NombreObra = o.NombreObra,
+                           Estado = o.Estado.ToString() == "EnProceso" ? "En proceso" : o.Estado.ToString()
+                       }).ToListAsync();
+
+                    return new Response<List<VerObraDTO>>()
+                    { Objeto = obras, Estado = true, Mensaje = "¡Obras cargadas con éxito!" };
+                }
+                else
+                {
+                    return new Response<List<VerObraDTO>>()
+                    { Objeto = null, Estado = true, Mensaje = "Acceso denegado." };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new Response<List<VerObraDTO>>()
+                { Objeto = null, Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar las obras!" };
+            }
         }
 
         public async Task<(bool, VerObraDTO)> ObtenerObraPorId(int id)

@@ -1,7 +1,6 @@
 using BD;
 using BD.Modelos;
 using DTO.DTOs_Depositos;
-using DTO.DTOs_Ubicacion;
 using Repositorios.Implementaciones;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -54,9 +53,8 @@ namespace Repositorios.Servicios
         {
             try
             {
-                var deposito = await baseDeDatos.Depositos
-                    .Include(o => o.Ubicacion).ThenInclude(u => u.Provincia)
-                    .FirstOrDefaultAsync(d => d.Id == id);
+                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
+
                 if (deposito != null)
                 {
                     var depositoDTO = new VerDepositoDTO
@@ -66,17 +64,6 @@ namespace Repositorios.Servicios
                         NombreDeposito = deposito.NombreDeposito,
                         TipoDeposito = deposito.TipoDeposito.ToString() 
                         == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
-                        Ubicacion = new UbicacionDTO()
-                        {
-                            Id = deposito.Ubicacion.Id,
-                            CodigoUbicacion = deposito.Ubicacion.CodigoUbicacion,
-                            UbicacionDomicilio = deposito.Ubicacion.Domicilio,
-                            Provincia = new ProvinciaDTO()
-                            {
-                                Id = deposito.Ubicacion.Provincia.Id,
-                                NombreProvincia = deposito.Ubicacion.Provincia.Nombre
-                            }
-                        }
                     };
                     return new Response<List<VerDepositoDTO>>
                     {
@@ -110,8 +97,7 @@ namespace Repositorios.Servicios
         {
             try
             {
-                var depositos = await baseDeDatos.Depositos.Where(o => o.ObraId == obraId)
-                    .Include(o => o.Ubicacion).ThenInclude(u => u.Provincia).ToListAsync();
+                var depositos = await baseDeDatos.Depositos.Where(o => o.ObraId == obraId).ToListAsync();
 
                 if (depositos != null && depositos.Count > 0)
                 {
@@ -125,17 +111,6 @@ namespace Repositorios.Servicios
                             NombreDeposito = deposito.NombreDeposito,
                             TipoDeposito = deposito.TipoDeposito.ToString() 
                             == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
-                            Ubicacion = new UbicacionDTO()
-                            {
-                                Id = deposito.Ubicacion.Id,
-                                CodigoUbicacion = deposito.Ubicacion.CodigoUbicacion,
-                                UbicacionDomicilio = deposito.Ubicacion.Domicilio,
-                                Provincia = new ProvinciaDTO()
-                                {
-                                    Id = deposito.Ubicacion.Provincia.Id,
-                                    NombreProvincia = deposito.Ubicacion.Provincia.Nombre
-                                }
-                            }
                         }).ToList(),
                         Mensaje = "Depósitos obtenidos exitosamente.",
                         Estado = true
@@ -173,8 +148,6 @@ namespace Repositorios.Servicios
                     NombreDeposito = e.NombreDeposito,
                     ObraId = e.ObraId,
                     TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito,
-                    Ubicacion = await BuscarUbicacion(e.Ubicacion),
-                    UbicacionId = e.Ubicacion.Id
                 };
                 await baseDeDatos.Depositos.AddAsync(nuevoDeposito);
                 await baseDeDatos.SaveChangesAsync();
@@ -231,7 +204,6 @@ namespace Repositorios.Servicios
                 deposito.NombreDeposito = e.NombreDeposito;
                 deposito.ObraId = e.ObraId;
                 deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;
-                deposito.Ubicacion = await BuscarUbicacion(e.Ubicacion);
 
                 baseDeDatos.Depositos.Update(deposito);
                 await baseDeDatos.SaveChangesAsync();
@@ -288,45 +260,6 @@ namespace Repositorios.Servicios
                     Estado = false
                 };
             }
-        }
-
-        public async Task<Ubicacion> BuscarUbicacion(UbicacionDTO ubicacion)
-        {
-            Ubicacion? resUbicacion = null;
-            Provincia? resProvincia = null;
-            if (ubicacion.Id == 0)
-            {
-                resUbicacion = baseDeDatos.Ubicaciones
-                    .FirstOrDefault(u => u.CodigoUbicacion.ToUpper() == ubicacion.CodigoUbicacion.ToUpper());
-
-                if (resUbicacion == null)
-                {
-                    if (ubicacion.Provincia.Id == 0)
-                    {
-                        resProvincia = baseDeDatos.Provincias
-                        .FirstOrDefault(p => p.Nombre == ubicacion.Provincia.NombreProvincia.ToUpper());
-
-                        if (resProvincia == null)
-                        {
-                            resProvincia = new Provincia()
-                            { Nombre = ubicacion.Provincia.NombreProvincia.ToUpper() };
-                            baseDeDatos.Provincias.Add(resProvincia);
-                            await baseDeDatos.SaveChangesAsync();
-                        }
-                    }
-
-                    resUbicacion = new Ubicacion()
-                    {
-                        CodigoUbicacion = ubicacion.CodigoUbicacion.ToUpper(),
-                        Domicilio = ubicacion.UbicacionDomicilio.ToUpper(),
-                        ProvinciaId = ubicacion.Provincia.Id != 0 ? ubicacion.Provincia.Id : resProvincia!.Id
-                    };
-                    baseDeDatos.Ubicaciones.Add(resUbicacion);
-                    await baseDeDatos.SaveChangesAsync();
-                }
-            }
-
-            return resUbicacion;
         }
     }
 }

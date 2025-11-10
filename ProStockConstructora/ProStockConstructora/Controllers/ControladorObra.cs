@@ -1,6 +1,7 @@
 using BD;
 using DTO.DTOs_Obras;
 using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,9 @@ namespace ProStockConstructora.Controllers
         [HttpGet("empresa/{EmpresaId:long}")]
         public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
         {
-            Response<List<ObraEmpresaDTO>>
-            resultado = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
-            if (!resultado.Estado)
-                return StatusCode(500, "Error al obtener las obras.");
-            else return Ok(resultado);
+            var res = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpGet("{id:int}")]
@@ -47,6 +46,13 @@ namespace ProStockConstructora.Controllers
             return Ok(resultado.Item2);
         }
 
+        [HttpPost("obras-usuario")]
+        public async Task<IActionResult> ObtenerObrasPorUsuario(DatosUsuario usuario)
+        {
+            var res = await obraServicio.ObtenerObrasPorUsuario(usuario);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)

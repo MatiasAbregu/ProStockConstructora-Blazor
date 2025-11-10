@@ -2,7 +2,7 @@
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 
-<h3>Depositos</h3>
+@* <h3>Depositos</h3>
 <br />
 <button class="btn btn-success mb-3" @onclick="DepositoCrear"><i class="bi bi-plus-circle"></i>Agregar</button>
 @if (depositos == null)
@@ -99,4 +99,4 @@ else
     {
         Navigation.NavigateTo("/depositos/crear");
     }
-}
+} *@
