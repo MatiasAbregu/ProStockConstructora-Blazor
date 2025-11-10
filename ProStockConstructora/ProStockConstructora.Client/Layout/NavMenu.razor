@@ -15,16 +15,15 @@
 
             <NavLink class="nav-link" href="deposito">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Depositos
-            </NavLink>
-
-            <NavLink class="nav-link" href="obra">
-                <i class="bi bi-people-fill"></i> Obras
-            </NavLink>
+            </NavLink> 
 
             @if(datosUsuario.Usuario != null)
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </NavLink>
+                <NavLink class="nav-link" href="obra">
+                    <i class="bi bi-people-fill"></i> Obras
                 </NavLink>
                 <NavLink class="nav-link" href="usuarios">
                     <i class="bi bi-people-fill"></i> Usuarios

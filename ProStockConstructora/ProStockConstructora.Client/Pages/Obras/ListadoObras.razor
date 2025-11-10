@@ -20,12 +20,6 @@
                 </button>
             </div>
         </div>
-
-        @if (!string.IsNullOrEmpty(Mensaje))
-        {
-            <div class="alert @ClaseAlerta" role="alert">@Mensaje</div>
-        }
-
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="table-responsive">
@@ -38,13 +32,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (!string.IsNullOrEmpty(Mensaje))
+                            @if (!string.IsNullOrEmpty(Mensaje) && Obras == null)
                             {
                                 <tr><td colspan="3" class="text-center text-muted">@Mensaje</td></tr>
                             }
-                            else if (Obras is null)
+                            else if (Obras == null)
                             {
-                                <tr><td colspan="3" class="text-center text-muted">Cargando obras...</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted">No hay obras cargadas aún en el sistema.</td></tr>
                             }
                             else
                             {
@@ -120,7 +114,7 @@ else
 }
 
 @code {
-    private DatosSesion usuario;
+    private DatosUsuario usuario = new();
     private List<VerObraDTO> Obras;
     private CrearObraDTO NuevaObra;
 
@@ -133,28 +127,22 @@ else
     protected async override void OnInitialized()
     {
         base.OnInitialized();
-        usuario = datosSesion;
+        usuario = datosSesion.Usuario;
         await CargarObras();
     }
 
     private async Task CargarObras()
     {
         var res =
-        await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", datosSesion.Usuario);
-
-        Console.WriteLine("Cargando obras... ----------------------------------------");
+        await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", usuario);
 
         if (res.Respuesta != null)
         {
-            Console.WriteLine("A ver... --------------------------------------");
-            Console.WriteLine("Mensaje: " + res.Respuesta.Mensaje);
-            Console.WriteLine("Objeto: " + res.Respuesta.Objeto);
-            Console.WriteLine("Estado: " + res.Respuesta.Estado);
             if (res.Respuesta.Estado)
             {
                 Obras = res.Respuesta.Objeto;
+                Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
             }
-            else Mensaje = res.Respuesta.Mensaje;
         }
     }
 
