@@ -21,7 +21,7 @@ namespace ProStockConstructora.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<VerDepositoDTO>>> ObtenerDepositos()
+        public async Task<ActionResult<List<VerDepositoDTO>>> GetDepositos()
         {
             Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositos();
             if (res.Estado) return Ok(res.Objeto);
@@ -57,7 +57,7 @@ namespace ProStockConstructora.Controllers
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
         {
             Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
-            if (res.Estado) return Ok(res.Objeto);
+            if (res.Estado) return Ok(e);
             else return StatusCode(500, res.Mensaje);
         }
 
