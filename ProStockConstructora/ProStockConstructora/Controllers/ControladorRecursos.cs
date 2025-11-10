@@ -28,18 +28,6 @@ namespace ProStockConstructora.Controllers
             this.recursosServicio = recursosServicio;
         }
 
-        //[HttpGet("Obtenerrecursos/{EmpresaId}")]
-        //public async Task<IActionResult> ObtenerRecursos(int EmpresaId)
-        //{
-        //   ValueTuple<bool, List<RecursosVerDTO>>
-        //   resultado = await recursosServicio.RecursosVerDTO();
-        //    if (!resultado.Item1)
-        //        return StatusCode(500, "Error al obtener los materiales y maquinarias.");
-        //    else if (resultado.Item2 == null || resultado.Item2.Count == 0)
-        //        return StatusCode(200, "No hay materiales y maquinarias registradas en la empresa.");
-        //    return Ok(resultado.Item2);
-        //}
-
         [HttpGet("materialesYmaquinarias/{EmpresaId}")]
         public async Task<IActionResult> ObtenerTotalRecursos(int EmpresaId)
         {
@@ -85,9 +73,8 @@ namespace ProStockConstructora.Controllers
                 return StatusCode(404, res.Item2);
         }
 
-
-        [HttpPost("{DepositoId:int}")]
-        public async Task<IActionResult> RecursoCargar([FromBody] RecursosCargarDTO recursoCargarDTO, int depositoId)
+        [HttpPost("{depositoId:int}")]
+        public async Task<IActionResult> RecursoCargar(long depositoId, [FromBody] RecursosCargarDTO recursoCargarDTO)
         {
             Response<string> resultado = await recursosServicio.RecursoCargar(recursoCargarDTO, depositoId);
             if (!resultado.Estado)
@@ -106,16 +93,16 @@ namespace ProStockConstructora.Controllers
             return Ok($"Recurso trasladado al deposito {recursosTransladarAdepositoDTO.DepositoDestinoId} con exito.");
         }
 
-        //[HttpPut("deposito/actualizarstock/{DepositoId:int}")]
-        //public async Task<IActionResult> RecursosActualizarStock([FromBody] RecursosActualizarDTO recursoActualizarDTO, int DepositoId)
-        //{
-        //    if (recursoActualizarDTO == null)
-        //        return BadRequest("El recurso no puede ser nulo.");
-        //    var exito = await recursosServicio.RecursosActualizarStock(recursoActualizarDTO, DepositoId);
-        //    if (!exito.Item1)
-        //        return StatusCode(500, exito.Item2);
-        //    return Ok("Stock actualizado con exito.");
-        //}
+        [HttpPut("recurso/actualizar")]
+        public async Task<IActionResult> RecursosActualizar([FromBody] RecursosActualizarDTO recursoActualizarDTO, int recursoId)
+        {
+            if (recursoActualizarDTO == null)
+                return BadRequest("El recurso no puede ser nulo.");
+            var exito = await recursosServicio.RecursosActualizar(recursoActualizarDTO, recursoId);
+            if (!exito.Item1)
+                return StatusCode(500, exito.Item2);
+            return Ok("Recurso actualizado con exito.");
+        }
 
         [HttpDelete("deposito/eliminartock/{stockId:int}")]
         public async Task<IActionResult> RecursoEliminarStock(int stockId)

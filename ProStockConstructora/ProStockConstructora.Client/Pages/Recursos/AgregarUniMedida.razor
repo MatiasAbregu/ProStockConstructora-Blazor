@@ -1,5 +1,6 @@
 ﻿@page "/recursos/agregarunimedida" 
 @inject NavigationManager navManager;
+@inject IHttpServicio http;
 
 <h3>Agregar Unidad de Medidad</h3>
 
@@ -21,10 +22,26 @@
 
 @code {
    private UnidadDeMedidaDTO UnidadMedida = new UnidadDeMedidaDTO();
+    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
     
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CargarUnidadMedida();
+    }
+
     private async Task CargarUnidadMedida()
     {
-        
+        var response = await http.Post<UnidadDeMedidaDTO, UnidadDeMedidaDTO>("api/unidadmedida", UnidadMedida);
+        if (response.Respuesta != null)
+        {
+            navManager.NavigateTo("/recursos");
+        }
+        else
+        {
+            // Manejar el error (por ejemplo, mostrar un mensaje al usuario)
+            Console.WriteLine(response);
+        }
     }
 
     private void Cancelar()

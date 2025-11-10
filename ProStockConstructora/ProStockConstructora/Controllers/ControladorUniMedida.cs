@@ -16,13 +16,14 @@ namespace ProStockConstructora.Controllers
         private readonly AppDbContext baseDeDatos;
         private readonly IUnidadMedidaServicio unidadMedidaServicio;
 
-        public ControladorUniMedida(AppDbContext baseDeDatos)
+        public ControladorUniMedida(AppDbContext baseDeDatos, IUnidadMedidaServicio unidadMedidaServicio)
         {
             this.baseDeDatos = baseDeDatos;
+            this.unidadMedidaServicio = unidadMedidaServicio;
         }
 
-        [HttpPost("{UnidadMedida:int}")]
-        public async Task<IActionResult> CrearUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO, int UnidadMedida)
+        [HttpPost]
+        public async Task<IActionResult> CrearUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO)
         {
             Response<string> resultado = await unidadMedidaServicio.UnidadDeMedidaCargar(unidadDeMedidaDTO);
             if (!resultado.Estado)
@@ -30,13 +31,22 @@ namespace ProStockConstructora.Controllers
             return Ok(resultado.Mensaje);
         }
 
-        [HttpGet("{UnidadMedida:int}")]
-        public async Task<IActionResult> ObtenerUnidadesDeMedida(int UnidadMedida)
+        [HttpGet]
+        public async Task<IActionResult> ObtenerUnidadesDeMedida()
         {
-            Response<List<UnidadDeMedidaDTO>> resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida(UnidadMedida);
+            Response<List<UnidadDeMedidaDTO>> resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida();
             if (!resultado.Estado)
                 return StatusCode(500, resultado.Mensaje);
             return Ok(resultado.Objeto);
+        }
+
+        [HttpPut("{Id:long}")]
+        public async Task<IActionResult> ModificarUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO,[FromRoute] long Id)
+        {
+            Response<string> resultado = await unidadMedidaServicio.UnidadDeMedidaModificar(unidadDeMedidaDTO, Id);
+            if (!resultado.Estado)
+                return StatusCode(500, resultado.Mensaje);
+            return Ok(resultado.Mensaje);
         }
     }
 }

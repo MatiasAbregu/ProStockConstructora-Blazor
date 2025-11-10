@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using DTO.DTOs_Obras;
+using DTO.DTOs_Response;
 
 namespace ProStockConstructora.Controllers
 {
@@ -23,7 +24,8 @@ namespace ProStockConstructora.Controllers
             this.baseDeDatos = baseDeDatos;
             this.obraServicio = obraServicio;
         }
-        [HttpGet("empresa/{EmpresaId:int}")]
+
+        [HttpGet("empresa/{EmpresaId:int}")] //obras de la empresa
         public async Task<IActionResult> ObtenerObras(int EmpresaId)
         {
             ValueTuple<bool, List<VerObraDTO>>
@@ -35,20 +37,31 @@ namespace ProStockConstructora.Controllers
             return Ok(resultado.Item2);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> ObtenerObraPorId(int id)
-        {
-            ValueTuple<bool, VerObraDTO>
-            resultado = await obraServicio.ObtenerObraPorId(id);
-            if (!resultado.Item1)
-                return StatusCode(500, "Error al obtener la obra.");
-            else if (resultado.Item2 == null)
-                return StatusCode(200, "No existe la obra con el ID proporcionado.");
-            return Ok(resultado.Item2);
-        }
+        //[HttpGet("{id:int}")] 
+        //public async Task<IActionResult> ObtenerObraPorId(int obraId)
+        //{
+        //    Response<List<VerObraDTO>>
+        //    resultado = await obraServicio.ObtenerObraPorId(obraId);
+        //    if (!resultado.Estado)
+        //        return StatusCode(500, "Error al obtener la obra.");
+        //    else if (resultado.Objeto == null)
+        //        return StatusCode(200, "No existe la obra con el ID proporcionado.");
+        //    return Ok(resultado.Objeto);
+        //}
 
+        //[HttpGet("codigo/{codigoObra}")]
+        //public async Task<IActionResult> ObtenerObraPorCodigoObra(string codigoObra)
+        //{
+        //    Response<List<VerObraDTO>>
+        //    resultado = await obraServicio.ObtenerObrasPorCodigoObra(codigoObra);
+        //    if (!resultado.Estado)
+        //        return StatusCode(500, "Error al obtener la obra.");
+        //    else if (resultado.Objeto == null || resultado.Objeto.Count == 0)
+        //        return StatusCode(200, "No existe la obra con el código proporcionado.");
+        //    return Ok(resultado.Objeto);
+        //}
 
-        [HttpPost]
+        [HttpPost] // habria que pasarle el id de la empresa
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)
         {
            ValueTuple<bool, string> resultado = await obraServicio.CrearObra(obraDTO);
