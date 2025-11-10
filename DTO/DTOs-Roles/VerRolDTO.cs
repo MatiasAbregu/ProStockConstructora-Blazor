@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DTO.DTOs_Roles
 {
-    public class VerRol
+    public class VerRolDTO
     {
-        public string NormalizedName { get; set; }
-        public string Name { get; set; }
+        public string NombreNormalizado { get; set; }
+        public string NombreRol { get; set; }
     }
 }

@@ -1,13 +1,19 @@
 using BD;
-using Repositorios.Implementaciones;
-using Repositorios.Servicios;
+using DTO.DTOs_Obras;
+using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
 using System.Diagnostics;
+<<<<<<< HEAD
 using DTO.DTOs_Obras;
 using DTO.DTOs_Response;
+=======
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
 
 namespace ProStockConstructora.Controllers
 {
@@ -25,16 +31,17 @@ namespace ProStockConstructora.Controllers
             this.obraServicio = obraServicio;
         }
 
+<<<<<<< HEAD
         [HttpGet("empresa/{EmpresaId:int}")] //obras de la empresa
         public async Task<IActionResult> ObtenerObras(int EmpresaId)
+=======
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
         {
-            ValueTuple<bool, List<VerObraDTO>>
-            resultado = await obraServicio.ObtenerObras(EmpresaId);
-            if (!resultado.Item1)
-                return StatusCode(500, "Error al obtener las obras.");
-            else if (resultado.Item2 == null || resultado.Item2.Count == 0)
-                return StatusCode(200, "No hay obras registradas.");
-            return Ok(resultado.Item2);
+            var res = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         //[HttpGet("{id:int}")] 
@@ -49,6 +56,7 @@ namespace ProStockConstructora.Controllers
         //    return Ok(resultado.Objeto);
         //}
 
+<<<<<<< HEAD
         //[HttpGet("codigo/{codigoObra}")]
         //public async Task<IActionResult> ObtenerObraPorCodigoObra(string codigoObra)
         //{
@@ -60,6 +68,15 @@ namespace ProStockConstructora.Controllers
         //        return StatusCode(200, "No existe la obra con el código proporcionado.");
         //    return Ok(resultado.Objeto);
         //}
+=======
+        [HttpPost("obras-usuario")]
+        public async Task<IActionResult> ObtenerObrasPorUsuario(DatosUsuario usuario)
+        {
+            var res = await obraServicio.ObtenerObrasPorUsuario(usuario);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
 
         [HttpPost] // habria que pasarle el id de la empresa
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)
@@ -81,16 +98,16 @@ namespace ProStockConstructora.Controllers
             return Ok("Obra actualizada exitosamente.");
         }
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> EliminarObra(int id)
-        //{
-        //    var obra = await baseDeDatos.Obras.FindAsync(id);
-        //    if (obra == null)
-        //        return NotFound("No se encontró la obra con el ID proporcionado.");
-        //    baseDeDatos.Obras.Remove(obra);
-        //    await baseDeDatos.SaveChangesAsync();
-        //    return Ok("Obra eliminada exitosamente.");
-        //}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarObra(int id)
+        {
+            var obra = await baseDeDatos.Obras.FindAsync(id);
+            if (obra == null)
+                return NotFound("No se encontró la obra con el ID proporcionado.");
+            baseDeDatos.Obras.Remove(obra);
+            await baseDeDatos.SaveChangesAsync();
+            return Ok("Obra eliminada exitosamente.");
+        }
     }
 }
    

@@ -15,11 +15,11 @@ namespace ProStockConstructora.Controllers
         }
 
         [HttpGet]
-        public ActionResult ObtenerRoles()
+        public async Task<ActionResult> ObtenerRoles()
         {
-            var res = rolesServicio.ObtenerRoles();
-            if(res.Item1) return StatusCode(200, res.Item2);
-            else return StatusCode(200, "No existen roles aún.");
+            var res = await rolesServicio.ObtenerRoles();
+            if(res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
     }
 }

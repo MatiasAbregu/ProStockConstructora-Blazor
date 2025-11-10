@@ -12,7 +12,7 @@
     <ProjectReference Include="..\..\Repositorios\Repositorios.csproj" />
     <ProjectReference Include="..\..\Servicios\Servicios.csproj" />
     <ProjectReference Include="..\ProStockConstructora.Client\ProStockConstructora.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>

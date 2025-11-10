@@ -1,7 +1,6 @@
 using BD;
 using BD.Modelos;
 using DTO.DTOs_Depositos;
-using DTO.DTOs_Ubicacion;
 using Repositorios.Implementaciones;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.DTOs_Response;
 
 namespace Repositorios.Servicios
 {
@@ -22,226 +22,244 @@ namespace Repositorios.Servicios
 
         }
 
-        public async Task<(bool, VerDepositoDTO)> ObtenerDepositoPorId(int id)
+        public async Task<Response<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId)
         {
             try
             {
-                Deposito? deposito = await baseDeDatos.Depositos
-                    .Include(d => d.Ubicacion).ThenInclude(u => u.Provincia)
-                    .FirstOrDefaultAsync(d => d.Id == id);
+                var res = await baseDeDatos.Depositos.Include(d => d.Obra)
+                                .Where(d => d.Obra.EmpresaId == EmpresaId).ToListAsync();
 
-                if (deposito == null) return (true, null);
-                VerDepositoDTO depositoVer = new VerDepositoDTO
+                if (res.Count == 0) return new Response<List<DepositoEmpresaDTO>>()
+                { Objeto = [], Estado = true, Mensaje = "Aún no existen depósitos en esta empresa." };
+
+                return new Response<List<DepositoEmpresaDTO>>()
                 {
-                    Id = deposito.Id,
-                    CodigoDeposito = deposito.CodigoDeposito,
-                    NombreDeposito = deposito.NombreDeposito,
-                    TipoDeposito = deposito.TipoDeposito.ToString() == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
-                    Ubicacion = new UbicacionDTO()
+                    Objeto = res.Select(d => new DepositoEmpresaDTO()
                     {
-                        Id = deposito.Ubicacion.Id,
-                        CodigoUbicacion = deposito.Ubicacion.CodigoUbicacion,
-                        UbicacionDomicilio = deposito.Ubicacion.Domicilio,
-                        Provincia = new ProvinciaDTO()
-                        {
-                            Id = deposito.Ubicacion.Provincia.Id,
-                            NombreProvincia = deposito.Ubicacion.Provincia.Nombre
-                        }
-                    }
+                        Id = d.Id,
+                        CodigoDeposito = d.CodigoDeposito,
+                        NombreDeposito = d.NombreDeposito,
+                        TipoDeposito = d.TipoDeposito.ToString()
+                    }).ToList(),
+                    Estado = true,
+                    Mensaje = "¡Depósitos cargados con éxito!"
                 };
-                return (true, depositoVer);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return (false, null);
-            }
+            catch (Exception ex) { return new Response<List<DepositoEmpresaDTO>>() 
+            { Objeto = null, Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar los depositos!" }; }
         }
 
-        public async Task<(bool, List<VerDepositoDTO>)> ObtenerDepositosPorObraId(int obraId)
+        public async Task<Response<List<VerDepositoDTO>>>ObtenerDepositoPorId(int id)
         {
             try
             {
-                var depositos = await baseDeDatos.Depositos.Where(o => o.ObraId == obraId)
-                    .Include(o => o.Ubicacion).ThenInclude(u => u.Provincia).ToListAsync();
+                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
 
-                if (depositos != null && depositos.Count > 0)
+                if (deposito != null)
                 {
-                    return (true, depositos.Select(deposito => new VerDepositoDTO
+                    var depositoDTO = new VerDepositoDTO
                     {
                         Id = deposito.Id,
                         CodigoDeposito = deposito.CodigoDeposito,
                         NombreDeposito = deposito.NombreDeposito,
                         TipoDeposito = deposito.TipoDeposito.ToString() 
                         == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
-                        Ubicacion = new UbicacionDTO()
-                        {
-                            Id = deposito.Ubicacion.Id,
-                            CodigoUbicacion = deposito.Ubicacion.CodigoUbicacion,
-                            UbicacionDomicilio = deposito.Ubicacion.Domicilio,
-                            Provincia = new ProvinciaDTO()
-                            {
-                                Id = deposito.Ubicacion.Provincia.Id,
-                                NombreProvincia = deposito.Ubicacion.Provincia.Nombre
-                            }
-                        }
-                    }).ToList());
+                    };
+                    return new Response<List<VerDepositoDTO>>
+                    {
+                        Objeto = new List<VerDepositoDTO> { depositoDTO },
+                        Mensaje = "Depósito encontrado.",
+                        Estado = true
+                    };
                 }
                 else
                 {
-                    return (true, null);
-                }
-            }
-            catch (Exception ex) { return (false, null); }
-            ;
-        }
-
-        public async Task<(bool, string)> CrearDeposito(DepositoAsociarDTO e)
-        {
-            try
-            {
-                bool existeDeposito = await baseDeDatos.Depositos
-                    .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito);
-                if (existeDeposito) return (false, "Ya existe un depósito con ese código.");
-
-                Ubicacion? resUbicacion = null;
-                Provincia? resProvincia = null;
-                if (e.Ubicacion.Id == 0)
-                {
-                    resUbicacion = baseDeDatos.Ubicaciones
-                        .FirstOrDefault(u => u.CodigoUbicacion.ToUpper() == e.Ubicacion.CodigoUbicacion.ToUpper());
-
-                    if (resUbicacion == null)
+                    return new Response<List<VerDepositoDTO>>
                     {
-                        if (e.Ubicacion.Provincia.Id == 0)
-                        {
-                            resProvincia = baseDeDatos.Provincias
-                            .FirstOrDefault(p => p.Nombre == e.Ubicacion.Provincia.NombreProvincia.ToUpper());
-
-                            if (resProvincia == null)
-                            {
-                                resProvincia = new Provincia()
-                                { Nombre = e.Ubicacion.Provincia.NombreProvincia.ToUpper() };
-                                baseDeDatos.Provincias.Add(resProvincia);
-                                await baseDeDatos.SaveChangesAsync();
-                            }
-                        }
-
-                        resUbicacion = new Ubicacion()
-                        {
-                            CodigoUbicacion = e.Ubicacion.CodigoUbicacion.ToUpper(),
-                            Domicilio = e.Ubicacion.UbicacionDomicilio.ToUpper(),
-                            ProvinciaId = e.Ubicacion.Provincia.Id != 0 ? e.Ubicacion.Provincia.Id : resProvincia!.Id
-                        };
-                        baseDeDatos.Ubicaciones.Add(resUbicacion);
-                        await baseDeDatos.SaveChangesAsync();
-                    }
+                        Objeto = null,
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Estado = true
+                    };
                 }
-
-                Deposito nuevoDeposito = new Deposito
-                {
-                    CodigoDeposito = e.CodigoDeposito,
-                    NombreDeposito = e.NombreDeposito,
-                    TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito,
-                    ObraId = e.ObraId,
-                    UbicacionId = e.Ubicacion.Id != 0 ? e.Ubicacion.Id : resUbicacion!.Id
-                };
-
-                await baseDeDatos.Depositos.AddAsync(nuevoDeposito);
-                await baseDeDatos.SaveChangesAsync();
-                return (true, "Depósito creado exitosamente.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return (false, "Error al crear el depósito.");
+                return new Response<List<VerDepositoDTO>>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al obtener el depósito.",
+                    Estado = false
+                };
             }
         }
 
-        public async Task<(bool, string)> ActualizarDeposito(DepositoAsociarDTO e)
+        public async Task<Response<List<VerDepositoDTO>>> ObtenerDepositosPorObraId(int obraId)
+        {
+            try
+            {
+                var depositos = await baseDeDatos.Depositos.Where(o => o.ObraId == obraId).ToListAsync();
+
+                if (depositos != null && depositos.Count > 0)
+                {
+                
+                    return new Response<List<VerDepositoDTO>>
+                    {
+                        Objeto = depositos.Select(deposito => new VerDepositoDTO
+                        {
+                            Id = deposito.Id,
+                            CodigoDeposito = deposito.CodigoDeposito,
+                            NombreDeposito = deposito.NombreDeposito,
+                            TipoDeposito = deposito.TipoDeposito.ToString() 
+                            == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
+                        }).ToList(),
+                        Mensaje = "Depósitos obtenidos exitosamente.",
+                        Estado = true
+                    };
+                }
+                else
+                {
+                    return new Response<List<VerDepositoDTO>>
+                    {
+                        Objeto = null,
+                        Mensaje = "No existen depósitos para esta obra.",
+                        Estado = true
+                    };
+                }
+            }
+            catch (Exception ex) 
+            { 
+                return new Response<List<VerDepositoDTO>>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al obtener los depósitos.",
+                    Estado = false
+                };
+            }
+            
+        }
+
+        public async Task<Response<int>>CrearDeposito(DepositoAsociarDTO e)
+        {
+            try
+            {
+                var nuevoDeposito = new Deposito
+                {
+                    CodigoDeposito = e.CodigoDeposito,
+                    NombreDeposito = e.NombreDeposito,
+                    ObraId = e.ObraId,
+                    TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito,
+                };
+                await baseDeDatos.Depositos.AddAsync(nuevoDeposito);
+                await baseDeDatos.SaveChangesAsync();
+
+               return new Response<int>
+                {
+                    Objeto = (int)nuevoDeposito.Id,
+                    Mensaje = "Depósito creado exitosamente.",
+                    Estado = true
+                };
+            }
+            catch (Exception )
+            {
+
+                return new Response<int>
+                {
+                    Objeto = 0,
+                    Mensaje = "Error al obtener los depósitos.",
+                    Estado = false
+                };
+            }
+        }
+
+        public async Task<Response<string>> ActualizarDeposito(int id,DepositoAsociarDTO e)
         {
             try
             {
                 Deposito? deposito = await baseDeDatos.Depositos
                     .FirstOrDefaultAsync(d => d.Id == e.Id);
-                if (deposito == null) return (false, "El depósito no existe.");
+                if (deposito == null)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "El depósito no existe.",
+                        Estado = false
+                    };
+                }
 
                 bool existeCodigo = await baseDeDatos.Depositos
                             .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito && d.Id != e.Id);
 
-                if (existeCodigo) return (false, "Ese código ya está en uso");
+                if (existeCodigo)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "Ese código ya está en uso",
+                        Estado = false
+                    };
+                }
 
                 deposito.CodigoDeposito = e.CodigoDeposito;
                 deposito.NombreDeposito = e.NombreDeposito;
                 deposito.ObraId = e.ObraId;
-                deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;   
-                deposito.Ubicacion = await BuscarUbicacion(e.Ubicacion);
+                deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;
 
                 baseDeDatos.Depositos.Update(deposito);
                 await baseDeDatos.SaveChangesAsync();
-                return (true, "Depósito actualizado exitosamente.");
+                return new Response<string>
+                {
+                    Objeto = deposito.Id.ToString(),
+                    Mensaje = "Depósito actualizado exitosamente.",
+                    Estado = true
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return (false, "Error al actualizar el depósito.");
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al actualizar el depósito.",
+                    Estado = false
+                };
             }
         }
 
-        public async Task<(bool, string)> EliminarDeposito(int id)
+        public async Task<Response<string>> EliminarDeposito(long id)
         {
             try
             {
-                BD.Modelos.Deposito deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
-                if (deposito == null) return (false, "No existe un depósito con ese ID.");
+                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
+                if (deposito == null)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Estado = false
+                    };
+                }
+
                 baseDeDatos.Depositos.Remove(deposito);
                 await baseDeDatos.SaveChangesAsync();
-                return (true, "Depósito eliminado exitosamente.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return (false, "Error al eliminar el depósito.");
-            }
-        }
 
-        public async Task<Ubicacion> BuscarUbicacion(UbicacionDTO ubicacion)
-        {
-            Ubicacion? resUbicacion = null;
-            Provincia? resProvincia = null;
-            if (ubicacion.Id == 0)
-            {
-                resUbicacion = baseDeDatos.Ubicaciones
-                    .FirstOrDefault(u => u.CodigoUbicacion.ToUpper() == ubicacion.CodigoUbicacion.ToUpper());
-
-                if (resUbicacion == null)
+                return new Response<string>
                 {
-                    if (ubicacion.Provincia.Id == 0)
-                    {
-                        resProvincia = baseDeDatos.Provincias
-                        .FirstOrDefault(p => p.Nombre == ubicacion.Provincia.NombreProvincia.ToUpper());
-
-                        if (resProvincia == null)
-                        {
-                            resProvincia = new Provincia()
-                            { Nombre = ubicacion.Provincia.NombreProvincia.ToUpper() };
-                            baseDeDatos.Provincias.Add(resProvincia);
-                            await baseDeDatos.SaveChangesAsync();
-                        }
-                    }
-
-                    resUbicacion = new Ubicacion()
-                    {
-                        CodigoUbicacion = ubicacion.CodigoUbicacion.ToUpper(),
-                        Domicilio = ubicacion.UbicacionDomicilio.ToUpper(),
-                        ProvinciaId = ubicacion.Provincia.Id != 0 ? ubicacion.Provincia.Id : resProvincia!.Id
-                    };
-                    baseDeDatos.Ubicaciones.Add(resUbicacion);
-                    await baseDeDatos.SaveChangesAsync();
-                }
+                    Objeto = deposito.Id.ToString(),
+                    Mensaje = "Depósito eliminado exitosamente.",
+                    Estado = true
+                };
             }
-
-            return resUbicacion;
+            catch (Exception)
+            {
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al eliminar el depósito.",
+                    Estado = false
+                };
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
         <div class="nav-item px-3">
+<<<<<<< HEAD
             <NavLink class="nav-link" href="/recursos">
                 <span class="bi bi-box-seam-fill-nav-menu" aria-hidden="true"></span> Recursos
             </NavLink>
@@ -21,6 +22,18 @@
             </NavLink>
 
          @*    @if(datosUsuario.Usuario != null)
+=======
+
+            <NavLink class="nav-link" href="deposito">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Depositos
+            </NavLink>
+
+            <NavLink class="nav-link" href="obra">
+                <i class="bi bi-people-fill"></i> Obras
+            </NavLink>
+
+            @if(datosUsuario.Usuario != null)
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
