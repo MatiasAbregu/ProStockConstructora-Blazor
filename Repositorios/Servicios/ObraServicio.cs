@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.DTOs_Response;
+using System.Security.Cryptography;
 
 namespace Repositorios.Servicios
 {
@@ -24,6 +26,41 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
+<<<<<<< HEAD
+        public async Task<Response<List<VerObraDTO>>> ObtenerObras(int EmpresaId)
+        {
+            try
+            {
+                var obras = await baseDeDatos.Obras
+                 .Where(o => o.EmpresaId == EmpresaId && o.Estado != EnumEstadoObra.Finalizada )
+                .Select(o => new VerObraDTO
+                {
+                    Id = o.Id,
+                    CodigoObra = o.CodigoObra,
+                    NombreObra = o.NombreObra,
+                    Estado = o.Estado.ToString() == "EnProceso" ? "En proceso" : o.Estado.ToString()
+                }).ToListAsync();
+
+                if (obras.Count == 0)
+                {
+                    Response<List<VerObraDTO>>
+                    res = new Response<List<VerObraDTO>>()
+                    {
+                        Estado = true,
+                        Objeto = null,
+                        Mensaje = "No hay obras registradas para la empresa."
+                    };
+                    return res;
+                }
+
+                Response<List<VerObraDTO>> response = new Response<List<VerObraDTO>>()
+                {
+                    Estado = true,
+                    Objeto = obras,
+                    Mensaje = "Obras obtenidas con éxito."
+                };
+                return response;
+=======
         public async Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId)
         {
             try
@@ -49,10 +86,19 @@ namespace Repositorios.Servicios
                     Estado = true,
                     Mensaje = "¡Obras cargadas con éxito!"
                 };
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.InnerException.Message}");
+<<<<<<< HEAD
+                return new Response<List<VerObraDTO>>
+                {
+                    Estado = false,
+                    Objeto = null,
+                    Mensaje = "Error al obtener las obras."
+                };
+=======
                 return new Response<List<ObraEmpresaDTO>>()
                 {
                     Objeto = null,
@@ -110,15 +156,61 @@ namespace Repositorios.Servicios
                 Console.WriteLine($"Error: {ex.Message}");
                 return new Response<List<VerObraDTO>>()
                 { Objeto = null, Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar las obras!" };
+>>>>>>> a8b31e8c0c543069e3149da4a07c437b47cf2a54
             }
         }
 
-        public async Task<(bool, VerObraDTO)> ObtenerObraPorId(int id)
+        public async Task<Response<VerObraDTO>> ObtenerObraPorId(int obraId)
         {
             try
             {
-                Obra o = await baseDeDatos.Obras.FirstOrDefaultAsync(o => o.Id == id);
-                if (o == null) return (true, null);
+                Obra o = await baseDeDatos.Obras.FirstOrDefaultAsync(o => o.Id == obraId);
+                if (o == null)
+                    return new Response<VerObraDTO>
+                    {
+                        Estado = true,
+                        Objeto = null,
+                        Mensaje = "No existe la obra con el ID proporcionado."
+                    };
+
+                VerObraDTO VerObraDTO = new VerObraDTO
+                {
+                    Id = o.Id,
+                    CodigoObra = o.CodigoObra,
+                    NombreObra = o.NombreObra,
+                    Estado = o.Estado.ToString() == "EnProceso" ? "En proceso" : o.Estado.ToString()
+                };
+                return new Response<VerObraDTO>
+                {
+                    Estado = true,
+                    Objeto = VerObraDTO,
+                    Mensaje = "Obra obtenida con éxito."
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
+                return new Response<VerObraDTO>
+                {
+                    Estado = false,
+                    Objeto = null,
+                    Mensaje = "Error al obtener la obra por el Id."
+                };
+            }
+        }
+
+        public async Task<Response<VerObraDTO>> ObtenerObrasPorCodigoObra(string codigoObra)
+        {
+            try
+            {
+                Obra o = await baseDeDatos.Obras.FirstOrDefaultAsync(o => o.CodigoObra.ToLower() == codigoObra.ToLower());
+                if (o == null)
+                    return new Response<VerObraDTO>
+                    {
+                        Estado = true,
+                        Objeto = null,
+                        Mensaje = "No existe la obra con el código proporcionado."
+                    };
                 VerObraDTO obraVer = new VerObraDTO
                 {
                     Id = o.Id,
@@ -126,16 +218,26 @@ namespace Repositorios.Servicios
                     NombreObra = o.NombreObra,
                     Estado = o.Estado.ToString() == "EnProceso" ? "En proceso" : o.Estado.ToString()
                 };
-                return (true, obraVer);
+                return new Response<VerObraDTO>
+                {
+                    Estado = true,
+                    Objeto = obraVer,
+                    Mensaje = "Obra obtenida con éxito."
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return (false, null);
+                return new Response<VerObraDTO>
+                {
+                    Estado = false,
+                    Objeto = null,
+                    Mensaje = "Error al obtener la obra por el codigo."
+                };
             }
         }
 
-        public async Task<(bool, string)> CrearObra(CrearObraDTO obraDTO)
+        public async Task<(bool, string)> CrearObra(CrearObraDTO obraDTO) // habria que pasarle el CUIT de la empresa Y EL RESPONSE
         {
             try
             {
@@ -163,7 +265,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> ActualizarObra(int id, ObraActualizarDTO o)
+        public async Task<(bool, string)> ActualizarObra(int id, ObraActualizarDTO o) // borrarlo o cambiarlo por CODIGO de OBRA
         {
             try
             {
