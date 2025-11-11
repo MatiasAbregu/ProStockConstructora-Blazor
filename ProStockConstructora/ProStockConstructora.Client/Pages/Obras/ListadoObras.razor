@@ -10,14 +10,10 @@
     <article class="p-4 container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold text-primary">Listado de Obras</h3>
-            <button class="btn btn-success rounded-circle"
-                    title="Agregar Obra"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalAgregarObra">
+            <button class="btn btn-success rounded-circle" @onclick="IrAgregarObra">
                 <i class="bi bi-plus-lg"></i>
             </button>
         </div>
-
 
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -72,53 +68,6 @@
         </div>
     </article>
 
-
-    <!-- MODAL para agregar una nueva obra -->
-
-    <div class="modal fade" id="modalAgregarObra" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-3 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="tituloModal">Agregar Obra</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <!-- Campo Código -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Código de Obra</label>
-                        <input type="text" class="form-control" @bind="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
-                    </div>
-
-                    <!-- Campo Nombre -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nombre de Obra</label>
-                        <input type="text" class="form-control" @bind="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
-                    </div>
-
-                    <!-- Campo Estado -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Estado</label>
-                        <select class="form-select" @bind="nuevaObra.Estado">
-                            <option value="0">En proceso</option>
-                            <option value="1">Pausada</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <button class="btn btn-success" @onclick="AgregarObra" data-bs-dismiss="modal">
-                        <i class="bi bi-check2-circle"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <!-- MODAL de confirmación para eliminar -->
 
     <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminar" aria-hidden="true">
@@ -170,26 +119,19 @@ else
             {
                 Obras = res.Respuesta.Objeto;
                 Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
-                StateHasChanged();
             }
         }
     }
 
-    private async Task AgregarObra()
+    private void IrAgregarObra()
     {
-        // try
-        // {
-        //     var res = await http.Post<CrearObraDTO, string>("api/obra", nuevaObra);
-        //     if (res.Respuesta != null)
-        //     {
-        //         await CargarObras();
-        //         nuevaObra = new CrearObraDTO();
-        //     }
-        // }
-        // catch
-        // {
-        //     mensaje = "Error al crear la obra.";
-        // }
+        navManager.NavigateTo("/obras/agregar-obra");
+    }
+
+    async Task CargarNuevasObras()
+    {
+        await CargarObras();
+        StateHasChanged();
     }
 
     private async Task EliminarObra(long id)

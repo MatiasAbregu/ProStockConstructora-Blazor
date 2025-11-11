@@ -1,4 +1,4 @@
-﻿using DTO.Enums;
+﻿using DTO.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
