@@ -1,4 +1,5 @@
-﻿using DTO.DTOs_Roles;
+﻿using DTO.DTOs_Response;
+using DTO.DTOs_Roles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Repositorios.Implementaciones
 {
     public interface IRolesServicio
     {
-        public (bool, List<VerRol>) ObtenerRoles();
+        public Task<Response<List<VerRolDTO>>> ObtenerRoles();
     }
 }

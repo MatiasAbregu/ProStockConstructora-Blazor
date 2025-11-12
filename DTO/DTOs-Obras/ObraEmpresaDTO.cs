@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace DTO.DTOs_Obras
 {
-    public class ObraAsociarUsuarioDTO
+    public class ObraEmpresaDTO
     {
-        public long ObraId { get; set; }
-        public long EmpresaId { get; set; }
+        public long Id { get; set; }
+        public string CodigoObra { get; set; }
         public string NombreObra { get; set; }
-        public required long UsuarioId { get; set; }
     }
 }

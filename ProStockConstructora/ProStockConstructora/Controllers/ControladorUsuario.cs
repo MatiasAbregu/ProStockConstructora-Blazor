@@ -22,16 +22,6 @@ namespace ProStockConstructora.Controllers
             this.usuarioServicio = usuarioServicio;
         }
 
-        // EN DEUSO
-        /*[HttpGet("obtener-administradores")]
-        public async Task<ActionResult<List<VerAdministradorDTO>>> ObtenerTodosLosAdministradores()
-        {
-            ValueTuple<bool, List<VerAdministradorDTO>> res = await usuarioServicio.ObtenerTodosLosAdministradores();
-
-            if (res.Item1) return StatusCode(200, res.Item2);
-            else return StatusCode(500, "Error al cargar los datos desde el servidor.");
-        }
-        */
         [HttpPost("iniciar-sesion")]
         public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
         {
@@ -41,8 +31,8 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpGet("{EmpresaId:int}")]
-        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(int EmpresaId)
+        [HttpGet("{EmpresaId:long}")]
+        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(long EmpresaId)
         {
             Response<List<DatosUsuario>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
 
@@ -50,12 +40,12 @@ namespace ProStockConstructora.Controllers
             return StatusCode(500, res);
         }
 
-        [HttpGet("obtener-usuario/{id}")]
-        public async Task<ActionResult> ObtenerUsuarioPorId(string id)
+        [HttpGet("obtener-usuario/{id:long}")]
+        public async Task<ActionResult> ObtenerUsuarioPorId(long id)
         {
-            ValueTuple<bool, DatosUsuario> res = await usuarioServicio.ObtenerUsuarioPorId(id);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(404, "Ese usuario no existe.");
+            var res = await usuarioServicio.ObtenerUsuarioPorId(id);
+            if (res.Estado) return StatusCode(200, res);
+            return StatusCode(500, res);
         }
         
         //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)

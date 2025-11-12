@@ -32,7 +32,7 @@ else
                     <td>@deposito.CodigoDeposito</td>
                     <td>@deposito.NombreDeposito</td>
                     <td>@deposito.TipoDeposito.ToString()</td>
-                    <td>@deposito.Ubicacion?.UbicacionDomicilio</td>
+                    <td></td>
                     <td>
                         <button class="btn btn-sm btn-warning me-2"
                            title="Editar" @onclick="() => EditarDeposito(deposito.Id)"><i class="bi bi-pencil"></i></button>
@@ -48,6 +48,7 @@ else
 
 @code {
     List<VerDepositoDTO>? depositos;
+    List<DatosUsuario>? usuario;
     string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
@@ -76,6 +77,19 @@ else
             depositos = new List<VerDepositoDTO>();
         }
     }
+    public async Task ObtenerDepositosPorUsuario(DatosUsuario usuario)
+    {
+        try
+        {
+            var res = await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>("api/deposito/por-usuario", usuario);
+           
+        }
+        catch (Exception)
+        {
+            
+            throw;
+        }  
+    }
 
     private void EditarDeposito(long id)
     {
@@ -96,4 +110,4 @@ else
     {
         Navigation.NavigateTo("/depositos/crear");
     }
-}
+} 

@@ -8,35 +8,37 @@
     <PageTitle>Crear usuario - ProStock</PageTitle>
     <article class="p-4">
         <div class="cabecera">
-            <p class="cabecera fw-bolder">Crear Usuario</p>
-            <button class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i> Atrás</button>
+            <p class="fw-bolder">Crear Usuario</p>
+            <a class="btn btn-secondary" href="/usuarios"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card">
-            <EditForm Model="usuario">
-                <div class="my-3">
+            <EditForm Model="usuario" class="d-flex flex-column">
+                <DataAnnotationsValidator />
+                <div class="my-3 px-4">
                     <label for="emailInput" class="form-label">Correo</label>
                     <InputText @bind-Value="usuario.Email" type="email" class="form-control" id="emailInput" />
                     <ValidationMessage For="@(() => usuario.Email)" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 px-4">
                     <label for="usernameInput" class="form-label">Nombre de usuario</label>
                     <InputText @bind-Value="usuario.NombreUsuario" type="text" class="form-control" id="usernameInput" />
                     <ValidationMessage For="@(() => usuario.NombreUsuario)" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 px-4">
                     <label for="telInput" class="form-label">Teléfono (opcional)</label>
                     <InputText @bind-Value="usuario.Celular" type="text" class="form-control" id="telInput" />
                     <ValidationMessage For="@(() => usuario.Celular)" />
                 </div>
-                <div class="my-3">
+                <div class="my-3 px-4">
                     <label>Escoja el rol del usuario:</label>
-                    @* <div>
-                        @if (roles != null)
+                    <div>
+                        @if (rolesBD != null)
                         {
-                            <InputSelect class="form-select" @bind-Value="RolSeleccionado">
-                                @foreach (var rol in roles)
+                            <InputSelect class="form-select" TValue="string" Value="RolSeleccionado"
+                                         ValueChanged="CambioDeRol" ValueExpression="@(() => RolSeleccionado)">
+                                @foreach (var rol in rolesBD)
                                 {
-                                    <option value="@rol.NombreRol">@FormatearTexto(rol.NombreRol)</option>
+                                    <option value="@rol.NombreNormalizado">@rol.NombreRol</option>
                                 }
                             </InputSelect>
                             <ValidationMessage For="@(() => usuario.Roles)" />
@@ -45,8 +47,75 @@
                         {
                             <p>Hubo un error al cargar los roles desde el servidor. Reintente más tarde o contacte con un administrador.</p>
                         }
-                    </div> *@
+                    </div>
                 </div>
+                @if (RolSeleccionado == "JEFEDEDEPOSITO")
+                {
+                    <div class="my-3 px-4">
+                        <label>Asigne los depósitos a los que el usuario estará a cargo:</label>
+                        <div>
+                            @if (depositosBD?.Count > 0)
+                            {
+                                @foreach (var deposito in depositosBD)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                        <label class="form-check-label" for="checkDefault">
+                                            @deposito.NombreDeposito (@deposito.CodigoDeposito - @deposito.TipoDeposito)
+                                        </label>
+                                    </div>
+                                }
+                                <a class="btn btn-success" href="/obra">+</a>
+                            }
+                            else if (depositosBD?.Count == 0)
+                            {
+                                <div class="contenedorAnadir">
+                                    <p>No existen depósitos aún agregados en el sistema. ¡Añada uno!</p>
+                                    <a class="btn btn-success" href="/obra">+</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Hubo un error al cargar los depósitos desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                            }
+                        </div>
+                    </div>
+                }
+                else if (RolSeleccionado == "JEFEDEOBRA")
+                {
+                    <div class="my-3 px-4">
+                        <label>Asigne las obras a las que el usuario estará a cargo:</label>
+                        <div>
+                            @if (obrasBD?.Count > 0)
+                            {
+                                @foreach (var obra in obrasBD)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                        <label class="form-check-label" for="checkDefault">
+                                            @obra.NombreObra
+                                        </label>
+                                    </div>
+                                }
+                                <button class="btn btn-success">+</button>
+                            }
+                            else if (obrasBD?.Count == 0)
+                            {
+                                <div class="contenedorAnadir">
+                                    <p>No existen obras aún agregadas en el sistema. ¡Añada una!</p>
+                                    <button class="btn btn-success">+</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Hubo un error al cargar las obras desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                            }
+                        </div>
+                    </div>
+                }
+                <button class="btn btn-success mb-2 btn-submit" type="submit">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
             </EditForm>
         </div>
     </article>
@@ -56,22 +125,86 @@ else
     navManager.NavigateTo("/");
 }
 
+
 @code {
     private CrearUsuarioDTO usuario;
-    private List<string> Roles;
+    private List<VerRolDTO> rolesBD;
+    private List<ObraEmpresaDTO> obrasBD;
+    private List<DepositoEmpresaDTO> depositosBD;
 
-    protected override void OnInitialized()
+    private bool Autenticado = true;
+
+    private string RolSeleccionado
     {
-        base.OnInitialized();
-        usuario = new CrearUsuarioDTO()
+        get => usuario.Roles?.FirstOrDefault() ?? "";
+        set => usuario.Roles = new List<string> { value };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (datosSesion.Usuario?.EmpresaId != null)
         {
-            EmpresaId = datosSesion.Usuario.EmpresaId
-        };
+            usuario = new CrearUsuarioDTO()
+            {
+                EmpresaId = datosSesion.Usuario.EmpresaId
+            };
+        }
+        else Autenticado = false;
+        await CargarRoles();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender && !Autenticado) navManager.NavigateTo("/");
     }
 
     private async Task CargarRoles()
     {
-        var res = await http.Get<object>("");
+        var res = await http.Get<Response<List<VerRolDTO>>>("api/roles");
+
+        if (res.Respuesta != null)
+        {
+            //mensaje = res.Respuesta.Mensaje;
+            rolesBD = res.Respuesta.Objeto;
+            CambioDeRol(rolesBD[0].NombreNormalizado);
+        }
     }
 
+    private async Task CambioDeRol(string valor)
+    {
+        RolSeleccionado = valor;
+        if (RolSeleccionado == "JEFEDEOBRA")
+        {
+            await CargarObras();
+        }
+        else if (RolSeleccionado == "JEFEDEDEPOSITO")
+        {
+            await CargarDepositos();
+        }
+    }
+
+    private async Task CargarObras()
+    {
+        var res = await http.Get<Response<List<ObraEmpresaDTO>>>($"api/obra/empresa/{usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            Console.WriteLine(res.Respuesta.Mensaje);
+            obrasBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CargarDepositos()
+    {
+        var res = await http.Get<Response<List<DepositoEmpresaDTO>>>($"api/deposito/empresa/{usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            Console.WriteLine(res.Respuesta.Mensaje);
+            depositosBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
 }

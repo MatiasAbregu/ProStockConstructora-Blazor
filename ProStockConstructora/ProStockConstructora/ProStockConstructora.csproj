@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\ProStockConstructora.Client\Pages\Deposito\Component.razor" Link="Component.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\BD\BD.csproj" />
     <ProjectReference Include="..\..\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Repositorios\Repositorios.csproj" />

@@ -1,12 +1,14 @@
 using BD;
-using Repositorios.Implementaciones;
-using Repositorios.Servicios;
+using DTO.DTOs_Obras;
+using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
 using System.Diagnostics;
-using DTO.DTOs_Obras;
 
 namespace ProStockConstructora.Controllers
 {
@@ -23,16 +25,13 @@ namespace ProStockConstructora.Controllers
             this.baseDeDatos = baseDeDatos;
             this.obraServicio = obraServicio;
         }
-        [HttpGet("empresa/{EmpresaId:int}")]
-        public async Task<IActionResult> ObtenerObras(int EmpresaId)
+
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
         {
-            ValueTuple<bool, List<VerObraDTO>>
-            resultado = await obraServicio.ObtenerObras(EmpresaId);
-            if (!resultado.Item1)
-                return StatusCode(500, "Error al obtener las obras.");
-            else if (resultado.Item2 == null || resultado.Item2.Count == 0)
-                return StatusCode(200, "No hay obras registradas.");
-            return Ok(resultado.Item2);
+            var res = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpGet("{id:int}")]
@@ -47,6 +46,13 @@ namespace ProStockConstructora.Controllers
             return Ok(resultado.Item2);
         }
 
+        [HttpPost("obras-usuario")]
+        public async Task<IActionResult> ObtenerObrasPorUsuario(DatosUsuario usuario)
+        {
+            var res = await obraServicio.ObtenerObrasPorUsuario(usuario);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)

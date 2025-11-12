@@ -16,7 +16,7 @@
 else
 {
     <div class="card shadow p-4 mx-auto" style="max-width: 700px;">
-        <EditForm Model="@deposito" OnValidSubmit="@Guardar">
+        <EditForm Model="@deposito" OnValidSubmit="@Guardar" FormName="EditarDeposito">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="mb-3">
@@ -30,6 +30,24 @@ else
             </div>
 
             <div class="mb-3">
+                <label class="form-label fw-semibold">Domicilio</label>
+                <InputText class="form-control" @bind-Value="deposito.Domicilio" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Obra asociada</label>
+                <InputSelect class="form-select" @bind-Value="deposito.ObraId">
+                    <option value="">-- Seleccionar obra --</option>
+                    @if (obras != null)
+                    {
+                        @foreach (var obra in obras)
+                        {
+                            <option value="@obra.Id">@obra.NombreObra</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-3">
                 <label class="form-label fw-semibold">Tipo de Depósito</label>
                 <InputSelect @bind-Value="deposito.TipoDeposito" class="form-select">
                     @foreach (var tipo in Enum.GetValues<EnumTipoDeposito>())
@@ -39,10 +57,7 @@ else
                 </InputSelect>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Ubicación</label>
-                <InputText @bind-Value="deposito.Ubicacion.UbicacionDomicilio" class="form-control" />
-            </div>
+            
 
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-warning me-2 text-white">
@@ -60,17 +75,36 @@ else
     [Parameter]
     public long Id { get; set; }
     // VerDepositoDTO deposito;
-    private DepositoAsociarDTO deposito = new DepositoAsociarDTO
-    {
-        Ubicacion = new UbicacionDTO()
-    };
+    private DepositoAsociarDTO deposito = new DepositoAsociarDTO();
+    private List<VerObraDTO> obras = new();
     string Mensaje="";
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         await CargarDepositos(Id);
+        await CargarObras();
     }
+    private async Task CargarObras()
+    {
+        try
+        {
+            var res = await Http.Get<Response<List<VerObraDTO>>>("api/obra");
+            if (res != null && res.Respuesta != null)
+            {
+                obras = res.Respuesta.Objeto;
+            }
+            else
+            {
+                Mensaje = "No se pudieron cargar las obras.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar obras: {ex.Message}";
+        }
+    }
+
     private async Task CargarDepositos(long id)
     {
         var res = await Http.Get<DepositoAsociarDTO>($"api/deposito/{id}");

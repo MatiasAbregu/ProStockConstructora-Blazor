@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class denuevoindicesconusuario : Migration
+    public partial class depositos01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,27 +42,12 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Provincias",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "varchar(80)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Provincias", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NombreRol = table.Column<string>(type: "longtext", nullable: false)
+                    NombreRol = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -158,30 +143,6 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Ubicaciones",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CodigoUbicacion = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Domicilio = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvinciaId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ubicaciones", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ubicaciones_Provincias_ProvinciaId",
-                        column: x => x.ProvinciaId,
-                        principalTable: "Provincias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Recursos",
                 columns: table => new
                 {
@@ -210,6 +171,33 @@ namespace BD.Migrations
                         column: x => x.UnidadMedidaId,
                         principalTable: "UnidadMedidas",
                         principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Depositos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CodigoDeposito = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NombreDeposito = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TipoDeposito = table.Column<int>(type: "int", nullable: false),
+                    ObraId = table.Column<long>(type: "bigint", nullable: false),
+                    Domicilio = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Depositos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Depositos_Obras_ObraId",
+                        column: x => x.ObraId,
+                        principalTable: "Obras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -262,38 +250,6 @@ namespace BD.Migrations
                         name: "FK_RolesUsuarios_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Depositos",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CodigoDeposito = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreDeposito = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoDeposito = table.Column<int>(type: "int", nullable: false),
-                    ObraId = table.Column<long>(type: "bigint", nullable: false),
-                    UbicacionId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Depositos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Depositos_Obras_ObraId",
-                        column: x => x.ObraId,
-                        principalTable: "Obras",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Depositos_Ubicaciones_UbicacionId",
-                        column: x => x.UbicacionId,
-                        principalTable: "Ubicaciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -509,11 +465,6 @@ namespace BD.Migrations
                 column: "ObraId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Depositos_UbicacionId",
-                table: "Depositos",
-                column: "UbicacionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DepositosUsuario_DepositoId",
                 table: "DepositosUsuario",
                 column: "DepositoId");
@@ -626,6 +577,12 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Roles_NombreRol",
+                table: "Roles",
+                column: "NombreRol",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolesUsuarios_RolId",
                 table: "RolesUsuarios",
                 column: "RolId");
@@ -645,11 +602,6 @@ namespace BD.Migrations
                 name: "IX_Stocks_MaterialesyMaquinasId",
                 table: "Stocks",
                 column: "MaterialesyMaquinasId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ubicaciones_ProvinciaId",
-                table: "Ubicaciones",
-                column: "ProvinciaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",
@@ -712,13 +664,7 @@ namespace BD.Migrations
                 name: "Obras");
 
             migrationBuilder.DropTable(
-                name: "Ubicaciones");
-
-            migrationBuilder.DropTable(
                 name: "Empresa");
-
-            migrationBuilder.DropTable(
-                name: "Provincias");
         }
     }
 }
