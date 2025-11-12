@@ -90,7 +90,7 @@
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
               "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
-              "ViewState": "AgIAAJkAAAAAAAAAAAAAAKIAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKIAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-10T20:34:34.704Z",
               "EditorCaption": ""
@@ -105,8 +105,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\Recursos.razor",
               "ViewState": "AgIAACEAAAAAAAAAAAAAADEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-10T20:33:53.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T20:33:53.481Z"
             },
             {
               "$type": "Document",
@@ -118,8 +117,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABcAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-10T20:33:45.065Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T20:33:45.065Z"
             },
             {
               "$type": "Document",
@@ -131,8 +129,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
               "ViewState": "AgIAAD4AAAAAAAAAAAAAADMAAABLAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-10T20:33:39.587Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T20:33:39.587Z"
             },
             {
               "$type": "Document",
@@ -144,8 +141,7 @@
               "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorObra.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAA9wBQAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T06:04:39.924Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T06:04:39.924Z"
             },
             {
               "$type": "Document",
@@ -157,8 +153,7 @@
               "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IObraServicio.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAB6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T20:30:12.673Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T20:30:12.673Z"
             },
             {
               "$type": "Document",
@@ -170,8 +165,7 @@
               "RelativeToolTip": "..\\Repositorios\\Servicios\\ObraServicio.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T19:54:34.801Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T19:54:34.801Z"
             },
             {
               "$type": "Document",
@@ -183,8 +177,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Usuarios\\CrearUsuario.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-10T19:55:06.052Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T19:55:06.052Z"
             },
             {
               "$type": "Document",
@@ -196,8 +189,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Usuarios\\ListaUsuarios.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-11T07:20:49.462Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-11T07:20:49.462Z"
             },
             {
               "$type": "Document",
