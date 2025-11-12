@@ -1,0 +1,69 @@
+﻿@page "/obras/agregar-obra"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion
+@inject NavigationManager navManager
+
+<PageTitle>Agregar Obra - ProStockConstructora</PageTitle>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-primary">Agregar Obra</h3>
+        <button class="btn btn-outline-secondary" @onclick="VolverAListado">
+            <i class="bi bi-arrow-left"></i> Volver
+        </button>
+    </div>
+
+    <EditForm Model="nuevaObra" OnValidSubmit="GuardarObra">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+            <!-- Campo Código -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Código de Obra</label>
+                <input type="text" class="form-control" @bind="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
+            </div>
+            <!-- Campo Nombre -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Nombre de Obra</label>
+                <input type="text" class="form-control" @bind="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
+            </div>
+            <!-- Campo Estado -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Estado</label>
+            <select class="form-select" @bind="nuevaObra.Estado">
+                <option value="@EnumEstadoObra.EnProceso">En proceso</option>
+                <option value="@EnumEstadoObra.Pausada">Pausada</option>
+            </select>
+            </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check2-circle"></i>
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private CrearObraDTO nuevaObra = new CrearObraDTO()
+    {
+        Estado = EnumEstadoObra.EnProceso
+    };
+
+    private async Task GuardarObra()
+    {
+       var response = await http.Post<CrearObraDTO, string>("api/obra", nuevaObra);
+       if (response.Respuesta != null)
+       {
+           Console.WriteLine("✅ Obra agregada correctamente.");
+           nuevaObra = new CrearObraDTO(); // limpia los campos
+       }
+       else
+       {
+           Console.WriteLine("❌ Error al agregar la obra: respuesta vacía.");
+       }
+    }
+
+    private void VolverAListado()
+    {
+        navManager.NavigateTo("/obras");
+    }
+}

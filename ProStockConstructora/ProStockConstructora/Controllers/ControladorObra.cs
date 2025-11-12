@@ -34,18 +34,6 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> ObtenerObraPorId(int id)
-        {
-            ValueTuple<bool, VerObraDTO>
-            resultado = await obraServicio.ObtenerObraPorId(id);
-            if (!resultado.Item1)
-                return StatusCode(500, "Error al obtener la obra.");
-            else if (resultado.Item2 == null)
-                return StatusCode(200, "No existe la obra con el ID proporcionado.");
-            return Ok(resultado.Item2);
-        }
-
         [HttpPost("obras-usuario")]
         public async Task<IActionResult> ObtenerObrasPorUsuario(DatosUsuario usuario)
         {
@@ -54,7 +42,8 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpPost]
+
+        [HttpPost] // habria que pasarle el id de la empresa
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)
         {
            ValueTuple<bool, string> resultado = await obraServicio.CrearObra(obraDTO);
@@ -86,6 +75,3 @@ namespace ProStockConstructora.Controllers
         }
     }
 }
-   
-
-

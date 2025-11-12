@@ -76,8 +76,7 @@
               "RelativeToolTip": "..\\DTO\\DTOs-Depositos\\DepositoAsociarDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-12T20:03:04.368Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-12T20:03:04.368Z"
             },
             {
               "$type": "Document",
@@ -102,8 +101,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\CrearDeposito.razor",
               "ViewState": "AgIAAEAAAAAAAAAAAAAAAFgAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-06T20:54:01.966Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-06T20:54:01.966Z"
             },
             {
               "$type": "Document",
@@ -115,8 +113,7 @@
               "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
               "ViewState": "AgIAADAAAAAAAAAAAAAAAD4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T20:20:10.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T20:20:10.285Z"
             },
             {
               "$type": "Document",
@@ -128,8 +125,7 @@
               "RelativeToolTip": "..\\Repositorios\\Servicios\\DepositoServicio.cs",
               "ViewState": "AgIAAGEAAAAAAAAAAAAAAJYAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T19:50:52.896Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T19:50:52.896Z"
             },
             {
               "$type": "Document",
@@ -141,8 +137,7 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\VerDeposito.razor",
               "ViewState": "AgIAACsAAAAAAAAAAAAAADgAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T19:40:23.064Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T19:40:23.064Z"
             }
           ]
         }

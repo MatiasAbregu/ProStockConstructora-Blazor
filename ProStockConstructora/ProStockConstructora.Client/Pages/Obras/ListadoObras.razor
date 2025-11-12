@@ -1,207 +1,149 @@
-﻿@page "/obra"
+﻿@page "/obras"
 @inject IHttpServicio http
 @inject DatosSesion datosSesion
-@inject NavigationManager navManager;
+@inject NavigationManager navManager
+
+<PageTitle>Obras - ProStockConstructora</PageTitle>
 
 @if (datosSesion.Usuario != null)
 {
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <div>
-                <h3 class="mb-0"><i class="bi bi-building"></i> Obras</h3>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary" @onclick="CargarObras">
-                    <i class="bi bi-arrow-clockwise me-1"></i> Recargar
-                </button>
-                <button class="btn btn-success">
-                    <i class="bi bi-plus-circle me-1"></i> Nueva Obra
-                </button>
-            </div>
+    <article class="p-4 container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-primary">Listado de Obras</h3>
+            <button class="btn btn-success rounded-circle" @onclick="IrAgregarObra">
+                <i class="bi bi-plus-lg"></i>
+            </button>
         </div>
 
-        @if (!string.IsNullOrEmpty(Mensaje))
-        {
-            <div class="alert @ClaseAlerta" role="alert">@Mensaje</div>
-        }
-
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped align-middle">
-                        <thead class="table-primary text-center">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!string.IsNullOrEmpty(Mensaje) && Obras?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">@Mensaje</td>
+                        </tr>
+                    }
+                    else if (Obras?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No hay obras cargadas aún en el sistema.</td>
+                        </tr>
+                    }
+                    else if (Obras?.Count > 0)
+                    {
+                        @foreach (var obra in Obras)
+                        {
                             <tr>
-                                <th style="width:24%;">Código</th>
-                                <th>Nombre</th>
-                                <th style="width:24%;">Estado</th>
+                                <td>@obra.CodigoObra</td>
+                                <td>@obra.NombreObra</td>
+                                <td>
+                                    <span class="badge @(obra.Estado == "En proceso" ? "bg-primary" : "bg-warning text-dark")">
+                                        @obra.Estado
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <!-- Botón eliminar -->
+                                    <button class="btn btn-outline-danger"
+                                            title="Eliminar Obra"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalConfirmarEliminar"
+                                            @onclick="() => obraSeleccionada = obra">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @if (!string.IsNullOrEmpty(Mensaje))
-                            {
-                                <tr><td colspan="3" class="text-center text-muted">@Mensaje</td></tr>
-                            }
-                            else if (Obras is null)
-                            {
-                                <tr><td colspan="3" class="text-center text-muted">Cargando obras...</td></tr>
-                            }
-                            else
-                            {
-                                @foreach (var o in Obras)
-                                {
-                                    <tr>
-                                        <td class="text-center">@o.CodigoObra</td>
-                                        <td>@o.NombreObra</td>
-                                        <td class="text-center">@o.Estado</td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <!-- MODAL de confirmación para eliminar -->
+
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminar" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 shadow">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Seguro que deseas eliminar la obra <strong>@obraSeleccionada?.NombreObra</strong>?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => EliminarObra(obraSeleccionada.Id)">Eliminar</button>
                 </div>
             </div>
         </div>
     </div>
-
-    @if (MostrarModal)
-    {
-        <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-plus-lg me-2"></i> Nueva Obra</h5>
-                        <button type="button" class="btn-close" @onclick="(() => MostrarModal = false)"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Código de Obra</label>
-                            <input class="form-control" @bind="NuevaObra.CodigoObra" placeholder="OB-001" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Nombre de Obra</label>
-                            <input class="form-control" @bind="NuevaObra.NombreObra" placeholder="Nombre de la obra" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Estado</label>
-                            <select class="form-select" @bind="NuevaObra.Estado">
-                                <option value="0">En proceso</option>
-                                <option value="1">Pausada</option>
-                                <option value="2">Finalizada</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" @onclick="(() => MostrarModal = false)">Cancelar</button>
-                        <button class="btn btn-primary" disabled="@Guardando">
-                            @if (Guardando)
-                            {
-                                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                            }
-                            else
-                            {
-                                <i class="bi bi-check-lg me-1">Guardar</i>
-                            }
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    @* @onclick="CrearObraAsync" *@
 }
 else
 {
     navManager.NavigateTo("/");
 }
 
+
 @code {
-    private DatosSesion usuario;
+    private DatosUsuario usuario = new();
     private List<VerObraDTO> Obras;
-    private CrearObraDTO NuevaObra;
+    private CrearObraDTO nuevaObra = new();
 
-    private bool MostrarModal = false;
-    private bool Guardando = false;
-
+    VerObraDTO obraSeleccionada;
     private string Mensaje = string.Empty;
-    private string ClaseAlerta = "alert-info";
 
-    protected async override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        usuario = datosSesion;
+        await base.OnInitializedAsync();
+        usuario = datosSesion.Usuario;
         await CargarObras();
     }
 
     private async Task CargarObras()
     {
-        var res =
-        await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", datosSesion.Usuario);
-
-        Console.WriteLine("Cargando obras... ----------------------------------------");
+        var res = await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", usuario);
 
         if (res.Respuesta != null)
         {
-            Console.WriteLine("A ver... --------------------------------------");
-            Console.WriteLine("Mensaje: " + res.Respuesta.Mensaje);
-            Console.WriteLine("Objeto: " + res.Respuesta.Objeto);
-            Console.WriteLine("Estado: " + res.Respuesta.Estado);
             if (res.Respuesta.Estado)
             {
                 Obras = res.Respuesta.Objeto;
+                Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
             }
-            else Mensaje = res.Respuesta.Mensaje;
         }
     }
 
-    // private async Task CrearObraAsync()
-    // {
-    //     Mensaje = string.Empty;
-    //     ClaseAlerta = "alert-info";
+    private void IrAgregarObra()
+    {
+        navManager.NavigateTo("/obras/agregar-obra");
+    }
 
-    //     Hago unas validaciones simples
-    //     if (string.IsNullOrWhiteSpace(NuevaObra.CodigoObra) || string.IsNullOrWhiteSpace(NuevaObra.NombreObra))
-    //     {
-    //         Mensaje = "Completa Código y Nombre de la obra.";
-    //         ClaseAlerta = "alert-warning";
-    //         return;
-    //     }
+    async Task CargarNuevasObras()
+    {
+        await CargarObras();
+        StateHasChanged();
+    }
 
-    //     Guardando = true;
-    //     try
-    //     {
-    //         NuevaObra.EmpresaId = usuario.Usuario.EmpresaId;
-    //         var response = await Http.PostAsJsonAsync("api/obra", NuevaObra);
-
-    //         if (response.IsSuccessStatusCode)
-    //         {
-    //             ClaseAlerta = "alert-success";
-    //             Mensaje = "Obra creada con éxito.";
-
-    //             Actualizamos la lista para ver la nueva obra....Aunque aun no me funciona...
-    //             await CargarObras();
-    //             CerrarModal();
-    //         }
-    //         else
-    //         {
-    //             var text = await response.Content.ReadAsStringAsync();
-    //             Mensaje = string.IsNullOrWhiteSpace(text) ? $"Error: {response.ReasonPhrase}" : text;
-    //             ClaseAlerta = "alert-danger";
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Mensaje = $"Error al crear obra: {ex.Message}";
-    //         ClaseAlerta = "alert-danger";
-    //     }
-    //     finally
-    //     {
-    //         Guardando = false;
-    //     }
-    // }
-
+    private async Task EliminarObra(long id)
+    {
+        // try
+        // {
+        //     await http.Delete<string>($"api/obra/{id}");
+        //     await CargarObras();
+        // }
+        // catch
+        // {
+        //     mensaje = "Error al eliminar la obra.";
+        // }
+    }
 }

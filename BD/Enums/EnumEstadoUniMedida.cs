@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTO.Enum
+namespace BD.Enums
 {
-    public enum EnumTipoDeposito
+    public enum EnumEstadoUniMedida
     {
-        Disponible = 0,
-        EnUso = 1,
-        Perdidas = 2,
+        Activa = 0,
+        Inactiva = 1
     }
 }

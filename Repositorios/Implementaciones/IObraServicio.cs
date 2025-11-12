@@ -11,9 +11,10 @@ namespace Repositorios.Implementaciones
 {
     public interface IObraServicio
     {
-        Task<(bool, string)> CrearObra(CrearObraDTO obraDTO);
+        Task<(bool, string)> CrearObra(CrearObraDTO obraDTO); // habria que pasarle el id de la empresa
         Task<(bool, string)> ActualizarObra(int id, ObraActualizarDTO o);
-        Task<(bool, VerObraDTO)> ObtenerObraPorId(int id);
+        Task<Response<VerObraDTO>> ObtenerObraPorId(int obraId); // seria obtener obra por CODIGO de OBRA
+        Task<Response<VerObraDTO>> ObtenerObrasPorCodigoObra(string CodigoObra); //obras de la empresa por nombre o codigo
         Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId);
         Task<Response<List<VerObraDTO>>> ObtenerObrasPorUsuario(DatosUsuario usuario);
     }

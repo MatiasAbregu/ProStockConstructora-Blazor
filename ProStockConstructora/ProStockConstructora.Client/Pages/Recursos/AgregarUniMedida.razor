@@ -1,0 +1,52 @@
+﻿@page "/recursos/agregarunimedida" 
+@inject NavigationManager navManager;
+@inject IHttpServicio http;
+
+<h3>Agregar Unidad de Medidad</h3>
+
+<EditForm Model="UnidadMedida" OnValidSubmit="CargarUnidadMedida"> 
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Nombre de la Unidad de Medida</label>
+        <InputText class="form-control" @bind-Value="UnidadMedida.Nombre" />
+        <ValidationMessage For="@(() => UnidadMedida.Nombre)" />
+    </div>
+    <div class="form-group">
+        <label>Abreviatura</label>
+        <InputText class="form-control" @bind-Value="UnidadMedida.Simbolo" />
+        <ValidationMessage For="@(() => UnidadMedida.Simbolo)" />
+    </div>
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="Cancelar">Volver</button>
+</EditForm>
+
+@code {
+   private UnidadDeMedidaDTO UnidadMedida = new UnidadDeMedidaDTO();
+    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CargarUnidadMedida();
+    }
+
+    private async Task CargarUnidadMedida()
+    {
+        var response = await http.Post<UnidadDeMedidaDTO, UnidadDeMedidaDTO>("api/unidadmedida", UnidadMedida);
+        if (response.Respuesta != null)
+        {
+            navManager.NavigateTo("/recursos");
+        }
+        else
+        {
+            // Manejar el error (por ejemplo, mostrar un mensaje al usuario)
+            Console.WriteLine(response);
+        }
+    }
+
+    private void Cancelar()
+    {
+        navManager.NavigateTo("/recursos");
+    }
+
+}

@@ -22,7 +22,7 @@ namespace BD.Modelos
         public long? UnidadMedidaId { get; set; }
         public UnidadMedida UnidadMedida { get; set; }
 
-        public long TipoMaterialId { get; set; }
+        public long? TipoMaterialId { get; set; }
         public TipoMaterial TipoMaterial { get; set; }
 
         public string? Descripcion { get; set; }

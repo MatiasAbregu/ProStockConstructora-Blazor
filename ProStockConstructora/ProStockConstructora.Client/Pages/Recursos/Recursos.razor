@@ -1,0 +1,75 @@
+﻿@page "/recursos"
+@inject NavigationManager navManager;
+
+<h3>Administrar Recursos</h3>
+<br />
+<a class="btn-link btn-primary fw-bold fs-20" href="/recursos/agregar">Agregar Recurso</a>
+<a class="btn-link btn-primary" href="/recursos/agregarunimedida">Agregar Unidad Medida</a> 
+<br /><br />
+@if (recursos == null)
+{
+    <p>Buscando...</p>
+}
+else if (recursos.Count == 0)
+{
+    <p>No hay recursos disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>CodigoISO</th> 
+                <th>Nombre</th>
+                <th>Unidad de Medida</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recurso in recursos)
+            {
+                <tr>
+                    <td>@recurso.CodigoISO</td>
+                    <td>@recurso.Nombre</td>
+                    <td>@recurso.UnidadMedida</td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-info btn-sm"
+                                @onclick="() => EditarRecurso(recurso.RecursosId)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+   </table>
+}
+
+
+
+@code {
+    List<RecursosPagPrincipalDTO> recursos = new List<RecursosPagPrincipalDTO>();
+    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
+
+   
+     protected override async Task OnInitializedAsync()
+     { 
+         await base.OnInitializedAsync();
+         await CargarRecursos();
+     }
+     
+     private async Task CargarRecursos()
+     {
+         // mock
+         recursos = new List<RecursosPagPrincipalDTO>
+         {
+             new RecursosPagPrincipalDTO { RecursosId = 1, CodigoISO = "MAT001", Nombre = "Cemento", UnidadMedida = "Kg" },
+             new RecursosPagPrincipalDTO { RecursosId = 2, CodigoISO = "MAT002", Nombre = "Ladrillos", UnidadMedida = "Unidad" },
+             new RecursosPagPrincipalDTO { RecursosId = 3, CodigoISO = "MAT003", Nombre = "Arena", UnidadMedida = "m3" },
+         };
+        await Task.CompletedTask;
+     }
+     
+     void EditarRecurso(int recursoId)
+     {
+         navManager.NavigateTo($"/recursos/editar/{recursoId}");
+     }
+}

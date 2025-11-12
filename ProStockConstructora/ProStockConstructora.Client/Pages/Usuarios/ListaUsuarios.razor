@@ -23,19 +23,23 @@
                         <th></th>
                     </tr>
                 </thead>
-                @if (!String.IsNullOrEmpty(mensaje) && !mensaje.Contains("éxito"))
-                {
-                    <p>@mensaje</p>
-                }
-                else if (usuarios == null)
-                {
-                    <p>@mensaje</p>
-                }
-                else if (usuarios != null && usuarios.Count > 0)
-                {
-                    <tbody>
-                        @foreach (var usuario 
-                        in usuarios.Skip(numeroPagina == 1 ? 0 : numeroPagina * 10).Take(10))
+                <tbody>
+                    @if (!String.IsNullOrEmpty(mensaje) && usuarios?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">@mensaje</td>
+                        </tr>
+                    }
+                    else if (usuarios?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">@mensaje</td>
+                        </tr>
+                    }
+                    else if (usuarios?.Count > 0)
+                    {
+                        @foreach (var usuario
+                                        in usuarios.Skip(numeroPagina == 1 ? 0 : numeroPagina * 10).Take(10))
                         {
                             <tr>
                                 <td>@usuario.Email</td>
@@ -70,8 +74,8 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                }
+                    }
+                </tbody>
             </table>
             <div class="d-flex justify-content-between">
                 <div class="botoneraTabla">
@@ -109,7 +113,7 @@ else
 
         if (res.Respuesta != null)
         {
-            mensaje = res.Respuesta.Mensaje;
+            mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
             usuarios = res.Respuesta.Objeto;
             StateHasChanged();
         }
@@ -117,7 +121,7 @@ else
 
     private async Task SiguientePagina()
     {
-        if(usuarios.Count > numeroPagina * 10)
+        if (usuarios.Count > numeroPagina * 10)
         {
             numeroPagina++;
             StateHasChanged();
@@ -126,7 +130,7 @@ else
 
     private async Task AnteriorPagina()
     {
-        if(numeroPagina > 1)
+        if (numeroPagina > 1)
         {
             numeroPagina--;
             StateHasChanged();
