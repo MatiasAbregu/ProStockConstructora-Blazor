@@ -11,7 +11,7 @@ namespace DTO.DTOs_Depositos
         public long Id { get; set; }
         public string CodigoDeposito { get; set; }
         public string NombreDeposito { get; set; }
-
+        public string Domicilio { get; set; }
         public string TipoDeposito { get; set; }
     }
 }

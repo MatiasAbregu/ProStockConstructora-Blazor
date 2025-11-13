@@ -32,20 +32,6 @@
             <InputText class="form-control" @bind-Value="deposito.Domicilio" />
         </div>
         <div class="mb-3">
-            <label class="form-label fw-semibold">Obra asociada</label>
-            <InputSelect class="form-control" @bind-Value="deposito.ObraId">
-                <option value="">-- Seleccionar obra --</option>
-                @if (obras != null)
-                {
-                    @foreach (var obra in obras)
-                    {
-                        <option value="@obra.Id">@obra.NombreObra</option>
-                    }
-                }
-            </InputSelect>
-        </div>
-
-        <div class="mb-3">
             <label class="form-label fw-semibold">Tipo de Depósito</label>
             <InputSelect class="form-control" @bind-Value="deposito.TipoDeposito">
                 @foreach (var tipo in Enum.GetValues(typeof(EnumTipoDeposito)))
@@ -68,36 +54,45 @@
 </div>
 
 @code {
-    // [Parameter]
-    // public long Id { get; set; }
+    [Parameter]
+    public long Id { get; set; }
     private DepositoAsociarDTO? deposito = new();
-    private List<VerObraDTO> obras = new();
+    // private List<VerObraDTO> obras = new();
     string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarObras();
+        await CargarDepositos();
+        //await CargarObras();
     }
-
-    private async Task CargarObras()
+    private async Task CargarDepositos()
     {
-        try
+        var res = await Http.Get<DepositoAsociarDTO>($"api/deposito/{Id}");
+        if (res.Respuesta != null)
         {
-            var res = await Http.Get<Response<List<VerObraDTO>>>("api/obra");
-            if (res != null && res.Respuesta != null)
-            {
-                obras = res.Respuesta.Objeto;
-            }
-            else
-            {
-                Mensaje = "No se pudieron cargar las obras disponibles.";
-            }
-        }
-        catch (Exception ex)
-        {
-            Mensaje = $"Error al cargar obras: {ex.Message}";
+            deposito = res.Respuesta;
         }
     }
+    
+    // private  async Task CargarObras()
+    // {
+    //     try
+    //     {
+    //         var res = await Http.Get<Response<List<VerObraDTO>>>($"api/obra/{Id}");
+    //         if (res != null && res.Respuesta != null)
+    //         {
+    //             obras = res.Respuesta.Objeto;
+    //         }
+    //         else
+    //         {
+    //             Mensaje = "No se pudieron cargar las obras disponibles.";
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Mensaje = $"Error al cargar obras: {ex.Message}";
+    //     }
+    // }
 
     private async Task Guardar()
     {
