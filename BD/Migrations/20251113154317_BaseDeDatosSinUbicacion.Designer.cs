@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251106232016_tipomaterialNull")]
-    partial class tipomaterialNull
+    [Migration("20251113154317_BaseDeDatosSinUbicacion")]
+    partial class BaseDeDatosSinUbicacion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,10 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Domicilio")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("NombreDeposito")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -47,17 +51,12 @@ namespace BD.Migrations
                     b.Property<int>("TipoDeposito")
                         .HasColumnType("int");
 
-                    b.Property<long>("UbicacionId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CodigoDeposito")
                         .IsUnique();
 
                     b.HasIndex("ObraId");
-
-                    b.HasIndex("UbicacionId");
 
                     b.ToTable("Depositos");
                 });
@@ -271,23 +270,6 @@ namespace BD.Migrations
                     b.ToTable("ObraUsuarios");
                 });
 
-            modelBuilder.Entity("BD.Modelos.Provincia", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("varchar(80)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Provincias");
-                });
-
             modelBuilder.Entity("BD.Modelos.Recursos", b =>
                 {
                     b.Property<long>("Id")
@@ -391,9 +373,12 @@ namespace BD.Migrations
 
                     b.Property<string>("NombreRol")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NombreRol")
+                        .IsUnique();
 
                     b.ToTable("Roles");
 
@@ -485,32 +470,6 @@ namespace BD.Migrations
                     b.ToTable("TipoMateriales");
                 });
 
-            modelBuilder.Entity("BD.Modelos.Ubicacion", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CodigoUbicacion")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Domicilio")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("ProvinciaId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProvinciaId");
-
-                    b.ToTable("Ubicaciones");
-                });
-
             modelBuilder.Entity("BD.Modelos.UnidadMedida", b =>
                 {
                     b.Property<long>("Id")
@@ -579,15 +538,7 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BD.Modelos.Ubicacion", "Ubicacion")
-                        .WithMany()
-                        .HasForeignKey("UbicacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Obra");
-
-                    b.Navigation("Ubicacion");
                 });
 
             modelBuilder.Entity("BD.Modelos.DepositoUsuario", b =>
@@ -774,17 +725,6 @@ namespace BD.Migrations
                     b.Navigation("Deposito");
 
                     b.Navigation("MaterialesyMaquinas");
-                });
-
-            modelBuilder.Entity("BD.Modelos.Ubicacion", b =>
-                {
-                    b.HasOne("BD.Modelos.Provincia", "Provincia")
-                        .WithMany()
-                        .HasForeignKey("ProvinciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Provincia");
                 });
 
             modelBuilder.Entity("BD.Modelos.Usuario", b =>

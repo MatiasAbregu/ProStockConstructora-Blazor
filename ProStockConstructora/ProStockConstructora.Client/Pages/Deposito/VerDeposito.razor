@@ -48,6 +48,7 @@ else
 
 @code {
     List<VerDepositoDTO>? depositos;
+    List<DatosUsuario>? usuario;
     string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
@@ -75,6 +76,19 @@ else
             Console.WriteLine($" Error al obtener depósitos: {ex.Message}");
             depositos = new List<VerDepositoDTO>();
         }
+    }
+    public async Task ObtenerDepositosPorUsuario(DatosUsuario usuario)
+    {
+        try
+        {
+            var res = await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>("api/deposito/por-usuario", usuario);
+           
+        }
+        catch (Exception)
+        {
+            
+            throw;
+        }  
     }
 
     private void EditarDeposito(long id)

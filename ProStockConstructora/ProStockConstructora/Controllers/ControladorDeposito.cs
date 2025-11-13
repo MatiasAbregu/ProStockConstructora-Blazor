@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 
 namespace ProStockConstructora.Controllers
 {
@@ -28,7 +29,7 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
-
+        
         [HttpGet("{id:int}")]
         public async Task<ActionResult<VerDepositoDTO>> ObtenerDepositoPorId([FromRoute] int id)
         {
@@ -53,6 +54,14 @@ namespace ProStockConstructora.Controllers
             Response<int> res = await depositoServicio.CrearDeposito(e);
             return res.Estado ? StatusCode(201, res.Objeto) : StatusCode(500, res.Mensaje);
         }
+        [HttpPost("por-usuario")]
+        public async Task<ActionResult<Response<List<VerDepositoDTO>>>>ObtenerDepositosPorUsuario(DatosUsuario usuario) 
+        {
+            var res = await depositoServicio.ObtenerDepositosPorUsuario(usuario);
+            if (res.Estado) return Ok(usuario);
+            else return StatusCode(500, res.Mensaje);
+        }
+
         
         [HttpPut("actualizar/{id:int}")]
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)

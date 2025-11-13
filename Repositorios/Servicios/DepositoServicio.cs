@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
+using System.ComponentModel.Design;
 
 namespace Repositorios.Servicios
 {
@@ -146,6 +148,7 @@ namespace Repositorios.Servicios
                 {
                     CodigoDeposito = e.CodigoDeposito,
                     NombreDeposito = e.NombreDeposito,
+                    Domicilio = e.Domicilio,
                     ObraId = e.ObraId,
                     TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito,
                 };
@@ -167,6 +170,97 @@ namespace Repositorios.Servicios
                     Objeto = 0,
                     Mensaje = "Error al obtener los depósitos.",
                     Estado = false
+                };
+            }
+        }
+        public async Task<Response<List<VerDepositoDTO>>>ObtenerDepositosPorUsuario(DatosUsuario usuario) 
+        {
+            try
+            {
+                if (usuario == null) 
+                return new Response<List<VerDepositoDTO>>()
+                {
+                    Objeto = null,
+                    Estado = true,
+                    Mensaje = "No hay un usuario logueado"
+                };
+                
+                if (usuario.Roles.Contains("ADMINISTRADOR")) 
+                { 
+                    var depositos = await baseDeDatos.Depositos.
+                        Where(d => d.ObraId == usuario.EmpresaId)
+                        .Select(d => new VerDepositoDTO()
+                        {
+                            Id = d.Id,
+                            CodigoDeposito = d.CodigoDeposito,
+                            NombreDeposito = d.NombreDeposito,
+                            TipoDeposito = d.TipoDeposito.ToString()
+                        })
+                        .ToListAsync();
+                    return new Response<List<VerDepositoDTO>>()
+                    {
+                        Objeto = depositos,
+                        Estado = true,
+                        Mensaje = "¡Depositos cargados con exito!"
+                    };
+                }
+                else if (usuario.Roles.Contains("JEFEDEOBRA")) 
+                {
+                    var depositos = await baseDeDatos.Depositos.
+                        Where(d => usuario.DepositosId.Contains(d.Id))
+                        .Select(d => new VerDepositoDTO()
+                        {
+                            Id = d.Id,
+                            CodigoDeposito = d.CodigoDeposito,
+                            NombreDeposito = d.NombreDeposito,
+                            TipoDeposito = d.TipoDeposito.ToString()
+                        })
+                        .ToListAsync();
+                    return new Response<List<VerDepositoDTO>>()
+                    {
+                        Objeto = depositos,
+                        Estado = true,
+                        Mensaje = "Depositos cargados con exito."
+                    };
+                }
+                else if (usuario.Roles.Contains("JEFEDEDEPOSITO")) 
+                {
+                    var depositos = await baseDeDatos.Depositos.
+                        Where(d => usuario.DepositosId.Contains(d.Id))
+                        .Select(d => new VerDepositoDTO()
+                        {
+                            Id = d.Id,
+                            CodigoDeposito = d.CodigoDeposito,
+                            NombreDeposito = d.NombreDeposito,
+                            TipoDeposito = d.TipoDeposito.ToString()
+                        })
+                        .ToListAsync();
+                    return new Response<List<VerDepositoDTO>>()
+                    {
+                        Objeto = depositos,
+                        Estado = true,
+                        Mensaje = "Depositos cargados con exito."
+                    };
+                }
+                else
+                {
+                    return new Response<List<VerDepositoDTO>>()
+                    {
+                        Objeto = null,
+                        Estado = true,
+                        Mensaje = "Acceso Denegado."
+                    };
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error:{ex.Message}");
+                return new Response<List<VerDepositoDTO>>()
+                {
+                    Objeto = null,
+                    Estado = false,
+                    Mensaje = "Hubo un error desde el servidor al cargar los depositos."
                 };
             }
         }

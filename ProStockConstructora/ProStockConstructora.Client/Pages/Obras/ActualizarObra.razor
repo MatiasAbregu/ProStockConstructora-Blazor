@@ -1,16 +1,16 @@
-﻿@page "/obras/agregar-obra"
+﻿@page "/obras/editar/{ObraId:long}"
 @inject IHttpServicio http
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
 
-<PageTitle>Agregar Obra - ProStockConstructora</PageTitle>
+<PageTitle>Actualizar Obra - ProStockConstructora</PageTitle>
 
 @if (datosSesion.Usuario != null &&
     (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Agregar Obra</h3>
+            <h3 class="fw-bold">Actualizar Obra</h3>
             <a class="btn btn-secondary" href="/obras"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card">
@@ -21,19 +21,19 @@
                 </div>
             }
 
-            <EditForm Model="nuevaObra" OnValidSubmit="GuardarObra">
+            <EditForm Model="actualizarObra" OnValidSubmit="GuardarObra">
                 <DataAnnotationsValidator />
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Código de Obra</label>
-                    <input type="text" class="form-control" @bind="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
+                    <input type="text" class="form-control" @bind="actualizarObra.CodigoObra" placeholder="Ej: OB001" />
                 </div>
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Nombre de Obra</label>
-                    <input type="text" class="form-control" @bind="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
+                    <input type="text" class="form-control" @bind="actualizarObra.NombreObra" placeholder="Ej: Edificio Central" />
                 </div>
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Estado</label>
-                    <select class="form-select" @bind="nuevaObra.Estado">
+                    <select class="form-select" @bind="actualizarObra.Estado">
                         <option value="@EnumEstadoObra.EnProceso">En proceso</option>
                         <option value="@EnumEstadoObra.Pausada">Pausada</option>
                     </select>
@@ -53,20 +53,36 @@ else
 }
 
 @code {
+    [Parameter]
+    public long ObraId { get; set; }
     private DatosUsuario usuario;
-    private CrearObraDTO nuevaObra;
+    private ObraActualizarDTO actualizarObra = new();
     private string mensaje;
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
         base.OnInitialized();
         usuario = datosSesion.Usuario;
-        nuevaObra = new CrearObraDTO() { EmpresaId = usuario.EmpresaId, Estado = EnumEstadoObra.EnProceso };
+        await ObtenerObra();
+    }
+
+    private async Task ObtenerObra()
+    {
+        var res = await http.Get<Response<ObraActualizarDTO>>($"api/obra/{ObraId}");
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null)
+            {
+                actualizarObra = res.Respuesta.Objeto;
+            }
+            else mensaje = res.Respuesta.Mensaje;
+        }
+        StateHasChanged();
     }
 
     private async Task GuardarObra()
     {
-        var res = await http.Post<CrearObraDTO, Response<string>>("api/obra", nuevaObra);
+        var res = await http.Put<ObraActualizarDTO, Response<string>>($"api/obra/{ObraId}", actualizarObra);
         if (res.Respuesta != null)
         {
             if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) navManager.NavigateTo("/obras");

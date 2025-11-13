@@ -11,7 +11,9 @@ namespace DTO.DTOs_Usuarios
         [Required(ErrorMessage = "El correo es obligatorio.")]
         public string Email { get; set; }
         [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
-        public string NombreUsuario { get; set; }        
+        public string NombreUsuario { get; set; }
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        public string Contrasena { get; set; }
         public string? Celular { get; set; } = null;
         public long EmpresaId { get; set; }
         [Required(ErrorMessage = "El usuario debe contar con un rol.")]

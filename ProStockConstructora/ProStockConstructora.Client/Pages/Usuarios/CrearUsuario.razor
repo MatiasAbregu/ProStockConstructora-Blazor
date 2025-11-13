@@ -13,7 +13,13 @@
             <a class="btn btn-secondary" href="/usuarios"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card">
-            <EditForm Model="usuario" class="d-flex flex-column">
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger text-center mx-2 mt-2">
+                    @mensaje
+                </div>
+            }
+            <EditForm Model="usuario" class="d-flex flex-column" OnValidSubmit="CrearUsuarioMetodo">
                 <DataAnnotationsValidator />
                 <div class="my-3 px-4">
                     <label for="emailInput" class="form-label">Correo</label>
@@ -24,6 +30,11 @@
                     <label for="usernameInput" class="form-label">Nombre de usuario</label>
                     <InputText @bind-Value="usuario.NombreUsuario" type="text" class="form-control" id="usernameInput" />
                     <ValidationMessage For="@(() => usuario.NombreUsuario)" />
+                </div>
+                <div class="mb-3 px-4">
+                    <label for="passwordInput" class="form-label">Contraseña</label>
+                    <InputText @bind-Value="usuario.Contrasena" type="text" class="form-control" id="passwordInput" />
+                    <ValidationMessage For="@(() => usuario.Contrasena)" />
                 </div>
                 <div class="mb-3 px-4">
                     <label for="telInput" class="form-label">Teléfono (opcional)</label>
@@ -94,7 +105,7 @@
                                     {
                                         <div class="card checkBoxCard">
                                             <input class="form-check-input" type="checkbox" 
-                                            @onchange="(e) => ObraAgregarOQuitarDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
+                                                   @onchange="(e) => AgregarOQuitarObraDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
                                             <label class="form-check-label" for="check@(obra.CodigoObra)">
                                                 @obra.NombreObra
                                             </label>
@@ -135,9 +146,10 @@ else
     private List<VerRolDTO> rolesBD;
     private List<ObraEmpresaDTO> obrasBD;
     private List<DepositoEmpresaDTO> depositosBD;
-    private List<long> obrasId = [];
+    private List<long> obrasId = [], depositosId = [];
 
     private bool Autenticado = true;
+    private string mensaje;
 
     private string RolSeleccionado
     {
@@ -214,7 +226,7 @@ else
         }
     }
 
-    private void ObraAgregarOQuitarDeListado(ChangeEventArgs e, long obraId)
+    private void AgregarOQuitarObraDeListado(ChangeEventArgs e, long obraId)
     {
         if ((bool)e.Value)
         {
@@ -228,7 +240,16 @@ else
 
     private async Task CrearUsuarioMetodo()
     {
-        var res = await http.Post<CrearUsuarioDTO, Response<string>>("", usuario);
-        await Task.CompletedTask;
+        usuario.ObrasId = obrasId;
+        usuario.DepositosId = depositosId; 
+        if(RolSeleccionado != "JEFEDEDEPOSITO")
+        {
+            var res = await http.Post<CrearUsuarioDTO, Response<string>>("api/usuario", usuario);
+            if(res.Respuesta != null)
+            {
+                if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) navManager.NavigateTo("/usuarios");
+                else mensaje = res.Respuesta.Mensaje;
+            }
+        }
     }
 }

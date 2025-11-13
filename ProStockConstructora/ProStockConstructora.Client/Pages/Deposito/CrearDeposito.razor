@@ -2,7 +2,7 @@
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 
-@* <div class="card border-0 shadow-sm mb-4">
+ <div class="card border-0 shadow-sm mb-4">
     <div class="card-body bg-gradient p-4 text-center rounded-3" style="background: linear-gradient(135deg, #0d6efd, #3b8ef3);">
         <h2 class="fw-bold text-Black mb-1" style="font-family: 'Poppins', sans-serif;">
             <i class="bi bi-building-add me-2"></i> Añadir nuevo Depósito
@@ -14,8 +14,9 @@
 </div>
 
 <div class="card shadow-sm p-4">
-    <EditForm Model="@deposito" OnValidSubmit="@Guardar">
+    <EditForm Model="@deposito" OnValidSubmit="@Guardar" FormName="CrearDeposito">
         <DataAnnotationsValidator />
+        <ValidationSummary />
         <div class="mb-3">
             <label class="form-label fw-semibold">Código de Depósito</label>
             <InputText class="form-control" @bind-Value="deposito.CodigoDeposito" />
@@ -27,6 +28,24 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label fw-semibold">Domicilio</label>
+            <InputText class="form-control" @bind-Value="deposito.Domicilio" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Obra asociada</label>
+            <InputSelect class="form-control" @bind-Value="deposito.ObraId">
+                <option value="">-- Seleccionar obra --</option>
+                @if (obras != null)
+                {
+                    @foreach (var obra in obras)
+                    {
+                        <option value="@obra.Id">@obra.NombreObra</option>
+                    }
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label fw-semibold">Tipo de Depósito</label>
             <InputSelect class="form-control" @bind-Value="deposito.TipoDeposito">
                 @foreach (var tipo in Enum.GetValues(typeof(EnumTipoDeposito)))
@@ -35,43 +54,68 @@
                 }
             </InputSelect>
         </div>
-        <div class="mb-3">
-            <label class="form-label fw-semibold">Domicilio</label>
-            <InputText class="form-control" @bind-Value="deposito.Ubicacion.UbicacionDomicilio" />
-        </div>
+        
 
         <div class="d-flex justify-content-end gap-2 mt-3">
             <button type="submit" class="btn btn-primary">
                 <i class="bi bi-save"></i> Guardar
             </button>
             <button type="button" class="btn btn-secondary" @onclick="Volver">
-                <i class="bi bi-x-circle"></i> Volver
+                <i class="bi bi-arrow-left"></i> Volver
             </button>
         </div>
     </EditForm>
 </div>
 
 @code {
-    [Parameter]
-    public long Id { get; set; }
-    private DepositoAsociarDTO deposito = new DepositoAsociarDTO
-    {
-        Ubicacion = new UbicacionDTO(),
-        
-    };
+    // [Parameter]
+    // public long Id { get; set; }
+    private DepositoAsociarDTO? deposito = new();
+    private List<VerObraDTO> obras = new();
     string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarObras();
+    }
+
+    private async Task CargarObras()
+    {
+        try
+        {
+            var res = await Http.Get<Response<List<VerObraDTO>>>("api/obra");
+            if (res != null && res.Respuesta != null)
+            {
+                obras = res.Respuesta.Objeto;
+            }
+            else
+            {
+                Mensaje = "No se pudieron cargar las obras disponibles.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar obras: {ex.Message}";
+        }
+    }
 
     private async Task Guardar()
     {
-        var res = await Http.Post<DepositoAsociarDTO, int>("api/deposito/crear", deposito);
-        if (res.Respuesta != null)
+        try
         {
-            Navigation.NavigateTo("/deposito");
+            var res = await Http.Post<DepositoAsociarDTO, int>("api/deposito", deposito);
+            if (res != null && res.Respuesta > 0)
+            {
+                Navigation.NavigateTo("/deposito");
+            }
+            else
+            {
+                Mensaje = "Error al guardar el depósito.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Mensaje = "Error al guardar el depósito.";
-            return;
+            Mensaje = $"Error al guardar: {ex.Message}";
         }
     }
 
@@ -79,4 +123,4 @@
     {
         Navigation.NavigateTo("/deposito");
     }
-} *@
+} 
