@@ -3,9 +3,10 @@
 @inject DatosSesion datosSesion;
 @inject NavigationManager navManager;
 
-@if (datosSesion.Usuario != null)
-{
-    <PageTitle>Crear usuario - ProStock</PageTitle>
+<PageTitle>Crear usuario - ProStock</PageTitle>
+
+@if (datosSesion.Usuario != null && datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+{  
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Crear Usuario</p>
@@ -65,13 +66,13 @@
                                         </label>
                                     </div>
                                 }
-                                <a class="btn btn-success" href="/obra">+</a>
+                                <a class="btn btn-success" href="/depositos">+</a>
                             }
                             else if (depositosBD?.Count == 0)
                             {
                                 <div class="contenedorAnadir">
                                     <p>No existen depósitos aún agregados en el sistema. ¡Añada uno!</p>
-                                    <a class="btn btn-success" href="/obra">+</a>
+                                    <a class="btn btn-success" href="/depositos">+</a>
                                 </div>
                             }
                             else
@@ -88,22 +89,25 @@
                         <div>
                             @if (obrasBD?.Count > 0)
                             {
-                                @foreach (var obra in obrasBD)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
-                                        <label class="form-check-label" for="checkDefault">
-                                            @obra.NombreObra
-                                        </label>
-                                    </div>
-                                }
-                                <button class="btn btn-success">+</button>
+                                <div class="containerCheckbox">
+                                    @foreach (var obra in obrasBD)
+                                    {
+                                        <div class="card checkBoxCard">
+                                            <input class="form-check-input" type="checkbox" 
+                                            @onchange="(e) => ObraAgregarOQuitarDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
+                                            <label class="form-check-label" for="check@(obra.CodigoObra)">
+                                                @obra.NombreObra
+                                            </label>
+                                        </div>
+                                    }
+                                    <a class="btn btn-success" href="/obras/agregar-obra">+</a>
+                                </div>
                             }
                             else if (obrasBD?.Count == 0)
                             {
                                 <div class="contenedorAnadir">
                                     <p>No existen obras aún agregadas en el sistema. ¡Añada una!</p>
-                                    <button class="btn btn-success">+</button>
+                                    <a class="btn btn-success" href="/obras/agregar-obra">+</a>
                                 </div>
                             }
                             else
@@ -131,6 +135,7 @@ else
     private List<VerRolDTO> rolesBD;
     private List<ObraEmpresaDTO> obrasBD;
     private List<DepositoEmpresaDTO> depositosBD;
+    private List<long> obrasId = [];
 
     private bool Autenticado = true;
 
@@ -167,7 +172,8 @@ else
         {
             //mensaje = res.Respuesta.Mensaje;
             rolesBD = res.Respuesta.Objeto;
-            CambioDeRol(rolesBD[0].NombreNormalizado);
+            await CambioDeRol(rolesBD[0].NombreNormalizado);
+            obrasId = [];
         }
     }
 
@@ -206,5 +212,23 @@ else
             depositosBD = res.Respuesta.Objeto;
             StateHasChanged();
         }
+    }
+
+    private void ObraAgregarOQuitarDeListado(ChangeEventArgs e, long obraId)
+    {
+        if ((bool)e.Value)
+        {
+            if (!obrasId.Contains(obraId))
+                obrasId.Add(obraId);
+        } else
+        {
+            obrasId.Remove(obraId);
+        }
+    }
+
+    private async Task CrearUsuarioMetodo()
+    {
+        var res = await http.Post<CrearUsuarioDTO, Response<string>>("", usuario);
+        await Task.CompletedTask;
     }
 }

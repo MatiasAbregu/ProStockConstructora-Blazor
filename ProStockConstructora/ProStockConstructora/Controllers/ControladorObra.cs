@@ -43,13 +43,13 @@ namespace ProStockConstructora.Controllers
         }
 
 
-        [HttpPost] // habria que pasarle el id de la empresa
+        [HttpPost]
         public async Task<IActionResult> CrearObra([FromBody] CrearObraDTO obraDTO)
         {
-           ValueTuple<bool, string> resultado = await obraServicio.CrearObra(obraDTO);
-            if (!resultado.Item1)
-                return StatusCode(500, resultado.Item2);
-            return Ok("Obra creada exitosamente.");
+            var res = await obraServicio.CrearObra(obraDTO);
+            if (res.Estado)
+                return StatusCode(200, res);
+            return StatusCode(500, res);
         }
 
         [HttpPut("{id:int}")]

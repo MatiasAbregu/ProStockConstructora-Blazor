@@ -5,203 +5,164 @@
 
 <PageTitle>Obras - ProStockConstructora</PageTitle>
 
-@if (datosSesion.Usuario != null)
+@if (datosSesion.Usuario != null &&
+	(datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
-    <article class="p-4 container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold text-primary">Listado de Obras</h3>
-            <button class="btn btn-success rounded-circle"
-                    title="Agregar Obra"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalAgregarObra">
-                <i class="bi bi-plus-lg"></i>
-            </button>
-        </div>
+	<article class="p-4">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="fw-bold">Listado de Obras</h3>
+			<a class="btn btn-add btn-success" href="/obras/agregar-obra">+</a>
+		</div>
 
+		<div class="table-responsive">
+			<table class="table table-hover align-middle">
+				<thead class="table-dark">
+					<tr>
+						<th>Código</th>
+						<th>Nombre</th>
+						<th>Estado</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (!string.IsNullOrEmpty(Mensaje) && Obras?.Count == 0)
+					{
+						<tr>
+							<td colspan="4" class="text-center">@Mensaje</td>
+						</tr>
+					}
+					else if (Obras?.Count == 0)
+					{
+						<tr>
+							<td colspan="4" class="text-center text-muted">No hay obras cargadas aún en el sistema.</td>
+						</tr>
+					}
+					else if (Obras?.Count > 0)
+					{
+						@foreach (var obra in Obras)
+						{
+							<tr>
+								<td>@obra.CodigoObra</td>
+								<td>@obra.NombreObra</td>
+								<td>
+									<span class="badge @(obra.Estado == "En proceso" ? "bg-primary" : "bg-warning text-dark")">
+										@obra.Estado
+									</span>
+								</td>
+								<td class="text-center">
+									<a class="btn btn-outline-warning" href="/obras/@obra.Id">
+										<i class="bi bi-pencil-fill"></i>
+									</a>
+									<button class="btn btn-outline-danger">
+										<i class="bi bi-trash-fill"></i>
+									</button>
+								</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+			<div class="d-flex justify-content-between">
+				<div class="botoneraTabla">
+					<p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+					<p class="btn-tabla-numero">@numeroPagina</p>
+					<p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+				</div>
+				<p>@Obras?.Count registros totales</p>
+			</div>
+		</div>
+	</article>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Estado</th>
-                        <th class="text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!string.IsNullOrEmpty(Mensaje) && Obras?.Count == 0)
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center">@Mensaje</td>
-                        </tr>
-                    }
-                    else if (Obras?.Count == 0)
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">No hay obras cargadas aún en el sistema.</td>
-                        </tr>
-                    }
-                    else if (Obras?.Count > 0)
-                    {
-                        @foreach (var obra in Obras)
-                        {
-                            <tr>
-                                <td>@obra.CodigoObra</td>
-                                <td>@obra.NombreObra</td>
-                                <td>
-                                    <span class="badge @(obra.Estado == "En proceso" ? "bg-primary" : "bg-warning text-dark")">
-                                        @obra.Estado
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <!-- Botón eliminar -->
-                                    <button class="btn btn-outline-danger"
-                                            title="Eliminar Obra"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalConfirmarEliminar"
-                                            @onclick="() => obraSeleccionada = obra">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </article>
+	<!-- MODAL de confirmación para eliminar -->
 
-
-    <!-- MODAL para agregar una nueva obra -->
-
-    <div class="modal fade" id="modalAgregarObra" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-3 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="tituloModal">Agregar Obra</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <!-- Campo Código -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Código de Obra</label>
-                        <input type="text" class="form-control" @bind="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
-                    </div>
-
-                    <!-- Campo Nombre -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nombre de Obra</label>
-                        <input type="text" class="form-control" @bind="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
-                    </div>
-
-                    <!-- Campo Estado -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Estado</label>
-                        <select class="form-select" @bind="nuevaObra.Estado">
-                            <option value="0">En proceso</option>
-                            <option value="1">Pausada</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <button class="btn btn-success" @onclick="AgregarObra" data-bs-dismiss="modal">
-                        <i class="bi bi-check2-circle"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- MODAL de confirmación para eliminar -->
-
-    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminar" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-3 shadow">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Confirmar eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>¿Seguro que deseas eliminar la obra <strong>@obraSeleccionada?.NombreObra</strong>?</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => EliminarObra(obraSeleccionada.Id)">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminar" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content rounded-3 shadow">
+				<div class="modal-header bg-danger text-white">
+					<h5 class="modal-title">Confirmar eliminación</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body text-center">
+					<p>¿Seguro que deseas eliminar la obra <strong>@obraSeleccionada?.NombreObra</strong>?</p>
+				</div>
+				<div class="modal-footer justify-content-center">
+					<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<button class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => EliminarObra(obraSeleccionada.Id)">Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 }
 else
 {
-    navManager.NavigateTo("/");
+	navManager.NavigateTo("/");
 }
 
 
 @code {
-    private DatosUsuario usuario = new();
-    private List<VerObraDTO> Obras;
-    private CrearObraDTO nuevaObra = new();
+	private DatosUsuario usuario = new();
+	private List<VerObraDTO> Obras;
+	private CrearObraDTO nuevaObra = new();
+	private int numeroPagina = 1;
 
-    VerObraDTO obraSeleccionada;
-    private string Mensaje = string.Empty;
+	VerObraDTO obraSeleccionada;
+	private string Mensaje = string.Empty;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        usuario = datosSesion.Usuario;
-        await CargarObras();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		usuario = datosSesion.Usuario;
+		await CargarObras();
+	}
 
-    private async Task CargarObras()
-    {
-        var res = await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", usuario);
+	private async Task CargarObras()
+	{
+		var res = await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", usuario);
 
-        if (res.Respuesta != null)
-        {
-            if (res.Respuesta.Estado)
-            {
-                Obras = res.Respuesta.Objeto;
-                Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
-                StateHasChanged();
-            }
-        }
-    }
+		if (res.Respuesta != null)
+		{
+			if (res.Respuesta.Estado)
+			{
+				Obras = res.Respuesta.Objeto;
+				Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+			}
+		}
+	}
 
-    private async Task AgregarObra()
-    {
-        // try
-        // {
-        //     var res = await http.Post<CrearObraDTO, string>("api/obra", nuevaObra);
-        //     if (res.Respuesta != null)
-        //     {
-        //         await CargarObras();
-        //         nuevaObra = new CrearObraDTO();
-        //     }
-        // }
-        // catch
-        // {
-        //     mensaje = "Error al crear la obra.";
-        // }
-    }
+	async Task CargarNuevasObras()
+	{
+		await CargarObras();
+		StateHasChanged();
+	}
 
-    private async Task EliminarObra(long id)
-    {
-        // try
-        // {
-        //     await http.Delete<string>($"api/obra/{id}");
-        //     await CargarObras();
-        // }
-        // catch
-        // {
-        //     mensaje = "Error al eliminar la obra.";
-        // }
-    }
+	private async Task EliminarObra(long id)
+	{
+		// try
+		// {
+		//     await http.Delete<string>($"api/obra/{id}");
+		//     await CargarObras();
+		// }
+		// catch
+		// {
+		//     mensaje = "Error al eliminar la obra.";
+		// }
+	}
+
+	private async Task SiguientePagina()
+	{
+		if (Obras.Count > numeroPagina * 10)
+		{
+			numeroPagina++;
+			StateHasChanged();
+		}
+	}
+
+	private async Task AnteriorPagina()
+	{
+		if (numeroPagina > 1)
+		{
+			numeroPagina--;
+			StateHasChanged();
+		}
+	}
 }

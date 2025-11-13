@@ -188,15 +188,21 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> CrearObra(CrearObraDTO obraDTO) // habria que pasarle el CUIT de la empresa Y EL RESPONSE
+        public async Task<Response<string>> CrearObra(CrearObraDTO obraDTO) // habria que pasarle el CUIT de la empresa Y EL RESPONSE
         {
             try
             {
                 bool existeObra = await baseDeDatos.Obras
                     .AnyAsync(ob => obraDTO.CodigoObra.ToLower() == ob.CodigoObra.ToLower()
                     && ob.EmpresaId == obraDTO.EmpresaId);
+                
                 if (existeObra)
-                    return (false, "Ya existe una obra con ese código en la empresa.");
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "Ya existe una obra con ese código en la empresa.",
+                        Objeto = null
+                    };
 
                 var nuevaObra = new Obra
                 {
@@ -205,14 +211,22 @@ namespace Repositorios.Servicios
                     EmpresaId = obraDTO.EmpresaId,
                     Estado = (EnumEstadoObra)obraDTO.Estado
                 };
-                await baseDeDatos.Obras.AddAsync(nuevaObra);
+                baseDeDatos.Obras.Add(nuevaObra);
                 await baseDeDatos.SaveChangesAsync();
-                return (true, "Obra creada con éxito.");
+                return new Response<string>()
+                {
+                    Estado = true, Mensaje = null, Objeto = "¡Obra creada con éxito!"
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return (false, "Error al crear la obra.");
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Objeto = null,
+                    Mensaje = "¡Hubo un error desde el servidor al crear la obra!"
+                };
             }
         }
 

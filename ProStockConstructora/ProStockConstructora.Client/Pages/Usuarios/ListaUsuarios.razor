@@ -3,7 +3,7 @@
 @inject DatosSesion datosSesion;
 @inject NavigationManager navManager;
 
-@if (datosSesion.Usuario != null)
+@if (datosSesion.Usuario != null && datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
 {
     <PageTitle>Lista de usuarios - ProStock</PageTitle>
     <article class="p-4">

@@ -210,34 +210,38 @@ namespace Repositorios.Servicios
             throw new NotImplementedException();
         }
 
-        //public async Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario)
-        //{
-        //    using var transaction = await baseDeDatos.Database.BeginTransactionAsync();
+        public async Task<Response<string>> CrearUsuario(CrearUsuarioDTO usuario)
+        {
+            bool existe = await baseDeDatos.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+            if(existe) return new Response<string>()
+            {
 
-        //    Usuario UsuarioBD = new(usuario.NombreUsuario, usuario.EmpresaId, usuario.Email, usuario.Celular);
-        //    IdentityResult resultado = await gestorUsuarios.CreateAsync(UsuarioBD, usuario.NombreUsuario);
+            }
 
-        //    if (resultado.Succeeded)
-        //    {
-        //        resultado = await gestorUsuarios.AddToRolesAsync(UsuarioBD, usuario.Roles);
-        //        if (!resultado.Succeeded)
-        //        {
-        //            await transaction.RollbackAsync();
-        //            return resultado;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (IdentityError error in resultado.Errors)
-        //        {
-        //            Debug.WriteLine(error.Description);
-        //        }
-        //        await transaction.RollbackAsync();
-        //        return resultado;
-        //    }
-        //    await transaction.CommitAsync();
-        //    return resultado;
-        //}
+            Usuario UsuarioBD = new(usuario.NombreUsuario, usuario.EmpresaId, usuario.Email, usuario.Celular);
+            IdentityResult resultado = await gestorUsuarios.CreateAsync(UsuarioBD, usuario.NombreUsuario);
+
+            if (resultado.Succeeded)
+            {
+                resultado = await gestorUsuarios.AddToRolesAsync(UsuarioBD, usuario.Roles);
+                if (!resultado.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    return resultado;
+                }
+            }
+            else
+            {
+                foreach (IdentityError error in resultado.Errors)
+                {
+                    Debug.WriteLine(error.Description);
+                }
+                await transaction.RollbackAsync();
+                return resultado;
+            }
+            await transaction.CommitAsync();
+            return resultado;
+        }
 
         public async Task<(bool, string, Usuario)> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)
         {
