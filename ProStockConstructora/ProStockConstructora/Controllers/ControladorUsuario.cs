@@ -47,27 +47,15 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return StatusCode(200, res);
             return StatusCode(500, res);
         }
-        
-        //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)
-        //{
-        //    IdentityResult resultado = await usuarioServicio.CrearUsuario(usuario);
 
-        //    if (resultado.Succeeded) return StatusCode(200, "¡Usuario creado con éxito!");
-        //    else
-        //    {
-        //        string error = "";
-        //        foreach (IdentityError errorListado in resultado.Errors)
-        //        {
-        //            if (errorListado.Code == "DuplicateUserName")
-        //            {
-        //                error = "¡Error, el nombre de usuario ya está en uso!";
-        //                break;
-        //            }
-        //        }
+        [HttpPost]
+        public async Task<ActionResult<Response<string>>> CrearUsuario(CrearUsuarioDTO usuario)
+        {
+            var res = await usuarioServicio.CrearUsuario(usuario);
 
-        //        return StatusCode(400, error);
-        //    }
-        //}
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class depositos01 : Migration
+    public partial class BaseDeDatosSinUbicacion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -153,7 +153,7 @@ namespace BD.Migrations
                     Nombre = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UnidadMedidaId = table.Column<long>(type: "bigint", nullable: true),
-                    TipoMaterialId = table.Column<long>(type: "bigint", nullable: false),
+                    TipoMaterialId = table.Column<long>(type: "bigint", nullable: true),
                     Descripcion = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -164,8 +164,7 @@ namespace BD.Migrations
                         name: "FK_Recursos_TipoMateriales_TipoMaterialId",
                         column: x => x.TipoMaterialId,
                         principalTable: "TipoMateriales",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Recursos_UnidadMedidas_UnidadMedidaId",
                         column: x => x.UnidadMedidaId,

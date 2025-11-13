@@ -19,7 +19,7 @@ namespace Repositorios.Implementaciones
 
         // POSTs
         public Task<Response<DatosUsuario>> IniciarSesion(IniciarSesionDTO usuarioDTO);
-        //public Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario);
+        public Task<Response<string>> CrearUsuario(CrearUsuarioDTO usuario);
 
         // PUTs
         public Task<(bool, string, Usuario)> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario);

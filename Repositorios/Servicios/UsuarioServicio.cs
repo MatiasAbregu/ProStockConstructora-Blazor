@@ -210,34 +210,101 @@ namespace Repositorios.Servicios
             throw new NotImplementedException();
         }
 
-        //public async Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario)
-        //{
-        //    using var transaction = await baseDeDatos.Database.BeginTransactionAsync();
+        public async Task<Response<string>> CrearUsuario(CrearUsuarioDTO usuario)
+        {
+            try
+            {
+                bool existe = await baseDeDatos.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+                if (existe) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "Ya existe un usuario con ese email en el sistema. Pruebe con otro.",
+                    Objeto = null
+                };
+                bool existeUnRol = await baseDeDatos.Roles.Where(r => usuario.Roles.Contains(r.NombreRol)).AnyAsync();
+                if(existeUnRol == false)
+                {
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "Uno o más de los roles que se envió no existen.",
+                        Objeto = null
+                    };
+                }
 
-        //    Usuario UsuarioBD = new(usuario.NombreUsuario, usuario.EmpresaId, usuario.Email, usuario.Celular);
-        //    IdentityResult resultado = await gestorUsuarios.CreateAsync(UsuarioBD, usuario.NombreUsuario);
+                var usuarioBD = new Usuario()
+                {
+                    NombreUsuario = usuario.NombreUsuario,
+                    Contrasena = usuario.Contrasena,
+                    Email = usuario.Email,
+                    EmpresaId = usuario.EmpresaId,
+                    Telefono = usuario.Celular,
+                    Estado = true
+                };
 
-        //    if (resultado.Succeeded)
-        //    {
-        //        resultado = await gestorUsuarios.AddToRolesAsync(UsuarioBD, usuario.Roles);
-        //        if (!resultado.Succeeded)
-        //        {
-        //            await transaction.RollbackAsync();
-        //            return resultado;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (IdentityError error in resultado.Errors)
-        //        {
-        //            Debug.WriteLine(error.Description);
-        //        }
-        //        await transaction.RollbackAsync();
-        //        return resultado;
-        //    }
-        //    await transaction.CommitAsync();
-        //    return resultado;
-        //}
+                baseDeDatos.Usuarios.Add(usuarioBD);
+                await baseDeDatos.SaveChangesAsync();
+
+                var roles = await baseDeDatos.Roles
+                                .Where(r => usuario.Roles.Contains(r.NombreRol))
+                                .ToListAsync();
+
+                baseDeDatos.RolesUsuarios.AddRange(roles.Select(r => new RolesUsuario()
+                {
+                    UsuarioId = usuarioBD.Id,
+                    RolId = r.Id
+                }));
+
+                if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                {
+                    var depositos = await baseDeDatos.Depositos
+                                        .Where(d => usuario.DepositosId.Contains(d.Id))
+                                        .ToListAsync();
+
+                    baseDeDatos.DepositosUsuario.AddRange(
+                        depositos.Select(d => new DepositoUsuario()
+                        {
+                            UsuarioId = usuarioBD.Id,
+                            DepositoId = d.Id
+                        })
+                    );
+
+                    await baseDeDatos.SaveChangesAsync();
+                }
+                else if (usuario.Roles.Contains("JEFEDEOBRA"))
+                {
+                    var obras = await baseDeDatos.Obras
+                                    .Where(o => usuario.ObrasId.Contains(o.Id))
+                                    .ToListAsync();
+
+                    baseDeDatos.ObraUsuarios.AddRange(
+                        obras.Select(o => new ObraUsuario()
+                        {
+                            UsuarioId = usuarioBD.Id,
+                            ObraId = o.Id
+                        }));
+
+                    await baseDeDatos.SaveChangesAsync();
+                }
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡Usuario creado con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error desde el servidor al crear el usuario!",
+                    Objeto = null
+                };
+            }
+        }
 
         public async Task<(bool, string, Usuario)> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)
         {

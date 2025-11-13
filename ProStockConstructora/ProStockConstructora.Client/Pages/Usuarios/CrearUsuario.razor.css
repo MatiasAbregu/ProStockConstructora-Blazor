@@ -32,3 +32,19 @@
         margin: 0 1% 0 0;
         padding: 0;
     }
+
+.containerCheckbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    max-height: 250px;
+    overflow-y: auto;
+    align-items: center;
+}
+
+.checkBoxCard {
+    display: flex;
+    flex-direction: row;
+    padding: 1% 2%;
+    gap: 0 20px;
+}

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251110202108_depositos01")]
-    partial class depositos01
+    [Migration("20251113154317_BaseDeDatosSinUbicacion")]
+    partial class BaseDeDatosSinUbicacion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,7 +289,7 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("TipoMaterialId")
+                    b.Property<long?>("TipoMaterialId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("UnidadMedidaId")
@@ -651,9 +651,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Modelos.TipoMaterial", "TipoMaterial")
                         .WithMany()
-                        .HasForeignKey("TipoMaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TipoMaterialId");
 
                     b.HasOne("BD.Modelos.UnidadMedida", "UnidadMedida")
                         .WithMany()
