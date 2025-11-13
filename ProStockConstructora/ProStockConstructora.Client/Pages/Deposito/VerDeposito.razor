@@ -2,16 +2,30 @@
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 
-<h3>Depositos</h3>
+<div class="text-center mb-4">
+    <h2 class="fw-bold text-primary" style="font-family: 'Poppins', sans-serif;">
+        <i class="bi bi-box-seam"></i> Depósitos
+    </h2>
+</div>
 <br />
-<button class="btn btn-success mb-3" @onclick="DepositoCrear"><i class="bi bi-plus-circle"></i>Agregar</button>
+<div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-success shadow-sm" @onclick="DepositoCrear">
+        <i class="bi bi-plus-circle me-1"></i> Agregar
+    </button>
+</div>
+<br />
 @if (depositos == null)
 {
-    <p>Cargando...</p>
+    <div class="text-center text-secondary">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2">Cargando depósitos...</p>
+    </div>
 }
 else if (depositos.Count == 0)
 {
-    <p>No hay depósitos disponibles.</p>
+    <p class="text-center text-muted fst-italic">No hay depósitos disponibles.</p>
 }
 else
 {
@@ -48,12 +62,14 @@ else
 
 @code {
     List<VerDepositoDTO>? depositos;
-    List<DatosUsuario>? usuario;
+    DatosUsuario? usuario;
     string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
     {
         await CargarDepositos();
+        await ObtenerDepositosPorUsuario();
+
     }  
     private async Task CargarDepositos()
     {
@@ -77,17 +93,35 @@ else
             depositos = new List<VerDepositoDTO>();
         }
     }
-    public async Task ObtenerDepositosPorUsuario(DatosUsuario usuario)
+    public async Task ObtenerDepositosPorUsuario()
     {
         try
         {
-            var res = await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>("api/deposito/por-usuario", usuario);
-           
+            var usuariores = await Http.Get<DatosUsuario>("api/obtener-usuario");
+            if (usuariores.Respuesta != null)
+            {
+                usuario = usuariores.Respuesta;
+                var res = await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>("api/deposito/por-usuario", usuario);
+                if (res != null)
+                {
+                    depositos = res.Respuesta.Objeto;
+                }
+                else
+                {
+                    depositos = new List<VerDepositoDTO>();
+                }
+            }
+            else
+            {
+                Mensaje = "No se pudo obtener el usuario.";
+            }
+
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            
-            throw;
+
+            Mensaje = $"Error al cargar depósitos: {ex.Message}";
+            depositos = new List<VerDepositoDTO>();
         }  
     }
 
@@ -103,6 +137,10 @@ else
         {
             Mensaje = "Deposito eliminado correctamente";
             await CargarDepositos();
+        }
+        else
+        {
+            Mensaje = "Error al eliminar el depósito.";
         }
     }   
 
