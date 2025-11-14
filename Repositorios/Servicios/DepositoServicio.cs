@@ -247,41 +247,5 @@ namespace Repositorios.Servicios
                 };
             }
         }
-
-        public async Task<Response<string>> EliminarDeposito(long id)
-        {
-            try
-            {
-                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
-                if (deposito == null)
-                {
-                    return new Response<string>
-                    {
-                        Objeto = null,
-                        Mensaje = "No existe un depósito con ese ID.",
-                        Estado = false
-                    };
-                }
-
-                baseDeDatos.Depositos.Remove(deposito);
-                await baseDeDatos.SaveChangesAsync();
-
-                return new Response<string>
-                {
-                    Objeto = deposito.Id.ToString(),
-                    Mensaje = "Depósito eliminado exitosamente.",
-                    Estado = true
-                };
-            }
-            catch (Exception)
-            {
-                return new Response<string>
-                {
-                    Objeto = null,
-                    Mensaje = "Error al eliminar el depósito.",
-                    Estado = false
-                };
-            }
-        }
     }
 }

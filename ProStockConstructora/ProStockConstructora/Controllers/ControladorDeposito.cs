@@ -44,7 +44,7 @@ namespace ProStockConstructora.Controllers
         {
             var res = await depositoServicio.ObtenerDepositosPorUsuario(usuario, ObraId);
             if (res.Estado) return StatusCode(200, res);
-            else return StatusCode(500, res.Mensaje);
+            else return StatusCode(500, res);
         }
 
         [HttpPut("actualizar/{id:int}")]
@@ -52,16 +52,7 @@ namespace ProStockConstructora.Controllers
         {
             Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
             if (res.Estado) return Ok(e);
-            else return StatusCode(500, res.Mensaje);
+            else return StatusCode(500, res);
         }
-
-        [HttpDelete("eliminar/{id:long}")]
-        public async Task<ActionResult<string>> EliminarDeposito(long id)
-        {
-            Response<string> res = await depositoServicio.EliminarDeposito(id);
-            if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
-        }
-
     }
 }
