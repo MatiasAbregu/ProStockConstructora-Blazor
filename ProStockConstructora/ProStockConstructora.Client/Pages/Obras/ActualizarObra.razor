@@ -3,14 +3,14 @@
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
 
-<PageTitle>Actualizar Obra - ProStockConstructora</PageTitle>
+<PageTitle>Actualizar Obra - ProStock</PageTitle>
 
 @if (datosSesion.Usuario != null &&
     (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Actualizar Obra</h3>
+            <p class="fw-bolder">Actualizar Obra</p>
             <a class="btn btn-secondary" href="/obras"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card">

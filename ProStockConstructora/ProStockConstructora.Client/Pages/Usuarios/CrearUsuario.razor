@@ -6,7 +6,7 @@
 <PageTitle>Crear usuario - ProStock</PageTitle>
 
 @if (datosSesion.Usuario != null && datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
-{  
+{
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Crear Usuario</p>
@@ -104,7 +104,7 @@
                                     @foreach (var obra in obrasBD)
                                     {
                                         <div class="card checkBoxCard">
-                                            <input class="form-check-input" type="checkbox" 
+                                            <input class="form-check-input" type="checkbox"
                                                    @onchange="(e) => AgregarOQuitarObraDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
                                             <label class="form-check-label" for="check@(obra.CodigoObra)">
                                                 @obra.NombreObra
@@ -232,7 +232,8 @@ else
         {
             if (!obrasId.Contains(obraId))
                 obrasId.Add(obraId);
-        } else
+        }
+        else
         {
             obrasId.Remove(obraId);
         }
@@ -241,15 +242,12 @@ else
     private async Task CrearUsuarioMetodo()
     {
         usuario.ObrasId = obrasId;
-        usuario.DepositosId = depositosId; 
-        if(RolSeleccionado != "JEFEDEDEPOSITO")
+        usuario.DepositosId = depositosId;
+        var res = await http.Post<CrearUsuarioDTO, Response<string>>("api/usuario", usuario);
+        if (res.Respuesta != null)
         {
-            var res = await http.Post<CrearUsuarioDTO, Response<string>>("api/usuario", usuario);
-            if(res.Respuesta != null)
-            {
-                if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) navManager.NavigateTo("/usuarios");
-                else mensaje = res.Respuesta.Mensaje;
-            }
+            if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) navManager.NavigateTo("/usuarios");
+            else mensaje = res.Respuesta.Mensaje;
         }
     }
 }

@@ -3,14 +3,14 @@
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
 
-<PageTitle>Agregar Obra - ProStockConstructora</PageTitle>
+<PageTitle>Agregar Obra - ProStock</PageTitle>
 
 @if (datosSesion.Usuario != null &&
     (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <div class="p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Agregar Obra</h3>
+        <div class="cabecera">
+            <p class="fw-bolder">Crear Obra</p>
             <a class="btn btn-secondary" href="/obras"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card">
@@ -25,18 +25,21 @@
                 <DataAnnotationsValidator />
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Código de Obra</label>
-                    <input type="text" class="form-control" @bind="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
+                    <InputText type="text" class="form-control" @bind-Value="nuevaObra.CodigoObra" placeholder="Ej: OB001" />
+                    <ValidationMessage For="@(() => nuevaObra.CodigoObra)" />
                 </div>
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Nombre de Obra</label>
-                    <input type="text" class="form-control" @bind="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
+                    <InputText type="text" class="form-control" @bind-Value="nuevaObra.NombreObra" placeholder="Ej: Edificio Central" />
+                    <ValidationMessage For="@(() => nuevaObra.NombreObra)" />
                 </div>
                 <div class="my-3 px-4">
                     <label class="form-label fw-bold">Estado</label>
-                    <select class="form-select" @bind="nuevaObra.Estado">
+                    <InputSelect class="form-select" @bind-Value="nuevaObra.Estado">
                         <option value="@EnumEstadoObra.EnProceso">En proceso</option>
                         <option value="@EnumEstadoObra.Pausada">Pausada</option>
-                    </select>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => nuevaObra.Estado)" />
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success mb-2 btn-submit" type="submit">

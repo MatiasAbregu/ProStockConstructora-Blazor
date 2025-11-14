@@ -21,54 +21,38 @@ namespace ProStockConstructora.Controllers
             this.depositoServicio = depositoServicio;
         }
 
-        [HttpGet("empresa/{EmpresaId:long}")]
-        public async Task<ActionResult<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId)
-        {
-            var res = await depositoServicio.ObtenerDepositosDeEmpresa(EmpresaId);
 
-            if (res.Estado) return StatusCode(200, res);
-            else return StatusCode(500, res);
-        }
-        
         [HttpGet("{id:int}")]
         public async Task<ActionResult<VerDepositoDTO>> ObtenerDepositoPorId([FromRoute] int id)
         {
             Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositoPorId(id);
             if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
+            else return StatusCode(500, res);
         }
-       
 
-        [HttpGet("obra/{obraId:int}")]
-        public async Task<ActionResult<List<VerDepositoDTO>>> ObtenerDepositosPorObraId([FromRoute] int obraId)
+        [HttpPost]
+        public async Task<ActionResult> CrearDeposito([FromBody] DepositoAsociarDTO e)
         {
-           Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositosPorObraId(obraId);
-            if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
-
+            var res = await depositoServicio.CrearDeposito(e);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
-        [HttpPost("crear")]
-        public async Task<ActionResult<int>> CrearDeposito([FromBody] DepositoAsociarDTO e)
+        [HttpPost("depositos-usuario")]
+        [HttpPost("depositos-usuario/{ObraId:long?}")]
+        public async Task<ActionResult<Response<List<VerDepositoDTO>>>> ObtenerDepositosPorUsuario(DatosUsuario usuario, long? ObraId)
         {
-            Response<int> res = await depositoServicio.CrearDeposito(e);
-            return res.Estado ? StatusCode(201, res.Objeto) : StatusCode(500, res.Mensaje);
-        }
-        [HttpPost("por-usuario")]
-        public async Task<ActionResult<Response<List<VerDepositoDTO>>>>ObtenerDepositosPorUsuario(DatosUsuario usuario) 
-        {
-            var res = await depositoServicio.ObtenerDepositosPorUsuario(usuario);
-            if (res.Estado) return Ok(usuario);
-            else return StatusCode(500, res.Mensaje);
+            var res = await depositoServicio.ObtenerDepositosPorUsuario(usuario, ObraId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
-        
         [HttpPut("actualizar/{id:int}")]
         public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
         {
             Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
             if (res.Estado) return Ok(e);
-            else return StatusCode(500, res.Mensaje);
+            else return StatusCode(500, res);
         }
 
         [HttpDelete("eliminar/{id:long}")]

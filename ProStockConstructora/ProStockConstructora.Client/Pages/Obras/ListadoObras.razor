@@ -3,15 +3,18 @@
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
 
-<PageTitle>Obras - ProStockConstructora</PageTitle>
+<PageTitle>Obras - ProStock</PageTitle>
 
 @if (datosSesion.Usuario != null &&
     (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <article class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Listado de Obras</h3>
-            <a class="btn btn-add btn-success" href="/obras/agregar-obra">+</a>
+            <h3 class="fw-bold">Obras</h3>
+            @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+            {
+                <a class="btn btn-add btn-success" href="/obras/agregar-obra">+</a>
+            }
         </div>
 
         <div class="table-responsive">
@@ -50,10 +53,13 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-outline-warning" href="/obras/editar/@obra.Id">
+                                    <a class="btn btn-outline-warning mx-1" href=@($"/obras/editar/{@obra.Id}")>
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <button class="btn btn-outline-danger" @onclick="() => {
+                                    <a class="btn btn-outline-info mx-1" href=@($"/obras/{obra.Id}/depositos")>
+                                        <i class="bi bi-houses"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger mx-1" @onclick="() => {
                                         obraSeleccionada = obra;
                                         MostraModal = true;
                                     }">
@@ -113,7 +119,6 @@ else
     private VerObraDTO obraSeleccionada = new();
     private bool MostraModal = false;
     private string Mensaje = string.Empty;
-
 
     protected override async Task OnInitializedAsync()
     {

@@ -26,6 +26,14 @@ namespace ProStockConstructora.Controllers
             this.obraServicio = obraServicio;
         }
 
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerObrasDeEmpresa(long EmpresaId)
+        {
+            var res = await obraServicio.ObtenerObrasDeEmpresa(EmpresaId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+
         [HttpGet("{id:long}")]
         public async Task<IActionResult> ObtenerObraPorId(long id)
         {

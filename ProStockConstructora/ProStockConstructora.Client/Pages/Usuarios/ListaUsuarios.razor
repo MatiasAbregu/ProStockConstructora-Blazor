@@ -46,7 +46,7 @@
                                 <td>@usuario.NombreUsuario</td>
                                 <td>@usuario.Roles[0]</td>
                                 <td class="col-editar">
-                                    <a class="btn btn-outline-warning" href="/usuarios/@usuario.Id">
+                                    <a class="btn btn-outline-warning" href=@($"/usuarios/{usuario.Id}")>
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
                                     <button class="btn @(usuario.Estado == "Activo" ? "btn-outline-danger" : "btn-outline-success mx-1")">
