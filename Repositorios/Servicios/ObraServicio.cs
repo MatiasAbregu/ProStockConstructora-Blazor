@@ -24,6 +24,43 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
+        public async Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId)
+        {
+            try
+            {
+                List<Obra> obras = await baseDeDatos.Obras.
+                    Where(o => o.EmpresaId == EmpresaId).ToListAsync();
+
+                if (obras.Count == 0)
+                {
+                    return new Response<List<ObraEmpresaDTO>>()
+                    { Objeto = [], Mensaje = "Aún no existen obras para esta empresa.", Estado = true };
+                }
+
+                return new Response<List<ObraEmpresaDTO>>()
+                {
+                    Objeto = obras.Select(o => new ObraEmpresaDTO()
+                    {
+                        Id = o.Id,
+                        CodigoObra = o.CodigoObra,
+                        NombreObra = o.NombreObra
+                    }).ToList(),
+                    Estado = true,
+                    Mensaje = "¡Obras cargadas con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
+                return new Response<List<ObraEmpresaDTO>>()
+                {
+                    Objeto = null,
+                    Estado = false,
+                    Mensaje = $"¡Hubo un error desde el servidor al cargar las obras!"
+                };
+            }
+        }
+
         public async Task<Response<List<VerObraDTO>>> ObtenerObrasPorUsuario(DatosUsuario usuario)
         {
             try
@@ -44,7 +81,11 @@ namespace Repositorios.Servicios
                        }).ToListAsync();
 
                     return new Response<List<VerObraDTO>>()
-                    { Objeto = obras, Estado = true, Mensaje = "¡Obras cargadas con éxito!" };
+                    {
+                        Objeto = obras,
+                        Estado = true,
+                        Mensaje = obras.Count > 0 ? "¡Obras cargadas con éxito!" : "¡Aún no hay obras cargadas en el sistema!"
+                    };
                 }
                 else if (usuario.Roles.Contains("JEFEDEOBRA"))
                 {
@@ -59,7 +100,11 @@ namespace Repositorios.Servicios
                        }).ToListAsync();
 
                     return new Response<List<VerObraDTO>>()
-                    { Objeto = obras, Estado = true, Mensaje = "¡Obras cargadas con éxito!" };
+                    {
+                        Objeto = obras,
+                        Estado = true,
+                        Mensaje = obras.Count > 0 ? "¡Obras cargadas con éxito!" : "¡Aún no hay obras cargadas en el sistema!"
+                    };
                 }
                 else
                 {

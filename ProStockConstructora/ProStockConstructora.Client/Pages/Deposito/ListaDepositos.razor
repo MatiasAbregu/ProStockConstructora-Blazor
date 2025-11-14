@@ -1,0 +1,121 @@
+﻿@page "/obras/{ObraId:long}/depositos"
+@page "/obras/depositos"
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+@inject DatosSesion datosSesion;
+
+<PageTitle>Depósitos - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold">Depósitos</h3>
+            @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA"))
+            {
+                <a class="btn btn-add btn-success" href=@($"obras/{ObraId}/depositos/crear")>+</a>
+            }
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Domicilio</th>
+                        @if (ObraId == null)
+                        {
+                            <th>Obra</th>
+                        }
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!String.IsNullOrEmpty(mensaje) && depositos?.Count == 0)
+                    {
+                        <tr>
+                            <td class="text-center">@mensaje</td>
+                        </tr>
+                    }
+                    else if (depositos?.Count == 0)
+                    {
+                        <tr>
+                            <td class="text-center text-muted">@mensaje</td>
+                        </tr>
+                    }
+                    else if (depositos?.Count > 0)
+                    {
+                        @foreach (var deposito in depositos)
+                        {
+                            <tr>
+                                <td>@deposito.CodigoDeposito</td>
+                                <td>@deposito.NombreDeposito</td>
+                                <td>@(deposito.TipoDeposito.ToString() == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString())</td>
+                                <td>@deposito.Domicilio</td>
+                                @if (ObraId == null)
+                                {
+                                    <td>
+                                        @deposito.Obra
+                                    </td>
+                                }
+                                <td>
+                                    <a class="btn btn-outline-info mx-1" href=@($"/recursos")>
+                                        <i class="bi bi-tools"></i>
+                                    </a>
+                                    @if(ObraId != null)
+                                    {
+                                        <button class="btn btn-outline-warning mx-1"
+                                                title="Editar" @onclick="() => EditarDeposito(deposito.Id)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </article>
+}
+else
+{
+    Navigation.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long? ObraId { get; set; }
+    private List<VerDepositoDTO>? depositos;
+    private DatosUsuario usuario = new();
+    private string mensaje;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        usuario = datosSesion.Usuario;
+        await CargarDepositos();
+    }
+
+    private async Task CargarDepositos()
+    {
+        var res = ObraId != null ? await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario/{ObraId}", usuario)
+                                 : await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario", usuario);
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Estado)
+            {
+                depositos = res.Respuesta.Objeto;
+                mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+            }
+        }
+    }
+
+    private void EditarDeposito(long id)
+    {
+        Navigation.NavigateTo($"/deposito/editar/{id}");
+    }
+}

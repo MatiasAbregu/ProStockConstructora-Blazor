@@ -17,6 +17,7 @@ namespace Repositorios.Implementaciones
         Task<Response<VerObraDTO>> ObtenerObrasPorCodigoObra(string CodigoObra); //obras de la empresa por nombre o codigo
         Task<Response<List<VerObraDTO>>> ObtenerObrasPorUsuario(DatosUsuario usuario);
         Task<Response<string>> FinalizarObra(long id);
+        Task<Response<List<ObraEmpresaDTO>>> ObtenerObrasDeEmpresa(long EmpresaId);
     }
 }
 
