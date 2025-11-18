@@ -73,7 +73,8 @@ namespace Repositorios.Servicios
 
                 var nuevoTipoMaterial = new TipoMaterial
                 {
-                    Nombre = tipoMaterial.Nombre
+                    Nombre = tipoMaterial.Nombre,
+                    EmpresaId = 0
                 };
                 await baseDeDatos.TipoMateriales.AddAsync(nuevoTipoMaterial);
                 await baseDeDatos.SaveChangesAsync();

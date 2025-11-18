@@ -25,17 +25,20 @@ namespace Repositorios.Servicios
         {
            try
            {   
-             var existeUnidad = await baseDeDatos.UnidadMedidas.FirstOrDefaultAsync(um => um.Nombre.ToLower() == unidadDeMedidaDTO.Nombre.ToLower() ||
-                                                                                          um.Simbolo.ToLower() == unidadDeMedidaDTO.Simbolo.ToLower());
+             var existeUnidad = await baseDeDatos.UnidadMedidas
+                    .FirstOrDefaultAsync(um => um.Nombre.ToUpper() == unidadDeMedidaDTO.Nombre.ToUpper()
+                                        && um.EmpresaId == unidadDeMedidaDTO.EmpresaId);
+
              if (existeUnidad == null)
              { 
                 var nuevaUnidad = new UnidadMedida
                 {
                     Nombre = unidadDeMedidaDTO.Nombre,
-                    Simbolo = unidadDeMedidaDTO.Simbolo
+                    Simbolo = unidadDeMedidaDTO.Simbolo,
+                    EmpresaId = unidadDeMedidaDTO.EmpresaId
                 };
 
-                await baseDeDatos.UnidadMedidas.AddAsync(nuevaUnidad);
+                baseDeDatos.UnidadMedidas.Add(nuevaUnidad);
                 await baseDeDatos.SaveChangesAsync();
 
                 return new Response<string>
@@ -51,7 +54,7 @@ namespace Repositorios.Servicios
                 {
                     Objeto = null,
                     Mensaje = "La unidad de medida ya existe.",
-                    Estado = false
+                    Estado = true
                 };
              }
            }
@@ -63,17 +66,21 @@ namespace Repositorios.Servicios
            }
         }
 
-        public async Task<Response<List<UnidadDeMedidaDTO>>>ObtenerUnidadesDeMedida()
+        public async Task<Response<List<UnidadDeMedidaDTO>>>ObtenerUnidadesDeMedida(long EmpresaId)
         {
             try
             {
-                var existeUnidades = await baseDeDatos.UnidadMedidas.ToListAsync();
+                var existeUnidades = await baseDeDatos.UnidadMedidas
+                                    .Where(um => um.EmpresaId == EmpresaId).ToListAsync();
+
                 if (existeUnidades != null && existeUnidades.Count > 0)
                 {
                     var unidadesDTO = existeUnidades.Select(um => new UnidadDeMedidaDTO
                     {
+                        Id = um.Id,
                         Nombre = um.Nombre,
-                        Simbolo = um.Simbolo
+                        Simbolo = um.Simbolo,
+                        EmpresaId = um.EmpresaId
                     }).ToList();
                     return new Response<List<UnidadDeMedidaDTO>>
                     {
@@ -100,16 +107,64 @@ namespace Repositorios.Servicios
             }
         }
 
+        public async Task<Response<UnidadDeMedidaDTO>> ObtenerUnidadDeMedidaPorId(long id)
+        {
+            try
+            {
+                var um = await baseDeDatos.UnidadMedidas.FindAsync(id);
+                if (um == null) return new Response<UnidadDeMedidaDTO>()
+                {
+                    Estado = true,
+                    Mensaje = "No existe una unidad de medida con ese ID",
+                    Objeto = null
+                };
+
+                return new Response<UnidadDeMedidaDTO>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = new UnidadDeMedidaDTO()
+                    {
+                        Id = um.Id,
+                        Nombre = um.Nombre,
+                        Simbolo = um.Simbolo,
+                        EmpresaId = um.EmpresaId,
+                    }
+                };
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return new Response<UnidadDeMedidaDTO>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error en el servidor al cargar la unidad de medida!",
+                    Objeto = null
+                };
+            }
+        }
+
         public async Task<Response<string>>UnidadDeMedidaModificar(UnidadDeMedidaDTO unidadDeMedidaDTO, long id)
         {
             try
             {
                 var unidadExistente = await baseDeDatos.UnidadMedidas.FindAsync(id);
+                var nombreDisponible = await baseDeDatos.UnidadMedidas
+                    .AnyAsync(um => um.Nombre.ToUpper() == unidadDeMedidaDTO.Nombre.ToUpper()
+                                && um.Id != id && um.EmpresaId == unidadDeMedidaDTO.EmpresaId);
+
+                if (nombreDisponible) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "El nombre de la unidad de medida ya está en uso.",
+                    Objeto = null
+                };
+
                 if (unidadExistente != null)
                 {
                     unidadExistente.Nombre = unidadDeMedidaDTO.Nombre;
                     unidadExistente.Simbolo = unidadDeMedidaDTO.Simbolo;
                     await baseDeDatos.SaveChangesAsync();
+
                     return new Response<string>
                     {
                         Objeto = null,
@@ -123,14 +178,15 @@ namespace Repositorios.Servicios
                     {
                         Objeto = null,
                         Mensaje = "La unidad de medida no existe.",
-                        Estado = false
+                        Estado = true
                     };
                 }
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Response<string> response = new Response<string>() { Estado = false, Mensaje = "Error al modificar la unidad de medida." };
+                Response<string> response = new() 
+                { Estado = false, Mensaje = "Error al modificar la unidad de medida." };
                 return response;
             }
         }

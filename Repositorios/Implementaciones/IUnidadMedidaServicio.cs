@@ -6,7 +6,8 @@ namespace Repositorios.Implementaciones
 {
     public interface IUnidadMedidaServicio
     {
-        Task<Response<List<UnidadDeMedidaDTO>>> ObtenerUnidadesDeMedida();
+        Task<Response<UnidadDeMedidaDTO>> ObtenerUnidadDeMedidaPorId(long id);
+        Task<Response<List<UnidadDeMedidaDTO>>> ObtenerUnidadesDeMedida(long EmpresaId);
         Task<Response<string>> UnidadDeMedidaCargar(UnidadDeMedidaDTO unidadDeMedidaDTO);
         Task<Response<string>> UnidadDeMedidaModificar(UnidadDeMedidaDTO unidadDeMedidaDTO, long Id);
     }

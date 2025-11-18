@@ -8,22 +8,17 @@
 @if (datosSesion.Usuario != null)
 {
     <article class="p-4 container">
-        <!-- Encabezado con título y botones -->
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
             <h3 class="fw-bold text-primary">Listado de Recursos</h3>
             <div class="d-flex gap-2">
-                <!-- Botón para agregar Recurso -->
                 <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarRecurso">
                     <span class="material-symbols-outlined" title="Agregar recurso.">construction</span> +
                 </button>
 
-
-                <!-- Botón para agregar Unidad de Medida -->
                 <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarUnidadMedida">
                     <span class="material-symbols-outlined" title="Agregar unidad de medida.">square_foot</span> +
                 </button>
 
-                <!--Botón para agregar Tipo de Material-->
                 <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarTipoMaterial">
                     <span class="material-symbols-outlined" title="Agregar tipo de material.">home_improvement_and_tools</span> +
                 </button>
@@ -109,5 +104,5 @@ else
     private void IrAgregarRecurso() => navManager.NavigateTo("/recursos/agregar-recurso");
 
     // 🔹 Navega a la página para agregar un Tipo de Material
-    private void IrAgregarTipoMaterial() => navManager.NavigateTo("/recursos/agregar-tipo-material");
+    private void IrAgregarTipoMaterial() => navManager.NavigateTo("/recursos/tipo-material");
 }

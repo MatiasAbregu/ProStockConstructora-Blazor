@@ -1,0 +1,109 @@
+﻿@page "/recursos/tipo-material"
+@inject IHttpServicio http
+@inject NavigationManager navManager
+@inject DatosSesion datosSesion
+
+<PageTitle>Tipos de material - ProStockConstructora</PageTitle>
+
+@if(datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Tipos de material</p>
+            <a class="btn btn-secondary" href="/recursos"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+        </div>
+
+        <div class="row">
+            <EditForm Model="tipoMaterial" class="card col-12 col-md-6" style="height: fit-content">
+                <DataAnnotationsValidator />
+
+                <div class="my-3 px-3">
+                    <label class="form-label">Nombre</label>
+                    <InputText class="form-control" @bind-Value="tipoMaterial.Nombre" />
+                    <ValidationMessage For="@(() => tipoMaterial.Nombre)" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mb-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i> Crear
+                    </button>
+                </div>
+            </EditForm>
+
+            @* @onclick="() => { IdMarca = 0; unidad = new(); }" *@
+            <div class="table-responsive mt-2 col-12 col-md-6 overflow-auto" style="max-height: 70vh">
+                <table class="table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @if (unidad == null && listadoUnidades.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No hay unidades de medida cargadas aún.</td>
+                        </tr>
+                    }
+                    else if (listadoUnidades != null)
+                    {
+                        @foreach (var u in listadoUnidades)
+                        {
+                            <tr class="@(IdMarca == u.Id ? "table-primary" : "")">
+                                <td>@u.Nombre</td>
+                                <td>@u.Simbolo</td>
+                                <td>
+                                    <button class="btn @(IdMarca == u.Id ? "btn-warning" : "btn-outline-warning") mx-1" 
+                                    @onclick:stopPropagation="true"
+                                    @onclick="async() => {                                  
+                                            if(IdMarca == u.Id) {
+                                                IdMarca = 0;
+                                                unidad = new();
+                                            }
+                                            else {
+                                                IdMarca = u.Id;
+                                                await CargarUnidadDeMedida(u.Id);
+                                            }
+                                        }">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+} 
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    private DatosUsuario usuario = new();
+    private TipoMaterialDTO tipoMaterial = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+        }
+        else navManager.NavigateTo("/");
+    }
+
+    private async Task CrearTipoMaterial()
+    {
+
+    }
+
+    private async Task CargarTiposDeMaterial(long EmpresaId)
+    {
+        
+    }
+}

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251113154317_BaseDeDatosSinUbicacion")]
-    partial class BaseDeDatosSinUbicacion
+    [Migration("20251118222753_BaseDeDatosTipoYUnidad")]
+    partial class BaseDeDatosTipoYUnidad
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -461,11 +461,19 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("Nombre", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("TipoMateriales");
                 });
@@ -478,15 +486,23 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Simbolo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("Nombre", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("UnidadMedidas");
                 });
@@ -725,6 +741,28 @@ namespace BD.Migrations
                     b.Navigation("Deposito");
 
                     b.Navigation("MaterialesyMaquinas");
+                });
+
+            modelBuilder.Entity("BD.Modelos.TipoMaterial", b =>
+                {
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+                });
+
+            modelBuilder.Entity("BD.Modelos.UnidadMedida", b =>
+                {
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("BD.Modelos.Usuario", b =>
