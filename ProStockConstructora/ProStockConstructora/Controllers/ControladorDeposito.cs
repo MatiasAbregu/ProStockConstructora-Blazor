@@ -1,12 +1,13 @@
-﻿using ProStockConstructora;
-using BD.Modelos;
+﻿using BD.Modelos;
 using DTO.DTOs_Depositos;
-using Repositorios.Implementaciones;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using DTO.DTOs_Response;
 using DTO.DTOs_Usuarios;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProStockConstructora;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
+using System.Collections.Generic;
 
 namespace ProStockConstructora.Controllers
 {
@@ -21,13 +22,20 @@ namespace ProStockConstructora.Controllers
             this.depositoServicio = depositoServicio;
         }
 
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<VerDepositoDTO>> ObtenerDepositoPorId([FromRoute] int id)
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerDepositosDeEmpresa(long EmpresaId)
         {
-            Response<List<VerDepositoDTO>> res = await depositoServicio.ObtenerDepositoPorId(id);
-            if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
+            var res = await depositoServicio.ObtenerDepositosDeEmpresa(EmpresaId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<VerDepositoDTO>> ObtenerDepositoPorId([FromRoute] long id)
+        {
+            var res = await depositoServicio.ObtenerDepositoPorId(id);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpPost]
@@ -47,11 +55,19 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpPut("actualizar/{id:int}")]
-        public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] int id, [FromBody] DepositoAsociarDTO e)
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult<string>> ActualizarDeposito([FromRoute] long id, [FromBody] DepositoAsociarDTO e)
         {
-            Response<string> res = await depositoServicio.ActualizarDeposito(id, e);
-            if (res.Estado) return Ok(e);
+            if (id != e.Id)
+                return StatusCode(409, new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error al intentar actualizar el depósito.",
+                    Objeto = null
+                });
+
+            var res = await depositoServicio.ActualizarDeposito(id, e);
+            if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
     }

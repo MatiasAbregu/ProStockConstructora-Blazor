@@ -11,9 +11,10 @@ namespace Repositorios.Implementaciones
 {
     public interface IDepositoServicio
     {
-        public Task<Response<List<VerDepositoDTO>>> ObtenerDepositoPorId(int id);
+        public Task<Response<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId);
+        public Task<Response<DepositoActualizarDTO>> ObtenerDepositoPorId(long id);
         public Task<Response<string>> CrearDeposito(DepositoAsociarDTO e);
-        public Task<Response<string>> ActualizarDeposito(int id, DepositoAsociarDTO e);
-        Task<Response<List<VerDepositoDTO>>> ObtenerDepositosPorUsuario(DatosUsuario usuario, long? ObraId);
+        public Task<Response<string>> ActualizarDeposito(long id, DepositoAsociarDTO e);
+        public Task<Response<List<VerDepositoDTO>>> ObtenerDepositosPorUsuario(DatosUsuario usuario, long? ObraId);
     }
 }

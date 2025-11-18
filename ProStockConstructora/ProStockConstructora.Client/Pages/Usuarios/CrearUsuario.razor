@@ -68,78 +68,121 @@
                         <div>
                             @if (depositosBD?.Count > 0)
                             {
-                                @foreach (var deposito in depositosBD)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkDefault">
-                                        <label class="form-check-label" for="checkDefault">
-                                            @deposito.NombreDeposito (@deposito.CodigoDeposito - @deposito.TipoDeposito)
-                                        </label>
-                                    </div>
-                                }
-                                <a class="btn btn-success" href="/depositos">+</a>
-                            }
-                            else if (depositosBD?.Count == 0)
-                            {
-                                <div class="contenedorAnadir">
-                                    <p>No existen depósitos aún agregados en el sistema. ¡Añada uno!</p>
-                                    <a class="btn btn-success" href="/depositos">+</a>
-                                </div>
-                            }
-                            else
-                            {
-                                <p>Hubo un error al cargar los depósitos desde el servidor. Reintente más tarde o contacte con un administrador.</p>
-                            }
-                        </div>
-                    </div>
-                }
-                else if (RolSeleccionado == "JEFEDEOBRA")
-                {
-                    <div class="my-3 px-4">
-                        <label>Asigne las obras a las que el usuario estará a cargo:</label>
-                        <div>
-                            @if (obrasBD?.Count > 0)
-                            {
                                 <div class="containerCheckbox">
-                                    @foreach (var obra in obrasBD)
+                                    @foreach (var deposito in depositosBD)
                                     {
                                         <div class="card checkBoxCard">
-                                            <input class="form-check-input" type="checkbox"
-                                                   @onchange="(e) => AgregarOQuitarObraDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
-                                            <label class="form-check-label" for="check@(obra.CodigoObra)">
-                                                @obra.NombreObra
+                                            <input class="form-check-input" type="checkbox" @onchange="(e) => AgregarOQuitarDepositoDeListado(e, deposito.Id)"
+                                                   id="check@(deposito.CodigoDeposito)">
+                                            <label class="form-check-label" for="check@(deposito.CodigoDeposito)">
+                                                @deposito.NombreDeposito - @deposito.TipoDeposito <strong>(Código depósito: @deposito.CodigoDeposito - Código obra: @deposito.Obra)</strong>
                                             </label>
                                         </div>
                                     }
-                                    <a class="btn btn-success" href="/obras/agregar-obra">+</a>
-                                </div>
-                            }
-                            else if (obrasBD?.Count == 0)
-                            {
-                                <div class="contenedorAnadir">
-                                    <p>No existen obras aún agregadas en el sistema. ¡Añada una!</p>
-                                    <a class="btn btn-success" href="/obras/agregar-obra">+</a>
-                                </div>
-                            }
-                            else
-                            {
-                                <p>Hubo un error al cargar las obras desde el servidor. Reintente más tarde o contacte con un administrador.</p>
-                            }
+                                    <button class="btn btn-success" type="button"
+                                            @onclick="async () => {
+                                            await CargarObras();
+                                            MostraModal = true;
+                                        }">
+                                    +
+                                </button>
+                            </div>
+                        }
+                        else if (depositosBD?.Count == 0)
+                        {
+                            <div class="contenedorAnadir">
+                                <p>No existen depósitos aún agregados en el sistema. ¡Añada una!</p>
+                                <button class="btn btn-success" type="button"
+                                        @onclick="async () => {
+                                        await CargarObras();
+                                        MostraModal = true;
+                                    }">
+                                +
+                            </button>
                         </div>
+                    }
+                    else
+                    {
+                        <p>Hubo un error al cargar los depósitos desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                    }
+                </div>
+            </div>
+            } else if (RolSeleccionado == "JEFEDEOBRA")
+            {
+                <div class="my-3 px-4">
+                    <label>Asigne las obras a las que el usuario estará a cargo:</label>
+                    <div>
+                        @if (obrasBD?.Count > 0)
+                        {
+                            <div class="containerCheckbox">
+                                @foreach (var obra in obrasBD)
+                                {
+                                    <div class="card checkBoxCard">
+                                        <input class="form-check-input" type="checkbox"
+                                               @onchange="(e) => AgregarOQuitarObraDeListado(e, obra.Id)" id="check@(obra.CodigoObra)">
+                                        <label class="form-check-label" for="check@(obra.CodigoObra)">
+                                            @obra.NombreObra
+                                        </label>
+                                    </div>
+                                }
+                                <a class="btn btn-success" href="/obras/crear">+</a>
+                            </div>
+                        }
+                        else if (obrasBD?.Count == 0)
+                        {
+                            <div class="contenedorAnadir">
+                                <p>No existen obras aún agregadas en el sistema. ¡Añada una!</p>
+                                <a class="btn btn-success" href="/obras/crear">+</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Hubo un error al cargar las obras desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                        }
                     </div>
-                }
-                <button class="btn btn-success mb-2 btn-submit" type="submit">
-                    <i class="bi bi-check-lg me-1"></i> Guardar
-                </button>
-            </EditForm>
+                </div>
+            }
+            <button class="btn btn-success mb-2 btn-submit" type="submit">
+                <i class="bi bi-check-lg me-1"></i> Guardar
+            </button>
+        </EditForm>
+    </div>
+</article>
+
+@if (MostraModal)
+{
+    <div class="modal-backdrop show"></div>
+    <div class="modal fade show" id="modalConfirmarEliminar" tabindex="-1" style="display: block" aria-labelledby="confirmarEliminar" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Seleccione la obra en dónde creará el depósito</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            @onclick="() => MostraModal = false"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <InputSelect class="form-select" @bind-Value="ObraId">
+                        @foreach (var obra in obrasBD)
+                        {
+                            <option value="@obra.Id">@obra.NombreObra (@obra.CodigoObra)</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => MostraModal = false">Cancelar</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal" @onclick="IrACrearDeposito">
+                        Ir a crear depósito
+                    </button>
+                </div>
+            </div>
         </div>
-    </article>
+    </div>
+}
 }
 else
 {
     navManager.NavigateTo("/");
 }
-
 
 @code {
     private CrearUsuarioDTO usuario;
@@ -150,6 +193,8 @@ else
 
     private bool Autenticado = true;
     private string mensaje;
+    private bool MostraModal = false;
+    private long ObraId = 1;
 
     private string RolSeleccionado
     {
@@ -182,7 +227,6 @@ else
 
         if (res.Respuesta != null)
         {
-            //mensaje = res.Respuesta.Mensaje;
             rolesBD = res.Respuesta.Objeto;
             await CambioDeRol(rolesBD[0].NombreNormalizado);
             obrasId = [];
@@ -208,7 +252,6 @@ else
 
         if (res.Respuesta != null)
         {
-            Console.WriteLine(res.Respuesta.Mensaje);
             obrasBD = res.Respuesta.Objeto;
             StateHasChanged();
         }
@@ -220,7 +263,6 @@ else
 
         if (res.Respuesta != null)
         {
-            Console.WriteLine(res.Respuesta.Mensaje);
             depositosBD = res.Respuesta.Objeto;
             StateHasChanged();
         }
@@ -239,6 +281,19 @@ else
         }
     }
 
+    private void AgregarOQuitarDepositoDeListado(ChangeEventArgs e, long depositoId)
+    {
+        if ((bool)e.Value)
+        {
+            if (!depositosId.Contains(depositoId))
+                depositosId.Add(depositoId);
+        }
+        else
+        {
+            depositosId.Remove(depositoId);
+        }
+    }
+
     private async Task CrearUsuarioMetodo()
     {
         usuario.ObrasId = obrasId;
@@ -249,5 +304,10 @@ else
             if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) navManager.NavigateTo("/usuarios");
             else mensaje = res.Respuesta.Mensaje;
         }
+    }
+
+    private void IrACrearDeposito()
+    {
+        navManager.NavigateTo($"/obras/{ObraId}/depositos/crear");
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DTO.DTOs_Response;
+using BD.Modelos;
 
 namespace Repositorios.Servicios
 {
@@ -18,6 +19,12 @@ namespace Repositorios.Servicios
         public RolesServicio(AppDbContext baseDeDatos)
         {
             this.baseDeDatos = baseDeDatos;
+        }
+
+        public async Task<List<Rol>> BuscarRolesPorNombres(List<string> roles)
+        {
+            roles = roles.Select(r => r.ToUpper().Trim()).ToList();
+            return await baseDeDatos.Roles.Where(rol => roles.Contains(rol.NombreRol)).ToListAsync();
         }
 
         public async Task<Response<List<VerRolDTO>>> ObtenerRoles()
@@ -55,5 +62,6 @@ namespace Repositorios.Servicios
                 };
             }
         }
+        
     }
 }

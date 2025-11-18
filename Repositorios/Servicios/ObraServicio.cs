@@ -29,7 +29,7 @@ namespace Repositorios.Servicios
             try
             {
                 List<Obra> obras = await baseDeDatos.Obras.
-                    Where(o => o.EmpresaId == EmpresaId).ToListAsync();
+                    Where(o => o.EmpresaId == EmpresaId && o.Estado != EnumEstadoObra.Finalizada).ToListAsync();
 
                 if (obras.Count == 0)
                 {

@@ -67,8 +67,8 @@ namespace ProStockConstructora.Controllers
                 return StatusCode(409, new Response<string>()
                 {
                     Estado = false,
-                    Mensaje = "Conflicto con el ID",
-                    Objeto = ""
+                    Mensaje = "Ocurrió un error al intentar actualizar la obra.",
+                    Objeto = null
                 });
 
             var res = await obraServicio.ActualizarObra(id, obraDTO);
@@ -80,7 +80,7 @@ namespace ProStockConstructora.Controllers
         public async Task<IActionResult> FinalizarObra(long id)
         {
             var res = await obraServicio.FinalizarObra(id);
-            if(res.Estado) return StatusCode(200, res);
+            if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
     }

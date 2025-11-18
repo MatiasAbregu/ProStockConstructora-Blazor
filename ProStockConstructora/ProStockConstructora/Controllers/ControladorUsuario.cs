@@ -57,26 +57,30 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult> ActualizarUsuario(long id, ActualizarUsuarioDTO usuario)
         {
-            if (id != usuario.Id) return StatusCode(409, "Hubo un error al querer actualizar el usuario.");
+            if (id != usuario.Id)
+                return StatusCode(409, new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error al intentar actualizar el usuario.",
+                    Objeto = null
+                });
 
-            ValueTuple<bool, string, Usuario> res = await usuarioServicio.ActualizarUsuario(id, usuario);
+            var res = await usuarioServicio.ActualizarUsuario(id, usuario);
 
-            if (res.Item2.Contains("Error")) return StatusCode(500, res.Item2);
-            else if(!res.Item1) return StatusCode(409, res.Item2);
-            return StatusCode(200, res.Item2);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> CambiarEstadoUsuario(string id)
+        public async Task<ActionResult> CambiarEstadoUsuario(long id)
         {
-            ValueTuple<bool, string> res = await usuarioServicio.CambiarEstadoUsuario(id);
+            var res = await usuarioServicio.CambiarEstadoUsuario(id);
 
-            if(res.Item2.Contains("Error")) return StatusCode(500, res.Item2);
-            else if(!res.Item1) return StatusCode(404, res.Item2);
-            return StatusCode(200, res.Item2);
+            if(res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
     }
 }
