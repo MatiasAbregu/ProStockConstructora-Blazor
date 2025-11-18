@@ -1,5 +1,6 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "WorkspaceRootPath": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\",
   "Documents": [
     {
@@ -29,6 +30,10 @@
       "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorobra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
+=======
+  "WorkspaceRootPath": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\",
+  "Documents": [],
+>>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -36,7 +41,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
+<<<<<<< HEAD
           "SelectedChildIndex": 10,
+=======
+          "SelectedChildIndex": -1,
+>>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
           "Children": [
             {
               "$type": "Document",
@@ -82,6 +91,7 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+<<<<<<< HEAD
             },
             {
               "$type": "Document",
@@ -159,6 +169,8 @@
               "ViewState": "AgIAADUAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-17T21:08:37.062Z"
+=======
+>>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
             }
           ]
         }

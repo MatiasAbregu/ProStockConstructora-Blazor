@@ -1,8 +1,4 @@
-﻿.btn {
-    border-width: 2px !important;
-}
-
-.divBotonera {
+﻿.divBotonera {
     display: flex;
     width: 100%;
     margin-bottom: .5%;
@@ -58,3 +54,13 @@
             border-start-end-radius: 5px;
             border-end-end-radius: 5px;
         }
+
+.msg-estado {
+    background-color: #149700;
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 1vw 5vw;
+    border-radius: 10px;
+}

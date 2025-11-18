@@ -10,7 +10,7 @@
 {
     <article class="p-4">
         <div class="cabecera">
-            <p class="fw-bolder">Crear Depósito</p>
+            <p class="fw-bolder">Crear depósito</p>
             <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
 
@@ -21,7 +21,7 @@
                     @mensaje
                 </div>
             }
-            <EditForm Model="@deposito" OnValidSubmit="GuardarDeposito">
+            <EditForm Model="deposito" OnValidSubmit="GuardarDeposito">
                 <DataAnnotationsValidator />
                 <div class="my-3 px-4">
                     <label class="form-label fw-semibold">Código de Depósito</label>

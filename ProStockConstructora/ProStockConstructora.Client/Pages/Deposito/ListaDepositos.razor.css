@@ -1,7 +1,56 @@
-﻿.btn-add {
+﻿.divBotonera {
+    display: flex;
+    width: 100%;
+    margin-bottom: .5%;
+}
+
+.cabecera {
+    margin: 0;
+    flex: 1;
+    font-size: 1.1rem;
+}
+
+.botonera .btn-add {
     border: none;
     padding: 3px 8px;
     font-weight: 700 !important;
     font-size: 1.8rem;
     line-height: 25px;
 }
+
+.botoneraTabla {
+    display: flex;
+    color: #379aff;
+    user-select: none;
+}
+
+    .botoneraTabla p {
+        border: 1px solid lightgray;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .botoneraTabla .btn-tabla-numero {
+        border-left: none;
+        border-right: none;
+        cursor: default;
+    }
+
+    .botoneraTabla .btn-tabla {
+        cursor: pointer;
+        transition: background-color .3s ease, color .3s ease;
+    }
+
+        .botoneraTabla .btn-tabla:hover {
+            background-color: #379aff;
+            color: white;
+        }
+
+        .botoneraTabla .btn-tabla:nth-child(1) {
+            border-start-start-radius: 5px;
+            border-end-start-radius: 5px;
+        }
+
+        .botoneraTabla .btn-tabla:nth-child(3) {
+            border-start-end-radius: 5px;
+            border-end-end-radius: 5px;
+        }

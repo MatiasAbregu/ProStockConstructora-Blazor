@@ -1,16 +1,17 @@
 using BD;
 using BD.Modelos;
 using DTO.DTOs_Depositos;
-using Repositorios.Implementaciones;
+using DTO.DTOs_Obras;
+using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DTO.DTOs_Response;
-using DTO.DTOs_Usuarios;
-using System.ComponentModel.Design;
 
 namespace Repositorios.Servicios
 {
@@ -23,45 +24,82 @@ namespace Repositorios.Servicios
             this.baseDeDatos = BaseDeDatos;
         }
 
-        public async Task<Response<List<VerDepositoDTO>>> ObtenerDepositoPorId(int id)
+        public async Task<Response<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId)
+        {
+            try
+            {
+                var depositos = await baseDeDatos.Depositos.Include(d => d.Obra)
+                    .Where(o => o.Obra.EmpresaId == EmpresaId).ToListAsync();
+
+                if (depositos.Count == 0)
+                {
+                    return new Response<List<DepositoEmpresaDTO>>()
+                    { Objeto = [], Mensaje = "Aún no existen depósitos para esta empresa.", Estado = true };
+                }
+
+                return new Response<List<DepositoEmpresaDTO>>()
+                {
+                    Objeto = depositos.Select(d => new DepositoEmpresaDTO()
+                    {
+                        Id = d.Id,
+                        CodigoDeposito = d.CodigoDeposito,
+                        NombreDeposito = d.NombreDeposito,
+                        TipoDeposito = d.TipoDeposito.ToString() == "EnUso" ? "En uso" : d.TipoDeposito.ToString(),
+                        Obra = $"{d.Obra.CodigoObra}"
+                    }).ToList(),
+                    Estado = true,
+                    Mensaje = "¡Obras cargadas con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
+                return new Response<List<DepositoEmpresaDTO>>()
+                {
+                    Objeto = null,
+                    Estado = false,
+                    Mensaje = $"¡Hubo un error desde el servidor al cargar los depósitos!"
+                };
+            }
+        }
+
+        public async Task<Response<DepositoActualizarDTO>> ObtenerDepositoPorId(long id)
         {
             try
             {
                 var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == id);
 
-                if (deposito != null)
-                {
-                    var depositoDTO = new VerDepositoDTO
-                    {
-                        Id = deposito.Id,
-                        CodigoDeposito = deposito.CodigoDeposito,
-                        NombreDeposito = deposito.NombreDeposito,
-                        TipoDeposito = deposito.TipoDeposito.ToString()
-                        == "EnUso" ? "En uso" : deposito.TipoDeposito.ToString(),
-                    };
-                    return new Response<List<VerDepositoDTO>>
-                    {
-                        Objeto = new List<VerDepositoDTO> { depositoDTO },
-                        Mensaje = "Depósito encontrado.",
-                        Estado = true
-                    };
-                }
-                else
-                {
-                    return new Response<List<VerDepositoDTO>>
+                if (deposito == null)
+                    return new Response<DepositoActualizarDTO>()
                     {
                         Objeto = null,
-                        Mensaje = "No existe un depósito con ese ID.",
+                        Mensaje = "No existe el depósito con el ID proporcionado.",
                         Estado = true
                     };
-                }
+
+                var depositoDTO = new DepositoActualizarDTO()
+                {
+                    Id = deposito.Id,
+                    CodigoDeposito = deposito.CodigoDeposito,
+                    NombreDeposito = deposito.NombreDeposito,
+                    Domicilio = deposito.Domicilio,
+                    TipoDeposito = (DTO.Enum.EnumTipoDeposito)deposito.TipoDeposito,
+                };
+
+                return new Response<DepositoActualizarDTO>
+                {
+                    Objeto = depositoDTO,
+                    Mensaje = "Depósito obtenido con éxito.",
+                    Estado = true
+                };
             }
             catch (Exception ex)
             {
-                return new Response<List<VerDepositoDTO>>
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
+                return new Response<DepositoActualizarDTO>
                 {
                     Objeto = null,
-                    Mensaje = "Error al obtener el depósito.",
+                    Mensaje = "¡Hubo un error desde el servidor al cargar la obra!",
                     Estado = false
                 };
             }
@@ -115,7 +153,7 @@ namespace Repositorios.Servicios
                             Id = d.Id,
                             CodigoDeposito = d.CodigoDeposito,
                             NombreDeposito = d.NombreDeposito,
-                            TipoDeposito = d.TipoDeposito.ToString(),
+                            TipoDeposito = d.TipoDeposito.ToString() == "EnUso" ? "En uso" : d.TipoDeposito.ToString(),
                             Domicilio = d.Domicilio,
                             ObraId = d.Obra.Id,
                             Obra = $"{d.Obra.NombreObra}({d.Obra.CodigoObra})"
@@ -191,58 +229,52 @@ namespace Repositorios.Servicios
                     Estado = false
                 };
             }
-        } 
+        }
 
-        public async Task<Response<string>> ActualizarDeposito(int id, DepositoAsociarDTO e)
+        public async Task<Response<string>> ActualizarDeposito(long id, DepositoAsociarDTO e)
         {
             try
             {
                 Deposito? deposito = await baseDeDatos.Depositos
                     .FirstOrDefaultAsync(d => d.Id == e.Id);
                 if (deposito == null)
-                {
                     return new Response<string>
                     {
                         Objeto = null,
-                        Mensaje = "El depósito no existe.",
-                        Estado = false
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Estado = true
                     };
-                }
 
                 bool existeCodigo = await baseDeDatos.Depositos
                             .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito && d.Id != e.Id);
-
                 if (existeCodigo)
-                {
                     return new Response<string>
                     {
                         Objeto = null,
-                        Mensaje = "Ese código ya está en uso",
-                        Estado = false
+                        Mensaje = "Ya existe un depósito con ese código.",
+                        Estado = true
                     };
-                }
 
                 deposito.CodigoDeposito = e.CodigoDeposito;
                 deposito.NombreDeposito = e.NombreDeposito;
-                deposito.ObraId = e.ObraId;
+                deposito.Domicilio = e.Domicilio;
                 deposito.TipoDeposito = (BD.Enums.EnumTipoDeposito)e.TipoDeposito;
 
-                baseDeDatos.Depositos.Update(deposito);
                 await baseDeDatos.SaveChangesAsync();
                 return new Response<string>
                 {
-                    Objeto = deposito.Id.ToString(),
-                    Mensaje = "Depósito actualizado exitosamente.",
+                    Objeto = "Depósito actualizado con éxito.",
+                    Mensaje = null,
                     Estado = true
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
                 return new Response<string>
                 {
                     Objeto = null,
-                    Mensaje = "Error al actualizar el depósito.",
+                    Mensaje = "¡Hubo un error desde el servidor al actualizar el depósito!",
                     Estado = false
                 };
             }
