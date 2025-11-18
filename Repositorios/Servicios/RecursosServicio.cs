@@ -336,7 +336,8 @@ namespace Repositorios.Servicios
                         {
                             CodigoISO = s.MaterialesyMaquinas.CodigoISO,
                             Nombre = s.MaterialesyMaquinas.Nombre,
-                            UnidadMedida = s.MaterialesyMaquinas.UnidadMedida.Simbolo
+                            UnidadMedida = s.MaterialesyMaquinas.UnidadMedida.Simbolo,
+                            TipoMaterial = s.MaterialesyMaquinas.TipoMaterial.Nombre
                         }
                 ).ToListAsync();
                 Response<List<RecursosPagPrincipalDTO>> res2 = new Response<List<RecursosPagPrincipalDTO>>() { Estado = true, Objeto = resultado };

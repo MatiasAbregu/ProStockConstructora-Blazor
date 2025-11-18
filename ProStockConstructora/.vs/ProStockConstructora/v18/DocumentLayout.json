@@ -1,39 +1,35 @@
 {
   "Version": 1,
-<<<<<<< HEAD
-  "WorkspaceRootPath": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\",
+  "WorkspaceRootPath": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregarunimedida.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregarunimedida.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\recursos\\agregarunimedida.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregartipomaterial.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora\\controllers\\controladorunimedida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorunimedida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\listarecursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\recursos\\listarecursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregartipomaterial.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\recursos\\agregartipomaterial.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\dto\\dtos-recursos\\unidaddemedidadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\repositorios\\servicios\\recursosservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\dto\\dtos-recursos\\recursospagprincipaldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\obras\\listadoobras.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\obras\\listadoobras.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\recursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\recursos\\recursos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregarrecurso.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\recursos\\agregarrecurso.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\recursos\\agregarrecurso.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|d:\\proyecto frontend prostock constructora\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora\\controllers\\controladorobra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorobra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
-=======
-  "WorkspaceRootPath": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\",
-  "Documents": [],
->>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -41,25 +37,8 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-<<<<<<< HEAD
-          "SelectedChildIndex": 10,
-=======
-          "SelectedChildIndex": -1,
->>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
+          "SelectedChildIndex": 13,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "RecursosPagPrincipalDTO.cs",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\RecursosPagPrincipalDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Recursos\\RecursosPagPrincipalDTO.cs",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\RecursosPagPrincipalDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Recursos\\RecursosPagPrincipalDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T18:49:26.844Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -71,10 +50,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Bookmark",
@@ -91,86 +66,97 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
-<<<<<<< HEAD
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ListadoObras.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Obras\\ListadoObras.razor",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAADkAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-18T20:18:44.536Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RecursosServicio.cs",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Servicios\\RecursosServicio.cs",
+              "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\RecursosServicio.cs",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\Repositorios\\Servicios\\RecursosServicio.cs",
+              "RelativeToolTip": "..\\Repositorios\\Servicios\\RecursosServicio.cs",
+              "ViewState": "AgIAAEcBAAAAAAAAAAAmwFMBAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T19:56:52.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AgregarTipoMaterial.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA4AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-18T18:54:42.276Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "UnidadDeMedidaDTO.cs",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\UnidadDeMedidaDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Recursos\\UnidadDeMedidaDTO.cs",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\UnidadDeMedidaDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Recursos\\UnidadDeMedidaDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAABAAAAAAAAAA==",
+              "Title": "ListaRecursos.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\ListaRecursos.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\ListaRecursos.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\ListaRecursos.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\ListaRecursos.razor",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAEwDQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-18T18:54:42.277Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AgregarRecurso.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAACgAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-18T18:54:42.278Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ControladorUniMedida.cs",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUniMedida.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorUniMedida.cs",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorUniMedida.cs",
+              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorUniMedida.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwCUAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T18:43:30.511Z",
+              "WhenOpened": "2025-11-18T20:11:50.708Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "AgregarUniMedida.razor",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarUniMedida.razor",
-              "ViewState": "AgIAADIAAAAAAAAAAAAAAGkAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAIwCQAAABfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-17T21:32:14.179Z",
+              "WhenOpened": "2025-11-18T18:54:42.27Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AgregarTipoMaterial.razor",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarTipoMaterial.razor",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-17T21:42:39.049Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Recursos.razor",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\Recursos.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\Recursos.razor",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\Recursos.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\Recursos.razor",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAAFUAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-17T21:11:12.155Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AgregarRecurso.razor",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\AgregarRecurso.razor",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAACgAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-17T21:34:26.357Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ControladorObra.cs",
-              "DocumentMoniker": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorObra.cs",
-              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorObra.cs",
-              "ToolTip": "D:\\Proyecto Frontend ProStock Constructora\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorObra.cs",
-              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorObra.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-17T21:08:37.062Z"
-=======
->>>>>>> 2722014af4c1437fa0dfca8b270e85ee2793f8c7
             }
           ]
         }

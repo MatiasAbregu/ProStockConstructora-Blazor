@@ -9,7 +9,7 @@ using Repositorios.Servicios;
 
 namespace ProStockConstructora.Controllers
 {
-    [Route("api/uniMedida")]
+    [Route("api/unidad-medida")]
     [ApiController]
     public class ControladorUniMedida : ControllerBase
     {
@@ -25,19 +25,18 @@ namespace ProStockConstructora.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO)
         {
-            Response<string> resultado = await unidadMedidaServicio.UnidadDeMedidaCargar(unidadDeMedidaDTO);
-            if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Mensaje);
+            var res = await unidadMedidaServicio.UnidadDeMedidaCargar(unidadDeMedidaDTO);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpGet]
         public async Task<IActionResult> ObtenerUnidadesDeMedida()
         {
-            Response<List<UnidadDeMedidaDTO>> resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida();
+            var resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida();
             if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Objeto);
+                return StatusCode(500, resultado);
+            return Ok(resultado);
         }
 
         [HttpPut("{Id:long}")]

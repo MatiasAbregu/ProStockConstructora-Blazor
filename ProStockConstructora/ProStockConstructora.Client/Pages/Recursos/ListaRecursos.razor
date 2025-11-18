@@ -1,8 +1,4 @@
 ﻿@page "/recursos"
-@using DTO.DTOs_MaterialesYmaquinarias
-@using DTO.DTOs_Recursos
-@using DTO.DTOs_Response
-@using DTO.Enum
 @inject IHttpServicio http
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
@@ -26,7 +22,7 @@
                 <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarUnidadMedida">
                     <span class="material-symbols-outlined" title="Agregar unidad de medida.">square_foot</span> +
                 </button>
-  
+
                 <!--Botón para agregar Tipo de Material-->
                 <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarTipoMaterial">
                     <span class="material-symbols-outlined" title="Agregar tipo de material.">home_improvement_and_tools</span> +
@@ -35,13 +31,13 @@
         </div>
 
         <!-- Tabla responsive -->
-        <div class="table-responsive shadow-sm rounded">
-            <table class="table table-hover align-middle">
+        <div class="table-responsive">
+            <table class="table">
                 <thead class="table-dark">
                     <tr>
                         <th>Código ISO</th>
                         <th>Nombre</th>
-                        <th>Unidad de Medida</th>
+                        <th>Tipo de Material</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,7 +60,7 @@
                             <tr>
                                 <td>@recurso.CodigoISO</td>
                                 <td>@recurso.Nombre</td>
-                                <td>@recurso.UnidadMedida</td>
+                                <td>@recurso.TipoMaterial (@recurso.UnidadMedida)</td>
                             </tr>
                         }
                     }
@@ -79,8 +75,7 @@ else
 }
 
 @code {
-    // 🧠 Simulamos el ID de empresa (oculto visualmente)
-    private const int EmpresaId = 1; // Temporal para pruebas
+    private DatosUsuario usuario;
 
     // Renombrada la lista para evitar conflicto con el nombre de la página/clase "Recursos"
     private List<RecursosPagPrincipalDTO> listaRecursos = new();
@@ -88,25 +83,22 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarRecursos();
+        if(datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+            await CargarRecursos();
+        }
+        else navManager.NavigateTo("/");      
     }
 
     // 🔹 Carga la lista de recursos desde el endpoint
     private async Task CargarRecursos()
     {
-        try
-        {
-            var res = await http.Get<List<RecursosPagPrincipalDTO>>($"api/recursos/materialesYmaquinarias/{EmpresaId}");
+        var res = await http.Get<Response<List<RecursosPagPrincipalDTO>>>($"api/recursos/materialesYmaquinarias/{usuario.EmpresaId}");
 
-            // ✅ Verificamos que la respuesta no sea nula y contenga datos
-            listaRecursos = res?.Respuesta ?? new List<RecursosPagPrincipalDTO>();
-
-            if (listaRecursos.Count == 0)
-                Mensaje = "No se encontraron recursos disponibles.";
-        }
-        catch (Exception ex)
+        if (res.Respuesta != null)
         {
-            Mensaje = $"Error al cargar los recursos: {ex.Message}";
+            listaRecursos = res.Respuesta.Objeto;
         }
     }
 

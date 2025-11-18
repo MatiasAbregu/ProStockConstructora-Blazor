@@ -9,7 +9,9 @@ namespace DTO.DTOs_Recursos
 {
     public class UnidadDeMedidaDTO
     {
-        public string? Nombre { get; set; }
-        public string? Simbolo { get; set; }
+        [Required(ErrorMessage = "El nombre de la unidad de medida es obligatorio.")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El simbolo de la unidad de medida es obligatorio.")]
+        public string Simbolo { get; set; }
     }
 }

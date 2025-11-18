@@ -11,14 +11,14 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/recursos">
-                <span class="bi bi-box-seam-fill-nav-menu" aria-hidden="true"></span> Recursos
-            </NavLink>
+        <div class="nav-item px-3">    
             @if (datosUsuario.Usuario != null)
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </NavLink>
+                <NavLink class="nav-link" href="/recursos">
+                    <i class="bi bi-tools"></i> Recursos
                 </NavLink>
                 @if (datosUsuario.Usuario.Roles.Contains("ADMINISTRADOR")
                             || datosUsuario.Usuario.Roles.Contains("JEFEDEOBRA"))
