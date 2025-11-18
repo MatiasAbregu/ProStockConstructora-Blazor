@@ -1,52 +1,132 @@
-﻿@page "/recursos/agregarunimedida" 
-@inject NavigationManager navManager;
-@inject IHttpServicio http;
+﻿@page "/recursos/unidad-medida"
+@using DTO.DTOs_MaterialesYmaquinarias
+@using DTO.DTOs_Recursos
+@using DTO.DTOs_Response
+@using DTO.Enum
+@inject IHttpServicio http
+@inject NavigationManager navManager
 
-<h3>Agregar Unidad de Medidad</h3>
+<PageTitle>Agregar Unidad de Medida - ProStockConstructora</PageTitle>
 
-<EditForm Model="UnidadMedida" OnValidSubmit="CargarUnidadMedida"> 
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <label>Nombre de la Unidad de Medida</label>
-        <InputText class="form-control" @bind-Value="UnidadMedida.Nombre" />
-        <ValidationMessage For="@(() => UnidadMedida.Nombre)" />
+<article class="p-4 container">
+    <h3 class="fw-bold text-primary mb-4">Agregar Unidad de Medida</h3>
+
+    <EditForm Model="@unidad" OnValidSubmit="@CrearUnidad">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <!-- Campo Nombre -->
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <InputText class="form-control" @bind-Value="unidad.Nombre" />
+            <ValidationMessage For="@(() => unidad.Nombre)" />
+        </div>
+
+        <!-- Campo Simbolo -->
+        <div class="mb-3">
+            <label class="form-label">Simbolo</label>
+            <InputText class="form-control" @bind-Value="unidad.Simbolo" />
+            <ValidationMessage For="@(() => unidad.Simbolo)" />
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i> Crear
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Volver">
+                <i class="bi bi-arrow-left-circle me-1"></i> Volver
+            </button>
+        </div>
+    </EditForm>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Símbolo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!string.IsNullOrEmpty(unidad.Nombre) || !string.IsNullOrEmpty(unidad.Simbolo))
+                {
+                    <tr>
+                        <td>@unidad.Nombre</td>
+                        <td>@unidad.Simbolo</td>
+                    </tr>
+                }
+                else if (unidad == null && unidad.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">No hay unidades de medida cargadas aún.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var u in unidad)
+                    {
+                        <tr>
+                            <td>@u.Nombre</td>
+                            <td>@u.Simbolo</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
-    <div class="form-group">
-        <label>Abreviatura</label>
-        <InputText class="form-control" @bind-Value="UnidadMedida.Simbolo" />
-        <ValidationMessage For="@(() => UnidadMedida.Simbolo)" />
-    </div>
-    <button class="btn btn-primary" type="submit">Aceptar</button>
-    <button class="btn btn-secondary" @onclick="Cancelar">Volver</button>
-</EditForm>
+
+
+</article>
 
 @code {
-   private UnidadDeMedidaDTO UnidadMedida = new UnidadDeMedidaDTO();
-    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
-    
-    protected override async Task OnInitializedAsync()
+    private const int EmpresaId = 1; // Simulación temporal
+
+    private UnidadDeMedidaDTO unidad = new();
+    private string Mensaje = string.Empty;
+
+
+    private async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-        await CargarUnidadMedida();
+        
     }
 
-    private async Task CargarUnidadMedida()
+    private async Task CargarUnidades()
     {
-        var response = await http.Post<UnidadDeMedidaDTO, UnidadDeMedidaDTO>("api/unidadmedida", UnidadMedida);
-        if (response.Respuesta != null)
+        try
         {
-            navManager.NavigateTo("/recursos");
+            var res = await http.Get<List<UnidadDeMedidaDTO>>($"api/unidades/empresa/{EmpresaId}");
+
+            unidad = res?.Respuesta ?? new List<UnidadDeMedidaDTO>();
+
+            if (unidad.Count == 0)
+                Mensaje = "No se encontraron unidades de medidas disponibles";
         }
-        else
+        catch (Exception ex)
         {
-            // Manejar el error (por ejemplo, mostrar un mensaje al usuario)
-            Console.WriteLine(response);
+            await MostrarAlerta($"❌ Error al cargar las unidades de medida: {ex.Message}");
         }
     }
 
-    private void Cancelar()
+    private async Task CrearUnidad()
     {
-        navManager.NavigateTo("/recursos");
+        if (string.IsNullOrWhiteSpace(unidad.Nombre))
+        {
+            await MostrarAlerta("⚠️ Debes completar el nombre de la unidad.");
+            return;
+        }
+
+        // 🔹 En una app real se enviaría al endpoint correspondiente
+        Console.WriteLine($"✅ Unidad creada: {unidad.Nombre} [Empresa {EmpresaId}]");
+        await MostrarAlerta("Unidad creada correctamente (simulación).");
+
+        unidad = new UnidadDeMedidaDTO(); // limpiar formulario
     }
 
+    private void Volver() => navManager.NavigateTo("/recursos");
+
+    private async Task MostrarAlerta(string mensaje)
+    {
+        await Task.Run(() => Console.WriteLine(mensaje));
+    }
 }

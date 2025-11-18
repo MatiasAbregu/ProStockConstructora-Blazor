@@ -28,78 +28,50 @@ namespace Repositorios.Servicios
         {
             try
             {
-                Console.WriteLine("🔹 Entrando a RecursoCargar");
-                Console.WriteLine($"🔹 DepositoId recibido: {DepositoId}");
-                Console.WriteLine($"🔹 Conectando a base de datos...");
-                var totalDepositos = await baseDeDatos.Depositos.CountAsync();
-                Console.WriteLine($"🔹 Total de depósitos en la BD: {totalDepositos}");
+                if (materialYmaquinaDTO == null)
+                    return new Response<string> { Estado = false, Mensaje = "Datos de recurso vacíos.", Objeto = null };
 
-                var listaDepositos = await baseDeDatos.Depositos.ToListAsync();
-                foreach (var d in listaDepositos)
-                {
-                    Console.WriteLine($"➡️ Depósito ID={d.Id}, Nombre={d.NombreDeposito}");
-                }
+                if (string.IsNullOrWhiteSpace(materialYmaquinaDTO.CodigoISO))
+                    return new Response<string> { Estado = false, Mensaje = "Debe especificar el Código ISO.", Objeto = null };
 
                 string codigoISO = materialYmaquinaDTO.CodigoISO.ToUpper();
 
-                // Verificar que el depósito exista
                 bool depositoExiste = await baseDeDatos.Depositos.AnyAsync(d => d.Id == DepositoId);
                 if (!depositoExiste)
-                    return (new Response<string>
-                    {
-                        Estado = false,
-                        Mensaje = "El depósito especificado no existe.",
-                        Objeto = null
-                    });
+                    return new Response<string> { Estado = false, Mensaje = "El depósito especificado no existe.", Objeto = null };
 
                 if (materialYmaquinaDTO.Cantidad <= 0)
-                    return new Response<string> 
-                    { 
-                       Estado = false, 
-                       Mensaje = "La cantidad debe ser mayor a cero.",
-                       Objeto = null 
-                    };
+                    return new Response<string> { Estado = false, Mensaje = "La cantidad debe ser mayor a cero.", Objeto = null };
 
-                //  Verificar si el recurso ya existe
-                var (existeRecurso, mensaje) = await VerificarRecursoPorCodigoISO(codigoISO);
 
-                if (existeRecurso)
+                //VERIFICAR SI YA EXISTE EL RECURSO
+
+                var recursoExistente = await baseDeDatos.Recursos
+                    .FirstOrDefaultAsync(r => r.CodigoISO == codigoISO);
+
+                if (recursoExistente != null)
                 {
-                    // Buscar el recurso existente
-                    var recursoExistente = await baseDeDatos.Recursos
-                        .FirstOrDefaultAsync(r => r.CodigoISO.ToString() == codigoISO);
-
-                    if (recursoExistente == null)
-                        return new Response<string> 
-                        { 
-                          Estado = false, 
-                          Mensaje = "Error al buscar el recurso existente.", 
-                          Objeto = null 
-                        };
-
-                    // Verificar si tiene stock en ese depósito
                     var stockExistente = await baseDeDatos.Stocks
-                        .FirstOrDefaultAsync(s => s.DepositoId == DepositoId && s.MaterialesyMaquinasId == recursoExistente.Id);
+                        .FirstOrDefaultAsync(s => s.DepositoId == DepositoId &&
+                                                  s.MaterialesyMaquinasId == recursoExistente.Id);
 
                     if (stockExistente != null)
                     {
-                        // Ya existe en ese depósito → sumamos cantidad
                         stockExistente.Cantidad += materialYmaquinaDTO.Cantidad;
                         stockExistente.FechaIngreso = DateTime.Now;
 
                         baseDeDatos.Stocks.Update(stockExistente);
                         await baseDeDatos.SaveChangesAsync();
 
-                        return (new Response<string>
+                        return new Response<string>
                         {
                             Estado = true,
-                            Mensaje = "Stock actualizado en el depósito para un recurso existente.",
+                            Mensaje = "Stock actualizado para recurso existente.",
                             Objeto = null
-                        });
+                        };
                     }
                     else
                     {
-                        // Recurso existe, pero no tiene stock en este depósito → crear stock nuevo
                         var nuevoStock = new Stock
                         {
                             DepositoId = DepositoId,
@@ -111,65 +83,92 @@ namespace Repositorios.Servicios
                         await baseDeDatos.Stocks.AddAsync(nuevoStock);
                         await baseDeDatos.SaveChangesAsync();
 
-                        return (new Response<string> { Estado = true, Mensaje = "Stock actualizado en el depósito para un recurso existente.", Objeto = null });
+                        return new Response<string>
+                        {
+                            Estado = true,
+                            Mensaje = "Stock creado para recurso existente.",
+                            Objeto = null
+                        };
                     }
                 }
 
-                // Si el tipo de material y la unidad de media no existe, crearlo desde cero
+                // VALIDACIONES SEGÚN TIPO
                 TipoMaterial? tipoMaterial = null;
                 UnidadMedida? unidadMedida = null;
 
-                if (materialYmaquinaDTO.Tipo == EnumTipoMaterialoMaquina.Material)
+                bool esMaterial = materialYmaquinaDTO.TipoMaterial != null || materialYmaquinaDTO.UnidadDeMedida != null;
+
+                // SI ES MATERIA, VALIDAMOS
+                if (esMaterial)
                 {
-                    if (materialYmaquinaDTO.TipoMaterial != null && !string.IsNullOrEmpty(materialYmaquinaDTO.TipoMaterial.Nombre))
+                    // Validar TipoMaterial
+                    if (materialYmaquinaDTO.TipoMaterial == null || materialYmaquinaDTO.TipoMaterial.Id <=0)
                     {
-                        string nombreTipo = materialYmaquinaDTO.TipoMaterial.Nombre.ToUpper();
-
-                        tipoMaterial = await baseDeDatos.TipoMateriales
-                        .FirstOrDefaultAsync(tm => tm.Nombre == nombreTipo);
-
-                        if (tipoMaterial == null)
+                        return new Response<string>
                         {
-                            tipoMaterial = new TipoMaterial{ Nombre = nombreTipo };    
-                            await baseDeDatos.TipoMateriales.AddAsync(tipoMaterial);
-                            await baseDeDatos.SaveChangesAsync();        
-                        }
+                            Estado = false,
+                            Mensaje = "Debe especificar el ID del tipo de material.",
+                            Objeto = null
+                        };
                     }
-                }
 
-                if (materialYmaquinaDTO.UnidadDeMedida != null && !string.IsNullOrWhiteSpace(materialYmaquinaDTO.UnidadDeMedida.Nombre))
-                {
-                    string nombreUM = materialYmaquinaDTO.UnidadDeMedida.Nombre.ToUpper();
+                    var IdTipo = materialYmaquinaDTO.TipoMaterial.Id;
+
+                    tipoMaterial = await baseDeDatos.TipoMateriales
+                        .FirstOrDefaultAsync(tm => tm.Id == IdTipo);
+
+                    if (tipoMaterial == null)
+                    {
+                        return new Response<string>
+                        {
+                            Estado = false,
+                            Mensaje = $"El tipo de material con el ID '{IdTipo}' no existe. Debe cargarlo antes.",
+                            Objeto = null
+                        };
+                    }
+
+                    // Validar Unidad Medida
+                    if (materialYmaquinaDTO.UnidadDeMedida == null ||
+                        string.IsNullOrWhiteSpace(materialYmaquinaDTO.UnidadDeMedida.Simbolo))
+                    {
+                        return new Response<string>
+                        {
+                            Estado = false,
+                            Mensaje = "Debe especificar la unidad de medida.",
+                            Objeto = null
+                        };
+                    }
+
+                    string simboloUM = materialYmaquinaDTO.UnidadDeMedida.Simbolo.Trim().ToUpper();
 
                     unidadMedida = await baseDeDatos.UnidadMedidas
-                        .FirstOrDefaultAsync(um => um.Nombre == nombreUM);
+                        .FirstOrDefaultAsync(um => um.Simbolo.Trim().ToUpper() == simboloUM);
 
                     if (unidadMedida == null)
                     {
-                        unidadMedida = new UnidadMedida
+                        return new Response<string>
                         {
-                            Nombre = nombreUM,
-                            Simbolo = materialYmaquinaDTO.UnidadDeMedida.Simbolo.ToUpper() ?? ""
+                            Estado = false,
+                            Mensaje = $"La unidad de medida '{simboloUM}' no existe. Cárguela antes.",
+                            Objeto = null
                         };
-                        baseDeDatos.UnidadMedidas.AddAsync(unidadMedida);
-                        await baseDeDatos.SaveChangesAsync();
                     }
                 }
 
-                // Crear recurso nuevo
+                // CREAR NUEVO RECURSO
                 var nuevoRecurso = new Recursos
                 {
                     CodigoISO = codigoISO,
-                    Nombre = materialYmaquinaDTO.Nombre,      
+                    Nombre = materialYmaquinaDTO.Nombre,
                     Descripcion = materialYmaquinaDTO.Descripcion,
                     TipoMaterialId = tipoMaterial?.Id,
-                    UnidadMedidaId = unidadMedida?.Id,
+                    UnidadMedidaId = unidadMedida?.Id
                 };
 
                 await baseDeDatos.Recursos.AddAsync(nuevoRecurso);
                 await baseDeDatos.SaveChangesAsync();
 
-                // Crear stock inicial
+                // CREAR STOCK
                 var nuevoStockRecurso = new Stock
                 {
                     DepositoId = DepositoId,
@@ -181,12 +180,22 @@ namespace Repositorios.Servicios
                 await baseDeDatos.Stocks.AddAsync(nuevoStockRecurso);
                 await baseDeDatos.SaveChangesAsync();
 
-                return (new Response<string> { Estado = true, Mensaje = "Stock actualizado en el depósito para un recurso existente.", Objeto = null });
+                return new Response<string>
+                {
+                    Estado = true,
+                    Mensaje = "Recurso y stock creados correctamente.",
+                    Objeto = null
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return (new Response<string> { Estado = false, Mensaje = "El depósito especificado no existe.", Objeto = null });
+                return new Response<string>
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Objeto = null
+                };
             }
         }
 
@@ -305,15 +314,15 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<List<RecursosPagPrincipalDTO>>>RecursosVerDTO(int EmpresaId)
+        public async Task<Response<List<RecursosPagPrincipalDTO>>> RecursosVerDTO(int EmpresaId)
         {
             try
             {
                 var existe = await baseDeDatos.Obras.Where(s => s.EmpresaId == EmpresaId).ToListAsync();
                 if (existe == null || existe.Count == 0)
                 {
-                    Response<List<RecursosPagPrincipalDTO>> 
-                    res = new Response<List<RecursosPagPrincipalDTO>>() 
+                    Response<List<RecursosPagPrincipalDTO>>
+                    res = new Response<List<RecursosPagPrincipalDTO>>()
                     { Estado = true };
                     return res;
                 }
@@ -330,7 +339,7 @@ namespace Repositorios.Servicios
                             UnidadMedida = s.MaterialesyMaquinas.UnidadMedida.Simbolo
                         }
                 ).ToListAsync();
-                Response<List<RecursosPagPrincipalDTO>> res2 = new Response<List<RecursosPagPrincipalDTO>>() { Estado = true, Objeto = resultado};
+                Response<List<RecursosPagPrincipalDTO>> res2 = new Response<List<RecursosPagPrincipalDTO>>() { Estado = true, Objeto = resultado };
                 return res2;
             }
             catch (Exception ex)
@@ -372,7 +381,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<(bool, string)> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, int recursoId)
+        public async Task<(bool, string)> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId)
         {
             var recurso = await baseDeDatos.Recursos.FindAsync(recursoId);
             if (recurso == null)
@@ -403,4 +412,3 @@ namespace Repositorios.Servicios
         }
     }
 }
-

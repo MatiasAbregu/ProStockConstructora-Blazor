@@ -1,0 +1,57 @@
+﻿@page "/recursos/agregar-tipo-material"
+@inject IHttpServicio http
+@inject NavigationManager navManager
+
+<PageTitle>Agregar Tipo de Material - ProStockConstructora</PageTitle>
+
+<article class="p-4 container">
+    <h3 class="fw-bold text-primary mb-4">Agregar Tipo de Material</h3>
+
+    <EditForm Model="@tipoMaterial" OnValidSubmit="@CrearTipoMaterial">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <!-- Campo Nombre -->
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <InputText class="form-control" @bind-Value="tipoMaterial.Nombre" />
+            <ValidationMessage For="@(() => tipoMaterial.Nombre)" />
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i> Crear
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Volver">
+                <i class="bi bi-arrow-left-circle me-1"></i> Volver
+            </button>
+        </div>
+    </EditForm>
+</article>
+
+@code {
+    private TipoMaterialDTO tipoMaterial = new();
+    private const int EmpresaId = 1; // Simulación temporal
+
+    private async Task CrearTipoMaterial()
+    {
+        if (string.IsNullOrWhiteSpace(tipoMaterial.Nombre))
+        {
+            await MostrarAlerta("⚠️ Debes completar el nombre del tipo de material.");
+            return;
+        }
+        // 🔹 En una app real se enviaría al endpoint correspondiente
+        Console.WriteLine($"✅ Tipo de Material creado: {tipoMaterial.Nombre} [Empresa {EmpresaId}]");
+        await MostrarAlerta("Tipo de Material creado correctamente (simulación).");
+
+        tipoMaterial = new TipoMaterialDTO(); // limpiar formulario
+    }
+
+    private void Volver() => navManager.NavigateTo("/recursos");
+
+    private async Task MostrarAlerta(string mensaje)
+    {
+        // Simulación de alerta
+        await Task.Run(() => Console.WriteLine(mensaje));
+    }
+}

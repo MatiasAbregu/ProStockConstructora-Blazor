@@ -1,0 +1,161 @@
+﻿using BD;
+using BD.Modelos;
+using DTO.DTOs_Recursos;
+using DTO.DTOs_Response;
+using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Repositorios.Servicios
+{
+    public class TipoMaterialServicio : ITipoMaterialServicio
+    {
+        private readonly AppDbContext baseDeDatos;
+
+        public TipoMaterialServicio(AppDbContext baseDeDatos)
+        {
+            this.baseDeDatos = baseDeDatos;
+        }
+
+        public async Task<Response<List<TipoMaterialDTO>>> ObtenerTiposDeMaterial()
+        {
+            try
+            {
+                var ExisteMaterial = await baseDeDatos.TipoMateriales.ToListAsync();
+                if (ExisteMaterial == null || ExisteMaterial.Count == 0)
+                {
+                    Response<List<TipoMaterialDTO>>
+                    res = new Response<List<TipoMaterialDTO>>()
+                    { Estado = true };
+                    return res;
+                }
+
+                var tiposDeMaterialDTO = ExisteMaterial.Select(tm => new TipoMaterialDTO
+                {
+                    Nombre = tm.Nombre
+                }).ToList();
+                Response<List<TipoMaterialDTO>> response = new Response<List<TipoMaterialDTO>>()
+                {
+                    Objeto = tiposDeMaterialDTO,
+                    Mensaje = "Tipos de material obtenidos exitosamente.",
+                    Estado = true
+                };
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<TipoMaterialDTO>>()
+                {
+                    Objeto = null,
+                    Mensaje = $"Error al obtener los tipos de material: {ex.Message}",
+                    Estado = false
+                };
+            }
+        }
+
+        public async Task<Response<string>> TipoMaterialCargar(TipoMaterialDTO tipoMaterial)
+        {
+            try
+            {
+                if (tipoMaterial == null || string.IsNullOrWhiteSpace(tipoMaterial.Nombre))
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "Datos de tipo de material inválidos.",
+                        Estado = false
+                    };
+                }
+
+                var nuevoTipoMaterial = new TipoMaterial
+                {
+                    Nombre = tipoMaterial.Nombre
+                };
+                await baseDeDatos.TipoMateriales.AddAsync(nuevoTipoMaterial);
+                await baseDeDatos.SaveChangesAsync();
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Tipo de material cargado exitosamente.",
+                    Estado = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = $"Error al cargar el tipo de material: {ex.Message}",
+                    Estado = false
+                };
+            }
+        }
+
+        public async Task<Response<string>> TipoMaterialModificar(TipoMaterialDTO tipoMaterialDTO, long Id)
+        {
+            try
+            {
+                if (tipoMaterialDTO == null || string.IsNullOrWhiteSpace(tipoMaterialDTO.Nombre))
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "Datos de tipo de material inválidos.",
+                        Estado = false
+                    };
+                }
+
+                string nuevoNombre = tipoMaterialDTO.Nombre.Trim().ToUpper();
+
+                var tipoMaterial = await baseDeDatos.TipoMateriales.FirstOrDefaultAsync(tm => tm.Id == Id);
+
+                if (tipoMaterial == null)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "El tipo de material no existe.",
+                        Estado = false
+                    };
+                }
+
+                bool nombreExistente = await baseDeDatos.TipoMateriales
+                    .AnyAsync(tm => tm.Nombre.ToUpper() == nuevoNombre && tm.Id != Id);
+
+                if (nombreExistente)
+                {
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "El nombre del tipo de material ya está en uso.",
+                        Estado = false
+                    };
+                }
+                tipoMaterial.Nombre = nuevoNombre;
+
+                baseDeDatos.TipoMateriales.Update(tipoMaterial);
+                await baseDeDatos.SaveChangesAsync();
+
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = "Tipo de material modificado exitosamente.",
+                    Estado = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<string>
+                {
+                    Objeto = null,
+                    Mensaje = $"Error al modificar el tipo de material: {ex.Message}",
+                    Estado = false
+                };
+            }
+        }
+    }
+}

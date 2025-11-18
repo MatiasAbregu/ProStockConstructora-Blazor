@@ -11,14 +11,12 @@ namespace DTO.DTOs_MaterialesYmaquinarias
 {
     public class RecursosCargarDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage ="El Codigo ISO es obligatorio")]
         public string CodigoISO { get; set; }
 
         [Required(ErrorMessage = "El Nombre es obligatorio")]
         public string Nombre { get; set; }
-
-        [Required(ErrorMessage = "El Tipo es obligatorio")]
-        public EnumTipoMaterialoMaquina Tipo { get; set; }
         public TipoMaterialDTO? TipoMaterial { get; set; }
         public UnidadDeMedidaDTO? UnidadDeMedida { get; set; }
 

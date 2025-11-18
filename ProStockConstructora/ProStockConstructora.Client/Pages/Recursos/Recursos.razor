@@ -1,75 +1,121 @@
 ﻿@page "/recursos"
-@inject NavigationManager navManager;
+@using DTO.DTOs_MaterialesYmaquinarias
+@using DTO.DTOs_Recursos
+@using DTO.DTOs_Response
+@using DTO.Enum
+@inject IHttpServicio http
+@inject DatosSesion datosSesion
+@inject NavigationManager navManager
 
-<h3>Administrar Recursos</h3>
-<br />
-<a class="btn-link btn-primary fw-bold fs-20" href="/recursos/agregar">Agregar Recurso</a>
-<a class="btn-link btn-primary" href="/recursos/agregarunimedida">Agregar Unidad Medida</a> 
-<br /><br />
-@if (recursos == null)
+<PageTitle>Recursos - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
 {
-    <p>Buscando...</p>
-}
-else if (recursos.Count == 0)
-{
-    <p>No hay recursos disponibles.</p>
+    <article class="p-4 container">
+        <!-- Encabezado con título y botones -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h3 class="fw-bold text-primary">Listado de Recursos</h3>
+            <div class="d-flex gap-2">
+                <!-- Botón para agregar Recurso -->
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarRecurso">
+                    <span class="material-symbols-outlined" title="Agregar recurso.">construction</span> +
+                </button>
+
+
+                <!-- Botón para agregar Unidad de Medida -->
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarUnidadMedida">
+                    <span class="material-symbols-outlined" title="Agregar unidad de medida.">square_foot</span> +
+                </button>
+  
+                <!--Botón para agregar Tipo de Material-->
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarTipoMaterial">
+                    <span class="material-symbols-outlined" title="Agregar tipo de material.">home_improvement_and_tools</span> +
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla responsive -->
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código ISO</th>
+                        <th>Nombre</th>
+                        <th>Unidad de Medida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!string.IsNullOrEmpty(Mensaje) && (listaRecursos == null || listaRecursos.Count == 0))
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">@Mensaje</td>
+                        </tr>
+                    }
+                    else if (listaRecursos == null || listaRecursos.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No hay recursos cargados aún.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var recurso in listaRecursos)
+                        {
+                            <tr>
+                                <td>@recurso.CodigoISO</td>
+                                <td>@recurso.Nombre</td>
+                                <td>@recurso.UnidadMedida</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </article>
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>CodigoISO</th> 
-                <th>Nombre</th>
-                <th>Unidad de Medida</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var recurso in recursos)
-            {
-                <tr>
-                    <td>@recurso.CodigoISO</td>
-                    <td>@recurso.Nombre</td>
-                    <td>@recurso.UnidadMedida</td>
-                    <td style="text-align:center;">
-                        <button class="btn btn-info btn-sm"
-                                @onclick="() => EditarRecurso(recurso.RecursosId)">
-                            Editar
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-   </table>
+    navManager.NavigateTo("/");
 }
 
-
-
 @code {
-    List<RecursosPagPrincipalDTO> recursos = new List<RecursosPagPrincipalDTO>();
-    List<UnidadDeMedidaDTO> unidadesMedida = new List<UnidadDeMedidaDTO>();
+    // 🧠 Simulamos el ID de empresa (oculto visualmente)
+    private const int EmpresaId = 1; // Temporal para pruebas
 
-   
-     protected override async Task OnInitializedAsync()
-     { 
-         await base.OnInitializedAsync();
-         await CargarRecursos();
-     }
-     
-     private async Task CargarRecursos()
-     {
-         // mock
-         recursos = new List<RecursosPagPrincipalDTO>
-         {
-             new RecursosPagPrincipalDTO { RecursosId = 1, CodigoISO = "MAT001", Nombre = "Cemento", UnidadMedida = "Kg" },
-             new RecursosPagPrincipalDTO { RecursosId = 2, CodigoISO = "MAT002", Nombre = "Ladrillos", UnidadMedida = "Unidad" },
-             new RecursosPagPrincipalDTO { RecursosId = 3, CodigoISO = "MAT003", Nombre = "Arena", UnidadMedida = "m3" },
-         };
-        await Task.CompletedTask;
-     }
-     
-     void EditarRecurso(int recursoId)
-     {
-         navManager.NavigateTo($"/recursos/editar/{recursoId}");
-     }
+    // Renombrada la lista para evitar conflicto con el nombre de la página/clase "Recursos"
+    private List<RecursosPagPrincipalDTO> listaRecursos = new();
+    private string Mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarRecursos();
+    }
+
+    // 🔹 Carga la lista de recursos desde el endpoint
+    private async Task CargarRecursos()
+    {
+        try
+        {
+            var res = await http.Get<List<RecursosPagPrincipalDTO>>($"api/recursos/materialesYmaquinarias/{EmpresaId}");
+
+            // ✅ Verificamos que la respuesta no sea nula y contenga datos
+            listaRecursos = res?.Respuesta ?? new List<RecursosPagPrincipalDTO>();
+
+            if (listaRecursos.Count == 0)
+                Mensaje = "No se encontraron recursos disponibles.";
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar los recursos: {ex.Message}";
+        }
+    }
+
+    // 🔹 Navega a la página para agregar una Unidad de Medida
+    private void IrAgregarUnidadMedida() => navManager.NavigateTo("/recursos/unidad-medida");
+
+    // 🔹 Navega a la página para agregar un Recurso
+    private void IrAgregarRecurso() => navManager.NavigateTo("/recursos/agregar-recurso");
+
+    // 🔹 Navega a la página para agregar un Tipo de Material
+    private void IrAgregarTipoMaterial() => navManager.NavigateTo("/recursos/agregar-tipo-material");
 }
