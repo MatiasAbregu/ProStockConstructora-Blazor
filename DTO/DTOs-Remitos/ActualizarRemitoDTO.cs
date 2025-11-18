@@ -1,0 +1,22 @@
+﻿using BD.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DTO.DTOs_Remitos
+{
+    public class ActualizarRemitoDTO
+    { 
+        public string? NumeroRemito { get; set; }
+        public long? NotaDePedidoId { get; set; }
+        public long? DepositoOrigenId { get; set; }
+        public long? DepositoDestinoId { get; set; }
+        public EstadoRemito EstadoRemito { get; set; } = EstadoRemito.Pendiente;
+        public string? NombreTransportista { get; set; }
+        public DateTime? FechaEmision { get; set; }
+        public DateTime? FechaLimite { get; set; }
+        public DateTime? FechaRecepcion { get; set; }
+    }
+}

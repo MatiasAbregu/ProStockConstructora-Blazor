@@ -1,5 +1,4 @@
 ﻿using BD.Enums;
-using BD.Modelos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace DTO.DTOs_Remitos
 {
-    public class VerRemitoDTO
+    public class CrearRemitoDTO
     {
-        public long Id { get; set; }
         public required string NumeroRemito { get; set; }
         public required long NotaDePedidoId { get; set; }
         public required long DepositoOrigenId { get; set; }
@@ -20,7 +18,5 @@ namespace DTO.DTOs_Remitos
         public required DateTime FechaEmision { get; set; }
         public required DateTime FechaLimite { get; set; }
         public DateTime? FechaRecepcion { get; set; }
-
-        public List<DetalleRemito>? ListaDelRemito { get; }
     }
 }

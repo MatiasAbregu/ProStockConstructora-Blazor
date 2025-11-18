@@ -54,14 +54,5 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return Ok(e);
             else return StatusCode(500, res);
         }
-
-        [HttpDelete("eliminar/{id:long}")]
-        public async Task<ActionResult<string>> EliminarDeposito(long id)
-        {
-            Response<string> res = await depositoServicio.EliminarDeposito(id);
-            if (res.Estado) return Ok(res.Objeto);
-            else return StatusCode(500, res.Mensaje);
-        }
-
     }
 }

@@ -63,12 +63,14 @@
                                     <a class="btn btn-outline-info mx-1" href=@($"/recursos")>
                                         <i class="bi bi-tools"></i>
                                     </a>
+                                    <a class="btn btn-outline-secondary mx-1" href=@($"/notadepedidos")>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </a>
                                     @if(ObraId != null)
                                     {
-                                        <button class="btn btn-outline-warning mx-1"
-                                                title="Editar" @onclick="() => EditarDeposito(deposito.Id)">
+                                        <a class="btn btn-outline-warning mx-1" href=@($"/obras/{ObraId}/depositos/editar/{deposito.Id}")>
                                             <i class="bi bi-pencil"></i>
-                                        </button>
+                                        </a>
                                     }
                                 </td>
 
