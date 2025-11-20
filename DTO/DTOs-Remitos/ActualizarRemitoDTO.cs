@@ -9,6 +9,7 @@ namespace DTO.DTOs_Remitos
 {
     public class ActualizarRemitoDTO
     { 
+        public long Id { get; set; }
         public string? NumeroRemito { get; set; }
         public long? NotaDePedidoId { get; set; }
         public long? DepositoOrigenId { get; set; }

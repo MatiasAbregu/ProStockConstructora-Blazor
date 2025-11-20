@@ -18,11 +18,18 @@ namespace ProStockConstructora.Controllers
         }
 
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<VerRemitoDTO>> ObtenerRemitoPorId(long id)
+        public async  Task<ActionResult> ObtenerRemitoPorId([FromRoute] long id)
         {
-            Response<List<VerRemitoDTO>> response = await remitoServicio.ObtenerRemitoPorId(id);
-            if (response.Estado) return Ok(response.Objeto);
-            else return StatusCode(500, response);
+            var res = await remitoServicio.ObtenerRemitoPorId(id);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res);
+        }
+        [HttpGet("notadepedidos/{notaDePedidoId:long}")]
+        public async Task<ActionResult> ObtenerRemitoPorNotaDePedidoId([FromRoute] long notaDePedidoId)
+        {
+            var res = await remitoServicio.ObtenerRemitoPorNotaDePedidoId(notaDePedidoId);
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res);
         }
         [HttpPost]
         public async Task<ActionResult>CrearRemito([FromBody] CrearRemitoDTO remitoDTO)
@@ -31,9 +38,16 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return Ok(res.Objeto);
             else return StatusCode(500, res);
         }
-        [HttpPut("actualizar/{id:long}")]
+        [HttpPut("{id:long}")]
         public async Task<ActionResult<string>> ActualizarRemito([FromRoute]long id, [FromBody] ActualizarRemitoDTO remitoDTO)
         {
+            if (id != remitoDTO.Id)
+                return StatusCode(409, new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error al intentar actualizar el remito.",
+                    Objeto = null
+                });
             var res = await remitoServicio.ActualizarRemito(id, remitoDTO);
             if (res.Estado) return Ok(res.Objeto);
             else return StatusCode(500, res);

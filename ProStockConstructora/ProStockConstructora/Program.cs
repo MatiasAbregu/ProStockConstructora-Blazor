@@ -38,6 +38,7 @@ builder.Services.AddScoped<IRecursosServicio, RecursosServicio>();
 builder.Services.AddScoped<INotaDePedidoServicio, NotaDePedidoServicio>();
 builder.Services.AddScoped<IUnidadMedidaServicio, UnidadMedidaServicio>();
 builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+builder.Services.AddScoped<IRemitoServicio, RemitoServicio>();
 
 builder.Services.AddScoped<HttpClient>(sp =>
 {

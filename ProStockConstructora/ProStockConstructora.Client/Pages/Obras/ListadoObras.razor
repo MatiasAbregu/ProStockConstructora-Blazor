@@ -9,12 +9,14 @@
     (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <article class="p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Obras</h3>
-            @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
-            {
-                <a class="btn btn-add btn-success" href="/obras/crear">+</a>
-            }
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Obras</p>
+            <div class="botonera">
+                @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+                {
+                    <a class="btn btn-add btn-success" href="/obras/crear">+</a>
+                }
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -42,7 +44,7 @@
                     }
                     else if (Obras?.Count > 0)
                     {
-                        @foreach (var obra in Obras.Skip(numeroPagina == 1 ? 0 : numeroPagina * 10).Take(10))
+                        @foreach (var obra in Obras.Skip(numeroPagina == 1 ? 0 : (numeroPagina-1) * 10).Take(10))
                         {
                             <tr>
                                 <td>@obra.CodigoObra</td>
@@ -81,6 +83,10 @@
             </div>
         </div>
     </article>
+    @if (!string.IsNullOrEmpty(mensajeEstado))
+    {
+        <p class="msg-estado">@mensajeEstado</p>
+    }
 
     @if (MostraModal)
     {
@@ -114,11 +120,12 @@ else
 
 @code {
     private DatosUsuario usuario = new();
-    private List<VerObraDTO> Obras;
-    private int numeroPagina = 1;
+    private List<VerObraDTO> Obras = new(); 
     private VerObraDTO obraSeleccionada = new();
+
+    private int numeroPagina = 1;
     private bool MostraModal = false;
-    private string Mensaje = string.Empty;
+    private string Mensaje = string.Empty, mensajeEstado;
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,8 +154,16 @@ else
         var res = await http.Delete <Response<string>>($"api/obra/{id}");
         if (res.Respuesta != null)
         {
-            await CargarObras();
-        }
+            if (res.Respuesta.Objeto != null)
+            {
+                await CargarObras();
+                mensajeEstado = res.Respuesta.Objeto;
+                StateHasChanged();
+                await Task.Delay(2500);
+                mensajeEstado = "";
+            }
+            else mensajeEstado = res.Respuesta.Mensaje;            
+        }     
     }
 
     private async Task SiguientePagina()

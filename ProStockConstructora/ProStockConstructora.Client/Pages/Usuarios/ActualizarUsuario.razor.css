@@ -1,0 +1,51 @@
+﻿.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+}
+
+.cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: .5%;
+}
+
+    .cabecera p {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .cabecera button {
+        display: flex;
+        align-items: center;
+    }
+
+.btn-submit {
+    margin: 0 1.3rem 0 auto;
+}
+
+.contenedorAnadir {
+    display: flex;
+    align-items: center;
+}
+
+    .contenedorAnadir p {
+        margin: 0 1% 0 0;
+        padding: 0;
+    }
+
+.containerCheckbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    max-height: 250px;
+    overflow-y: auto;
+    align-items: center;
+}
+
+.checkBoxCard {
+    display: flex;
+    flex-direction: row;
+    padding: 1% 2%;
+    gap: 0 20px;
+}

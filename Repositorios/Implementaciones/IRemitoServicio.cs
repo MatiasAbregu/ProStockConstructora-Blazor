@@ -10,8 +10,9 @@ namespace Repositorios.Implementaciones
 {
     public interface IRemitoServicio
     {
-        Task<Response<string>> ActualizarRemito(long id, ActualizarRemitoDTO remitoDTO);
-        Task<Response<string>> CrearRemito(CrearRemitoDTO remitoDTO);
-        Task<Response<List<VerRemitoDTO>>> ObtenerRemitoPorId(long id);
+        public Task<Response<string>> ActualizarRemito(long id, ActualizarRemitoDTO remitoDTO);
+        public Task<Response<string>> CrearRemito(CrearRemitoDTO remitoDTO);
+        public Task<Response<ActualizarRemitoDTO>> ObtenerRemitoPorId(long id);
+        public Task<Response<ActualizarRemitoDTO>> ObtenerRemitoPorNotaDePedidoId(long notaDePedidoId);
     }
 }

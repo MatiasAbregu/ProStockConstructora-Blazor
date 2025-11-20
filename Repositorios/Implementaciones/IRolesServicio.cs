@@ -1,4 +1,5 @@
-﻿using DTO.DTOs_Response;
+﻿using BD.Modelos;
+using DTO.DTOs_Response;
 using DTO.DTOs_Roles;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Repositorios.Implementaciones
     public interface IRolesServicio
     {
         public Task<Response<List<VerRolDTO>>> ObtenerRoles();
+        public Task<List<Rol>> BuscarRolesPorNombres(List<string> roles);
     }
 }

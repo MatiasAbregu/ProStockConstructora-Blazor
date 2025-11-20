@@ -1,111 +1,101 @@
 ﻿@page "/obras/{ObraId:long}/depositos/editar/{DepositoId:long}"
+@using DTO.Enum
 @inject IHttpServicio Http
+@inject DatosSesion datosSesion;
 @inject NavigationManager Navigation
 
-<h3 class="text-center my-4 fw-bold text-warning">
-    ✏️ Editar Depósito
-</h3>
-@if (deposito == null)
+<PageTitle>Editar Depósito - ProStock</PageTitle>
+
+@if (datosSesion.Usuario != null &&
+    (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
-    <div class="text-center">
-        <div class="spiner-border text-warning" role="status"><span class="visually-hiden">Cargando...</span>
-            </div>
-            <p class="mt-2">Cargando informacion del deposito...</p>
-    </div>
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Editar depósito</p>
+            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+        </div>
+        <div class="card">
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger text-center mx-2 mt-2">
+                    @mensaje
+                </div>
+            }
+            <EditForm Model="deposito" OnValidSubmit="GuardarDeposito">
+                <DataAnnotationsValidator />
+                <div class="my-3 px-4">
+                    <label class="form-label fw-semibold">Código de Depósito</label>
+                    <InputText class="form-control" @bind-Value="deposito.CodigoDeposito" />
+                    <ValidationMessage For="@(() => deposito.CodigoDeposito)" />
+                </div>
+                <div class="my-3 px-4">
+                    <label class="form-label fw-semibold">Nombre del Depósito</label>
+                    <InputText class="form-control" @bind-Value="deposito.NombreDeposito" />
+                    <ValidationMessage For="@(() => deposito.NombreDeposito)" />
+                </div>
+                <div class="my-3 px-4">
+                    <label class="form-label fw-semibold">Domicilio</label>
+                    <InputText class="form-control" @bind-Value="deposito.Domicilio" />
+                    <ValidationMessage For="@(() => deposito.Domicilio)" />
+                </div>
+                <div class="my-3 px-4">
+                    <label class="form-label fw-semibold">Tipo de Depósito</label>
+                    <InputSelect class="form-select" @bind-Value="deposito.TipoDeposito">
+                        <option value="@EnumTipoDeposito.Disponible">Disponible</option>
+                        <option value="@EnumTipoDeposito.EnUso">En uso</option>
+                        <option value="@EnumTipoDeposito.Perdidas">Pérdidas</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => deposito.TipoDeposito)" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success mb-2 btn-submit" type="submit">
+                        <i class="bi bi-check-lg me-1"></i> Guardar
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </article>
 }
 else
 {
-    <div class="card shadow p-4 mx-auto">
-        <EditForm Model="@deposito" OnValidSubmit="@Guardar">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Código de Depósito</label>
-                <InputText class="form-control" @bind-Value="deposito.CodigoDeposito" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Nombre del Depósito</label>
-                <InputText @bind-Value="deposito.NombreDeposito" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Domicilio</label>
-                <InputText class="form-control" @bind-Value="deposito.Domicilio" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Obra asociada</label>
-                <InputSelect class="form-select" @bind-Value="deposito.ObraId">
-                    <option value="">-- Seleccionar obra --</option>
-                    @if (obras != null)
-                    {
-                        @foreach (var obra in obras)
-                        {
-                            <option value="@obra.Id">@obra.NombreObra</option>
-                        }
-                    }
-                </InputSelect>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Tipo de Depósito</label>
-                <InputSelect @bind-Value="deposito.TipoDeposito" class="form-select">
-                    @foreach (var tipo in Enum.GetValues<EnumTipoDeposito>())
-                    {
-                        <option value="@tipo">@tipo</option>
-                    }
-                </InputSelect>
-            </div>
-
-            
-
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-warning me-2 text-white">
-                    <i class="bi bi-save"></i> Guardar
-                </button>
-            </div>
-        </EditForm>
-    </div>
+    Navigation.NavigateTo("/");
 }
-@code {
 
+@code {
     [Parameter]
     public long ObraId { get; set; }
     [Parameter]
     public long DepositoId { get; set; }
 
-    private DepositoAsociarDTO deposito = new();
+    private DepositoActualizarDTO deposito = new();
     private List<VerObraDTO> obras = new();
-    string Mensaje="";
+    private string mensaje;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        //await CargarDepositos(DepositoId);
+        await CargarDeposito();
     }
 
-    private async Task CargarDeposito(long id)
+    private async Task CargarDeposito()
     {
-        var res = await Http.Get<DepositoAsociarDTO>($"api/deposito/{id}");
+        var res = await Http.Get<Response<DepositoActualizarDTO>>($"api/deposito/{DepositoId}");
 
         if (res.Respuesta != null)
         {
-            deposito = res.Respuesta;
+            if (res.Respuesta.Objeto != null) deposito = res.Respuesta.Objeto;
+            else mensaje = res.Respuesta.Mensaje;
         }
+        StateHasChanged();
     }
 
-    private async Task Guardar()
+    private async Task GuardarDeposito()
     {
-        var res = await Http.Put<DepositoAsociarDTO,string>($"api/deposito/actualizar/{deposito.Id}", deposito);
+        var res = await Http.Put<DepositoActualizarDTO, Response<string>>($"api/deposito/{DepositoId}", deposito);
         if (res.Respuesta != null)
         {
-            Mensaje = res.Respuesta;
-            Navigation.NavigateTo("api/deposito");
+            if (!string.IsNullOrEmpty(res.Respuesta.Objeto)) Navigation.NavigateTo($"/obras/{ObraId}/depositos");
+            else mensaje = res.Respuesta.Mensaje;
         }
-        else
-        {
-            Mensaje = "No se pudo actualizar el deposito";
-        }
-
     }
 }
