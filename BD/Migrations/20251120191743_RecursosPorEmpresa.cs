@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseDeDatosTipoYUnidad : Migration
+    public partial class RecursosPorEmpresa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -196,11 +196,18 @@ namespace BD.Migrations
                     UnidadMedidaId = table.Column<long>(type: "bigint", nullable: true),
                     TipoMaterialId = table.Column<long>(type: "bigint", nullable: true),
                     Descripcion = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmpresaId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recursos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recursos_Empresa_EmpresaId",
+                        column: x => x.EmpresaId,
+                        principalTable: "Empresa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Recursos_TipoMateriales_TipoMaterialId",
                         column: x => x.TipoMaterialId,
@@ -553,10 +560,15 @@ namespace BD.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recursos_CodigoISO",
+                name: "IX_Recursos_CodigoISO_EmpresaId",
                 table: "Recursos",
-                column: "CodigoISO",
+                columns: new[] { "CodigoISO", "EmpresaId" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recursos_EmpresaId",
+                table: "Recursos",
+                column: "EmpresaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recursos_TipoMaterialId",

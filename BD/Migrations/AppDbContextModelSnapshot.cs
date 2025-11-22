@@ -282,6 +282,9 @@ namespace BD.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("longtext");
 
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -294,12 +297,14 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CodigoISO")
-                        .IsUnique();
+                    b.HasIndex("EmpresaId");
 
                     b.HasIndex("TipoMaterialId");
 
                     b.HasIndex("UnidadMedidaId");
+
+                    b.HasIndex("CodigoISO", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("Recursos");
                 });
@@ -662,6 +667,12 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Modelos.Recursos", b =>
                 {
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BD.Modelos.TipoMaterial", "TipoMaterial")
                         .WithMany()
                         .HasForeignKey("TipoMaterialId");
@@ -669,6 +680,8 @@ namespace BD.Migrations
                     b.HasOne("BD.Modelos.UnidadMedida", "UnidadMedida")
                         .WithMany()
                         .HasForeignKey("UnidadMedidaId");
+
+                    b.Navigation("Empresa");
 
                     b.Navigation("TipoMaterial");
 

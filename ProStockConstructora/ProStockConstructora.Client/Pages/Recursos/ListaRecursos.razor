@@ -90,7 +90,6 @@ else
     private async Task CargarRecursos()
     {
         var res = await http.Get<Response<List<RecursosPagPrincipalDTO>>>($"api/recursos/materialesYmaquinarias/{usuario.EmpresaId}");
-
         if (res.Respuesta != null)
         {
             listaRecursos = res.Respuesta.Objeto;

@@ -6,13 +6,13 @@ namespace Repositorios.Implementaciones
 {
     public interface IRecursosServicio
     {
-        Task<Response<string>> RecursoCargar(RecursosCargarDTO recursosCargarDTO, long depositoId);
-        Task<(bool, string)> RecursosTransladarAdeposito(RecursosTransladarDepositoDTO RecursosTransladarDepositoDTO);
-        Task<Response<List<RecursosPagPrincipalDTO>>> RecursosVerDTO(int empresaId);
-        Task<(bool, List<RecursosVerDepositoDTO>)> RecursosVerDepositoDTO(int depositoId);
-        Task<(bool, RecursoStockVerDTO)> ObtenerRecursoPorStockId(int stockId);
-        Task<(bool, string)> RecursoEliminarStock(int stockId);
-        Task<(bool, object)> VerificarRecursoPorCodigoISO(string codigoISO);
-        Task<(bool, string)> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId);
+        Task<Response<string>> RecursoCargar(RecursosCargarEmpresaDTO recursosCargarDTO, long depositoId);
+        Task<Response<string>> RecursosTransladarAdeposito(RecursosTransladarDepositoDTO RecursosTransladarDepositoDTO);
+        Task<Response<List<RecursosPagPrincipalDTO>>> RecursosVerDTO(long empresaId);
+        Task<Response<List<RecursosVerDepositoDTO>>> RecursosVerDepositoDTO(long depositoId);
+        Task<Response<List<RecursoStockVerDTO>>> ObtenerRecursoPorStockId(long stockId);
+        Task<Response<string>> RecursoEliminarStock(long stockId);
+        Task<Response<object>> VerificarRecursoPorCodigoISO(string codigoISO);
+        Task<Response<string>> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId);
     }
 }
