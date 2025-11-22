@@ -43,7 +43,7 @@
                 } else
                 {
                     <button type="button" class="btn btn-success" @onclick="CrearUnidad">
-                        <i class="bi bi-check-lg me-1"></i> Guardar
+                        <i class="bi bi-check-lg me-1"></i> Crear
                     </button>
                 }          
             </div>
@@ -183,6 +183,7 @@ else
         {
             unidad = res.Respuesta.Objeto;
             editContext = new(unidad);
+            IdMarca = 0;
             StateHasChanged();
         }       
     }
