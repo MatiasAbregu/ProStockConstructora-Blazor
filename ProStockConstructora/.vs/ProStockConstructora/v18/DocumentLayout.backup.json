@@ -58,7 +58,7 @@
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Recursos\\ListaUnidadesDeMedida.razor",
               "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Recursos\\ListaUnidadesDeMedida.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Recursos\\ListaUnidadesDeMedida.razor",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACsAAABBAAAAAAAAAA==",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAAACsAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-19T21:02:23.075Z",
               "EditorCaption": ""
@@ -73,8 +73,7 @@
               "RelativeToolTip": "..\\Repositorios\\Servicios\\TipoMaterialServicio.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAhwEwAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T22:27:27.18Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-18T22:27:27.18Z"
             },
             {
               "$type": "Document",
@@ -86,8 +85,7 @@
               "RelativeToolTip": "..\\Repositorios\\Implementaciones\\ITipoMaterialServicio.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T22:53:30.743Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-18T22:53:30.743Z"
             }
           ]
         }
