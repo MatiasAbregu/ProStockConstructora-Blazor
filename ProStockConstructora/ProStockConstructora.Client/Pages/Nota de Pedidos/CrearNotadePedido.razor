@@ -2,22 +2,25 @@
 <h3>Agregar Nota de Pedido</h3>
 
 <EditForm Model="NotadePedido">
-   
+
     <DataAnnotationsValidator />
     <div class="my-3 px-4">
         <label for="emailInput" class="form-label">Numero Nota de Pedido</label>
         <InputText @bind-Value="NotadePedido.NumeroNotaPedido" type="text" class="form-control" id="emailInput" />
         <ValidationMessage For="@(() => NotadePedido.NumeroNotaPedido)" />
     </div>
-   
-    @foreach (var renglon in renglones) {<div class="my-3 px-4"></div> }
 
-    <button class="btn btn-primary" >Añadir detalle</button>
+    @foreach (var renglon in renglones)
+    {
+        <div class="my-3 px-4">
 
+        </div>
+    }
 
-
-   
+    <button class="btn btn-primary">Añadir detalle</button>
 </EditForm>
+
+
 @code {
     [Parameter]
     public long? ObraId { get; set; }
@@ -29,10 +32,10 @@
 
     private CrearNotaDePedidoDTO NotadePedido = new();
 
-    private async Task Agregarrenglon() 
-   {
-       DetalleNotaDePedidoDTO renglon=new(){ Estado= EnumEstadoNotaPedido.Pendiente};
-        renglones.Add();
+    private async Task Agregarrenglon()
+    {
+        DetalleNotaDePedidoDTO renglon = new() { EstadoNotaPedido = EnumEstadoNotaPedido.Pendiente };
+        renglones.Add(renglon);
     }
 
 }
