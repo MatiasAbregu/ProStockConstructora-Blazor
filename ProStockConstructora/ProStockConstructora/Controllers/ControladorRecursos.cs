@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using BD.Enums;
-using DTO.DTOs_MaterialesYmaquinarias;
 using DTO.DTOs_Recursos;
 using DTO.DTOs_Response;
 
@@ -69,31 +68,14 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        //[HttpPut("deposito/movimiento")]
-        //public async Task<IActionResult> RecursosTransladarAdeposito([FromBody] RecursosTransladarDepositoDTO recursosTransladarAdepositoDTO)
-        //{
-        //    Response<string> resultado = await recursosServicio.RecursosTransladarAdeposito(recursosTransladarAdepositoDTO);
-        //    if (!resultado.Estado)
-        //        return StatusCode(500, resultado.Mensaje);
-        //    return Ok(resultado.Mensaje);
-        //}
+        [HttpPut("{RecursoId:long}")]
+        [HttpPut("deposito/{DepositoId:long}/recurso/{RecursoId:long}")]
+        public async Task<IActionResult> RecursosActualizar(long? DepositoId, long RecursoId, RecursosActualizarDTO recurso)
+        {
+            var res = await recursosServicio.RecursoActualizar(DepositoId, RecursoId, recurso);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
-        //[HttpPut("recurso/actualizar")]
-        //public async Task<IActionResult> RecursosActualizar([FromBody] RecursosActualizarDTO recursoActualizarDTO, long recursoId)
-        //{
-        //   Response<string> resultado = await recursosServicio.RecursosActualizar(recursoActualizarDTO, recursoId);
-        //    if (!resultado.Estado)
-        //        return StatusCode(500, resultado.Mensaje);
-        //    return Ok(resultado.Mensaje);
-        //}
-
-        //[HttpDelete("deposito/eliminarStock/{stockId:long}")]
-        //public async Task<IActionResult> RecursoEliminarStock(long stockId)
-        //{
-        //    Response<string> resultado = await recursosServicio.RecursoEliminarStock(stockId);
-        //    if (!resultado.Estado)
-        //        return StatusCode(500, resultado.Mensaje);
-        //    return Ok(resultado.Mensaje);
-        //}
     }
 }
