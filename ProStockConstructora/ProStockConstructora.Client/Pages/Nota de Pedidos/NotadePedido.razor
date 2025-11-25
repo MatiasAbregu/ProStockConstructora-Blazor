@@ -1,16 +1,14 @@
-﻿@page "/notadepedidos"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido"
 @inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager Nav
-@using DTO.Enum
-@using DTO.DTOs_NotaDePedido
 
 
 
 <h3 class="mb-4 text-center">Notas de Pedidos</h3>
 
 <div class="d-flex justify-content-start mb-3">
-    <button class="btn btn-success" @onclick="AbrirModalCargar">➕ Cargar</button>
+    <a class="btn btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/crear")>➕ Cargar</a>
 </div>
 
 @if (listaNotas == null)
@@ -40,8 +38,8 @@ else
             {
                 <tr>
                     <td>@nota.NumeroNotaPedido</td>
-                    <td>@GetDepositoDisplay(nota.DepositoOrigenId)</td>
-                    <td>@GetDepositoDisplay(nota.DepositoDestinoId)</td>
+                    <td>@nota.DepositoOrigenId</td>
+                    <td>@nota.DepositoDestinoId</td>
                     <td>@nota.FechaEmision.ToShortDateString()</td>
                     <td>@nota.Estado</td>
 
@@ -72,20 +70,20 @@ else
                 <div class="mb-3">
                     <label>Depósito Origen:</label>
                     <select class="form-select" @bind="nuevaNota.DepositoOrigenId">
-                        @foreach (var d in depositos)
+                       @*  @foreach (var d in Deposito)
                         {
                             <option value="@d.Id">@d.Id (@d.Nombre)</option>
-                        }
+                        } *@
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label>Depósito Destino:</label>
                     <select class="form-select" @bind="nuevaNota.DepositoDestinoId">
-                        @foreach (var d in depositos)
+                       @*  @foreach (var d in depositos)
                         {
                             <option value="@d.Id">@d.Id (@d.Nombre)</option>
-                        }
+                        } *@
                     </select>
                 </div>
 
@@ -106,50 +104,26 @@ else
 }
 
 @code {
-    
-    List<VerNotaDePedidoDTO>? listaNotas;
-    List<DepositoDTO> depositos = new()
-    {
-        new DepositoDTO{ Id = 10, Nombre = "Depósito Central"},
-        new DepositoDTO{ Id = 20, Nombre = "Depósito Norte"},
-        new DepositoDTO{ Id = 12, Nombre = "Depósito Sur"},
-        new DepositoDTO{ Id = 22, Nombre = "Depósito Oeste"}
-    };
+    [Parameter]
+    public long? ObraId { get; set; }
+    [Parameter]
+    public long? DepositoId { get; set; }
 
+    private List<VerNotaDePedidoDTO> listaNotas = new();
+
+
+
+    
     bool mostrarModalCargar = false;
     VerNotaDePedidoDTO nuevaNota = new();
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(200);
-
-        
-        listaNotas = new List<VerNotaDePedidoDTO>
-        {
-            new VerNotaDePedidoDTO
-            {
-                NumeroNotaPedido = "NP-001",
-                DepositoOrigenId = 10,
-                DepositoDestinoId = 20,
-                FechaEmision = DateTime.Now.AddDays(-3),
-                Estado = EnumEstadoNotaPedido.Pendiente
-            },
-            new VerNotaDePedidoDTO
-            {
-                NumeroNotaPedido = "NP-002",
-                DepositoOrigenId = 12,
-                DepositoDestinoId = 22,
-                FechaEmision = DateTime.Now.AddDays(-1),
-                Estado = EnumEstadoNotaPedido.Pendiente
-            }
-        };
     }
+    
 
-    string GetDepositoDisplay(long id)
-    {
-        var d = depositos.FirstOrDefault(x => x.Id == id);
-        return d != null ? $"{d.Id} ({d.Nombre})" : id.ToString();
-    }
+  
 
     void IrEditar(string nro) => Nav.NavigateTo($"/editar-nota/{nro}");
     void IrVer(string nro) => Nav.NavigateTo($"/ver-nota/{nro}");
@@ -157,6 +131,7 @@ else
 
     void AbrirModalCargar() => mostrarModalCargar = true;
     void CerrarModalCargar() { mostrarModalCargar = false; nuevaNota = new VerNotaDePedidoDTO(); }
+  
 
     
     private async Task CargarNota()
@@ -182,10 +157,5 @@ else
         await JS.InvokeVoidAsync("alert", "Nota de Pedido cargada exitosamente");
     }
 
-       
-    class DepositoDTO
-    {
-        public long Id { get; set; }
-        public string Nombre { get; set; } = "";
-    }
+   
 }

@@ -12,6 +12,6 @@ namespace DTO.DTOs_Pedidos
         public int DepositoDestinoId { get; set; }
         public string NumeroNotaPedido { get; set; }
         public DateTime FechaEmision { get; set; } = DateTime.Now;
-        public EnumEstadoNotaPedido EstadoNotaPedido { get; set; } = EnumEstadoNotaPedido.Pendiente;
-    }
+       
+     }
 }
