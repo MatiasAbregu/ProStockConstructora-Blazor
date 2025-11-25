@@ -17,6 +17,7 @@ namespace BD.Modelos
 
         public required long DetalleNotaDePedidoId { get; set; }
         public DetalleNotaDePedido DetalleNotaDePedido { get; set; }
+        public string NombreTransportista { get; set; }
 
         public required int CantidadDespachada { get; set; }
         public int CantidadRecibida { get; set; }

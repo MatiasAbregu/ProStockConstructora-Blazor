@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ProStockConstructora.Controllers
 {
     [ApiController]
-    [Route("api/nota-de-pedido")]
+    [Route("api/notadepedido")]
 
     public class ControladorNotaDePedido : ControllerBase
     {

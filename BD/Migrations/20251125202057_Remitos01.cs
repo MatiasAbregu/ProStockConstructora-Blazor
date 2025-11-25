@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class recursos : Migration
+    public partial class Remitos01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -401,10 +401,7 @@ namespace BD.Migrations
                     DepositoDestinoId = table.Column<long>(type: "bigint", nullable: false),
                     DestinoId = table.Column<long>(type: "bigint", nullable: false),
                     EstadoRemito = table.Column<int>(type: "int", nullable: false),
-                    NombreTransportista = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaEmision = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    FechaLimite = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaRecepcion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>

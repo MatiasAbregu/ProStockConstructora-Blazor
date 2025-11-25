@@ -11,12 +11,11 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="notadepedidos">
-                <i class="bi bi-people-fill"></i> Notas de Pedidos
+        <div class="nav-item px-3"> 
+            <NavLink class="nav-link" href="/remito">
+                <i class="bi bi-file-earmark-text"></i>Remitos
             </NavLink>
-
-            @if(datosUsuario.Usuario != null)
+            @if (datosUsuario.Usuario != null)
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión

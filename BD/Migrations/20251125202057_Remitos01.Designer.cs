@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251124234605_recursos")]
-    partial class recursos
+    [Migration("20251125202057_Remitos01")]
+    partial class Remitos01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -335,14 +335,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("FechaEmision")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("FechaLimite")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime?>("FechaRecepcion")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("NombreTransportista")
-                        .HasColumnType("longtext");
 
                     b.Property<long>("NotaDePedidoId")
                         .HasColumnType("bigint");

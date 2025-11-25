@@ -10,7 +10,7 @@ using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7283/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5037/") });
 
 
 builder.Services.AddScoped<IHttpServicio, HttpServicio>();
@@ -39,6 +39,7 @@ builder.Services.AddScoped<INotaDePedidoServicio, NotaDePedidoServicio>();
 builder.Services.AddScoped<IUnidadMedidaServicio, UnidadMedidaServicio>();
 builder.Services.AddScoped<ITipoMaterialServicio, TipoMaterialServicio>();  
 builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+builder.Services.AddScoped<IRemitoServicio, RemitoServicio>();
 
 builder.Services.AddScoped<HttpClient>(sp =>
 {

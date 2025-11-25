@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BD.Enums
 {
-    public enum EstadoRemito
+    public enum EnumEstadoRemito
     {
         Pendiente = 0,
         EnTransito = 1,

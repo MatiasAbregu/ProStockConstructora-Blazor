@@ -63,8 +63,7 @@
               "RelativeToolTip": "..\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAnwCQAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T22:48:22.479Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T22:48:22.479Z"
             },
             {
               "$type": "Document",
@@ -76,8 +75,7 @@
               "RelativeToolTip": "..\\Repositorios\\Servicios\\PedidosServicio.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T22:48:06.789Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T22:48:06.789Z"
             },
             {
               "$type": "Document",
@@ -89,8 +87,7 @@
               "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IPedidosServicio.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T22:47:41.406Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-25T22:47:41.406Z"
             },
             {
               "$type": "Document",
@@ -100,7 +97,7 @@
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\CrearNotadePedido.razor",
               "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\CrearNotadePedido.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\CrearNotadePedido.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-25T22:45:38.371Z",
               "EditorCaption": ""

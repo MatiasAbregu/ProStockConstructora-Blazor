@@ -9,7 +9,7 @@
 @if (datosSesion.Usuario != null)
 {
     <article class="p-4">
-        <div class="divBotonera">
+        <div class="divBotonera">  
             <p class="cabecera fw-bolder">Depósitos</p>
             <div class="botonera">
                 @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA"))
