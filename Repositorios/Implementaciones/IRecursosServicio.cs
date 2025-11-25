@@ -1,5 +1,4 @@
-﻿using DTO.DTOs_MaterialesYmaquinarias;
-using DTO.DTOs_Recursos;
+﻿using DTO.DTOs_Recursos;
 using DTO.DTOs_Response;
 
 namespace Repositorios.Implementaciones
@@ -14,11 +13,9 @@ namespace Repositorios.Implementaciones
         // POSTs
         Task<Response<string>> RecursoCrear(RecursosCrearDTO recursoDTO);
         Task<Response<string>> RecursoAnadirPorISO(RecursoPorISODTO recursoDTO);
-        
-        //Task<Response<string>> RecursosTransladarAdeposito(RecursosTransladarDepositoDTO RecursosTransladarDepositoDTO);      
-        //Task<Response<List<RecursoStockVerDTO>>> ObtenerRecursoPorStockId(long stockId);
-        //Task<Response<string>> RecursoEliminarStock(long stockId);
-        //Task<Response<object>> VerificarRecursoPorCodigoISO(string codigoISO);
-        //Task<Response<string>> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId);
+
+        // PUTs
+        Task<Response<string>> RecursoActualizar(long? DepositoId, long RecursoId, RecursosActualizarDTO recursoDTO);
+
     }
 }
