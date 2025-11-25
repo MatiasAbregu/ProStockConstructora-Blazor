@@ -35,20 +35,26 @@ namespace ProStockConstructora.Controllers
             if (respuesta == null)
                 return StatusCode(500, "Error al obtener la nota de pedido.");  
               return Ok(respuesta);
+
         }
 
-        //[HttpPost("crear-notapedido")]
+
+
+        // [HttpPost("crear-notapedido")]
         //public async Task<ActionResult> CrearNotaDePedido([FromBody] CrearNotaDePedidoDTO crearNotaDePedidoDTO)
         //{
-        //   if (crearNotaDePedidoDTO == null)
-        //     return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-        //   var exito = await notaDePedidoServicio.CrearNotaDePedido(crearNotaDePedidoDTO);
+        //    if (crearNotaDePedidoDTO == null)
+        //        return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+        //    var exito = await notaDePedidoServicio.CrearNotaDePedido(crearNotaDePedidoDTO);
         //    if (!exito.Item1)
         //        return StatusCode(500, exito.Item2);
         //    return Ok("Nota de pedido creada exitosamente.");
 
         //}
-        
+
+
+
+
 
         //[HttpPut("actualizar-notapedido/{id:int}")]
         //public async Task<ActionResult> ActualizarNotaDePedido([FromRoute] int id, [FromBody] BD.Modelos.NotaDePedido notaDePedidoActualizada)
@@ -76,6 +82,9 @@ namespace ProStockConstructora.Controllers
         //    }
         //}
 
+       
+        
+        
         [HttpDelete("eliminar-notapedido/{id:int}")]
         public async Task<ActionResult> EliminarNotaDePedido([FromRoute] int id)
         {

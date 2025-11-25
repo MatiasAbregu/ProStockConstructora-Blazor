@@ -1,0 +1,191 @@
+﻿@page "/notadepedidos"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+@using DTO.Enum
+@using DTO.DTOs_NotaDePedido
+
+
+
+<h3 class="mb-4 text-center">Notas de Pedidos</h3>
+
+<div class="d-flex justify-content-start mb-3">
+    <button class="btn btn-success" @onclick="AbrirModalCargar">➕ Cargar</button>
+</div>
+
+@if (listaNotas == null)
+{
+    <p>Cargando...</p>
+}
+else if (!listaNotas.Any())
+{
+    <p>No hay notas de pedidos disponibles.</p>
+}
+else
+{
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>N° de Nota</th>
+                <th>Depósito Origen</th>
+                <th>Depósito Destino</th>
+                <th>Fecha Emisión</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var nota in listaNotas)
+            {
+                <tr>
+                    <td>@nota.NumeroNotaPedido</td>
+                    <td>@GetDepositoDisplay(nota.DepositoOrigenId)</td>
+                    <td>@GetDepositoDisplay(nota.DepositoDestinoId)</td>
+                    <td>@nota.FechaEmision.ToShortDateString()</td>
+                    <td>@nota.Estado</td>
+
+                    <td>
+                        <button class="btn btn-outline-warning btn-sm me-2" title="Editar" @onclick="() => IrEditar(nota.NumeroNotaPedido)">✏️</button>
+                        <button class="btn btn-outline-primary btn-sm me-2" title="Ver" @onclick="() => IrVer(nota.NumeroNotaPedido)">👁️</button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar" @onclick="() => IrEliminar(nota.NumeroNotaPedido)">🗑️</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (mostrarModalCargar)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <h5>Cargar Nota de Pedido</h5>
+
+                <div class="mb-3">
+                    <label>Nº de Nota:</label>
+                    <input class="form-control" @bind="nuevaNota.NumeroNotaPedido" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Depósito Origen:</label>
+                    <select class="form-select" @bind="nuevaNota.DepositoOrigenId">
+                        @foreach (var d in depositos)
+                        {
+                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Depósito Destino:</label>
+                    <select class="form-select" @bind="nuevaNota.DepositoDestinoId">
+                        @foreach (var d in depositos)
+                        {
+                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Estado:</label>
+                    <select class="form-select" @bind="nuevaNota.Estado">
+                        <option value="Pendiente">Pendiente</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-secondary me-2" @onclick="CerrarModalCargar">Volver</button>
+                    <button class="btn btn-success" @onclick="CargarNota">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    
+    List<VerNotaDePedidoDTO>? listaNotas;
+    List<DepositoDTO> depositos = new()
+    {
+        new DepositoDTO{ Id = 10, Nombre = "Depósito Central"},
+        new DepositoDTO{ Id = 20, Nombre = "Depósito Norte"},
+        new DepositoDTO{ Id = 12, Nombre = "Depósito Sur"},
+        new DepositoDTO{ Id = 22, Nombre = "Depósito Oeste"}
+    };
+
+    bool mostrarModalCargar = false;
+    VerNotaDePedidoDTO nuevaNota = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(200);
+
+        
+        listaNotas = new List<VerNotaDePedidoDTO>
+        {
+            new VerNotaDePedidoDTO
+            {
+                NumeroNotaPedido = "NP-001",
+                DepositoOrigenId = 10,
+                DepositoDestinoId = 20,
+                FechaEmision = DateTime.Now.AddDays(-3),
+                Estado = EnumEstadoNotaPedido.Pendiente
+            },
+            new VerNotaDePedidoDTO
+            {
+                NumeroNotaPedido = "NP-002",
+                DepositoOrigenId = 12,
+                DepositoDestinoId = 22,
+                FechaEmision = DateTime.Now.AddDays(-1),
+                Estado = EnumEstadoNotaPedido.Pendiente
+            }
+        };
+    }
+
+    string GetDepositoDisplay(long id)
+    {
+        var d = depositos.FirstOrDefault(x => x.Id == id);
+        return d != null ? $"{d.Id} ({d.Nombre})" : id.ToString();
+    }
+
+    void IrEditar(string nro) => Nav.NavigateTo($"/editar-nota/{nro}");
+    void IrVer(string nro) => Nav.NavigateTo($"/ver-nota/{nro}");
+    void IrEliminar(string nro) => Nav.NavigateTo($"/eliminar-nota/{nro}");
+
+    void AbrirModalCargar() => mostrarModalCargar = true;
+    void CerrarModalCargar() { mostrarModalCargar = false; nuevaNota = new VerNotaDePedidoDTO(); }
+
+    
+    private async Task CargarNota()
+    {
+        
+        if (string.IsNullOrWhiteSpace(nuevaNota.NumeroNotaPedido))
+        {
+            await JS.InvokeVoidAsync("alert", "El número de nota es obligatorio.");
+            return;
+        }
+        if (nuevaNota.DepositoOrigenId == 0 || nuevaNota.DepositoDestinoId == 0)
+        {
+            await JS.InvokeVoidAsync("alert", "Seleccioná depósito origen y destino.");
+            return;
+        }
+
+        nuevaNota.FechaEmision = DateTime.Now;
+       
+        listaNotas!.Add(nuevaNota);
+        nuevaNota = new VerNotaDePedidoDTO();
+        mostrarModalCargar = false;
+
+        await JS.InvokeVoidAsync("alert", "Nota de Pedido cargada exitosamente");
+    }
+
+       
+    class DepositoDTO
+    {
+        public long Id { get; set; }
+        public string Nombre { get; set; } = "";
+    }
+}
