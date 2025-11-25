@@ -1,0 +1,158 @@
+﻿@page "/obras/{ObraId:long}/depositos"
+@page "/obras/depositos"
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+@inject DatosSesion datosSesion;
+
+<PageTitle>Depósitos - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Depósitos</p>
+            <div class="botonera">
+                @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEOBRA"))
+                {
+                    <a class="btn btn-add btn-success" href=@($"obras/{ObraId}/depositos/crear")>+</a>
+                }
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Domicilio</th>
+                        @if (usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0)
+                        {
+                            <th>Obra</th>
+                        }
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!String.IsNullOrEmpty(mensaje) && depositos?.Count == 0)
+                    {
+                        <tr>
+                            <td class="text-center" 
+                            colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
+                            @mensaje</td>
+                        </tr>
+                    }
+                    else if (depositos?.Count == 0)
+                    {
+                        <tr>
+                            <td class="text-center" 
+                                colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
+                            @mensaje</td>
+                        </tr>
+                    }
+                    else if (depositos?.Count > 0)
+                    {
+                        @foreach (var deposito in depositos.Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                        {
+                            <tr>
+                                <td>@deposito.CodigoDeposito</td>
+                                <td>@deposito.NombreDeposito</td>
+                                <td>
+                                    <span class="badge @(deposito.TipoDeposito == "En uso"
+                                          ? "bg-primary" : deposito.TipoDeposito == "Disponible"
+                                          ? "bg-success" : "bg-danger")">
+                                        @deposito.TipoDeposito
+                                    </span>
+                                </td>
+                                <td>@deposito.Domicilio</td>
+                                @if (usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0)
+                                {
+                                    <td>
+                                        @deposito.Obra
+                                    </td>
+                                }
+                                <td>
+                                    <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{deposito.Id}/recursos")>
+                                        <i class="bi bi-tools"></i>
+                                    </a>
+                                    <a class="btn btn-outline-secondary mx-1" href=@($"/notadepedidos")>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </a>
+                                    @if (usuario.Roles.Contains("ADMINISTRADOR") || usuario.Roles.Contains("JEFEDEOBRA"))
+                                    {
+                                        <a class="btn btn-outline-warning mx-1" href=@($"/obras/{ObraId}/depositos/editar/{deposito.Id}")>
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@depositos?.Count registros totales</p>
+            </div>
+        </div>
+    </article>
+}
+else
+{
+    Navigation.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long ObraId { get; set; }
+    private List<VerDepositoDTO>? depositos = new();
+    private DatosUsuario usuario = new();
+
+    private string mensaje;
+    private int numeroPagina = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        usuario = datosSesion.Usuario;
+        await CargarDepositos();
+    }
+
+    private async Task CargarDepositos()
+    {
+        var res = ObraId != null ? await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario/{ObraId}", usuario)
+                                 : await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario", usuario);
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Estado)
+            {
+                depositos = res.Respuesta.Objeto;
+                mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+            }
+        }
+    }
+
+    private async Task SiguientePagina()
+    {
+        if (depositos.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
+    }
+}

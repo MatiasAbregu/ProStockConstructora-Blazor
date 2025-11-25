@@ -18,8 +18,6 @@ namespace BD
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<RolesUsuario> RolesUsuarios { get; set; }
-        public DbSet<Ubicacion> Ubicaciones { get; set; }
-        public DbSet<Provincia> Provincias { get; set; }
         public DbSet<UnidadMedida> UnidadMedidas { get; set; }
         public DbSet<TipoMaterial> TipoMateriales { get; set; }
         public DbSet<Stock> Stocks { get; set; }

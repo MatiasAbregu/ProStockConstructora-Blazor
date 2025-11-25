@@ -11,6 +11,7 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
+<<<<<<< HEAD
         <div class="nav-item px-3">
 
 
@@ -19,13 +20,36 @@
             </NavLink>
 
             @if(datosUsuario.Usuario != null)
+=======
+        <div class="nav-item px-3">    
+            @if (datosUsuario.Usuario != null)
+>>>>>>> 40753bb75d635c06398f4935c31c7b2cde1cf48d
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </NavLink>
-                <NavLink class="nav-link" href="usuarios">
-                    <i class="bi bi-people-fill"></i> Usuarios
+                <NavLink class="nav-link" href="/recursos">
+                    <i class="bi bi-tools"></i> Recursos
                 </NavLink>
+                @if (datosUsuario.Usuario.Roles.Contains("ADMINISTRADOR")
+                            || datosUsuario.Usuario.Roles.Contains("JEFEDEOBRA"))
+                {
+                    <NavLink class="nav-link" href="obras">
+                        <i class="bi bi-building-fill"></i> Obras
+                    </NavLink>
+                }
+                else if (datosUsuario.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                {
+                    <NavLink class="nav-link" href="/obras/depositos">
+                        <i class="bi bi-houses"></i> Depósitos
+                    </NavLink>
+                }
+                @if (datosUsuario.Usuario.Roles.Contains("ADMINISTRADOR"))
+                {
+                    <NavLink class="nav-link" href="usuarios">
+                        <i class="bi bi-people-fill"></i> Usuarios
+                    </NavLink>
+                }
             }
         </div>
     </nav>

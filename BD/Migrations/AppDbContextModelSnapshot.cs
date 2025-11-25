@@ -34,6 +34,10 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Domicilio")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("NombreDeposito")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -44,17 +48,12 @@ namespace BD.Migrations
                     b.Property<int>("TipoDeposito")
                         .HasColumnType("int");
 
-                    b.Property<long>("UbicacionId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CodigoDeposito")
                         .IsUnique();
 
                     b.HasIndex("ObraId");
-
-                    b.HasIndex("UbicacionId");
 
                     b.ToTable("Depositos");
                 });
@@ -268,23 +267,6 @@ namespace BD.Migrations
                     b.ToTable("ObraUsuarios");
                 });
 
-            modelBuilder.Entity("BD.Modelos.Provincia", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("varchar(80)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Provincias");
-                });
-
             modelBuilder.Entity("BD.Modelos.Recursos", b =>
                 {
                     b.Property<long>("Id")
@@ -297,14 +279,14 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("longtext");
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("TipoMaterialId")
+                    b.Property<long?>("TipoMaterialId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("UnidadMedidaId")
@@ -312,12 +294,14 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CodigoISO")
-                        .IsUnique();
+                    b.HasIndex("EmpresaId");
 
                     b.HasIndex("TipoMaterialId");
 
                     b.HasIndex("UnidadMedidaId");
+
+                    b.HasIndex("CodigoISO", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("Recursos");
                 });
@@ -388,9 +372,12 @@ namespace BD.Migrations
 
                     b.Property<string>("NombreRol")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NombreRol")
+                        .IsUnique();
 
                     b.ToTable("Roles");
 
@@ -450,17 +437,14 @@ namespace BD.Migrations
                     b.Property<long>("DepositoId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("FechaIngreso")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long>("MaterialesyMaquinasId")
+                    b.Property<long>("RecursoId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DepositoId");
 
-                    b.HasIndex("MaterialesyMaquinasId");
+                    b.HasIndex("RecursoId");
 
                     b.ToTable("Stocks");
                 });
@@ -473,39 +457,21 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("Nombre", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("TipoMateriales");
-                });
-
-            modelBuilder.Entity("BD.Modelos.Ubicacion", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CodigoUbicacion")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Domicilio")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("ProvinciaId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProvinciaId");
-
-                    b.ToTable("Ubicaciones");
                 });
 
             modelBuilder.Entity("BD.Modelos.UnidadMedida", b =>
@@ -516,15 +482,23 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("EmpresaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Simbolo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("Nombre", "EmpresaId")
+                        .IsUnique();
 
                     b.ToTable("UnidadMedidas");
                 });
@@ -576,15 +550,7 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BD.Modelos.Ubicacion", "Ubicacion")
-                        .WithMany()
-                        .HasForeignKey("UbicacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Obra");
-
-                    b.Navigation("Ubicacion");
                 });
 
             modelBuilder.Entity("BD.Modelos.DepositoUsuario", b =>
@@ -695,15 +661,21 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Modelos.Recursos", b =>
                 {
-                    b.HasOne("BD.Modelos.TipoMaterial", "TipoMaterial")
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
                         .WithMany()
-                        .HasForeignKey("TipoMaterialId")
+                        .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BD.Modelos.TipoMaterial", "TipoMaterial")
+                        .WithMany()
+                        .HasForeignKey("TipoMaterialId");
 
                     b.HasOne("BD.Modelos.UnidadMedida", "UnidadMedida")
                         .WithMany()
                         .HasForeignKey("UnidadMedidaId");
+
+                    b.Navigation("Empresa");
 
                     b.Navigation("TipoMaterial");
 
@@ -764,26 +736,37 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BD.Modelos.Recursos", "MaterialesyMaquinas")
+                    b.HasOne("BD.Modelos.Recursos", "Recurso")
                         .WithMany()
-                        .HasForeignKey("MaterialesyMaquinasId")
+                        .HasForeignKey("RecursoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Deposito");
 
-                    b.Navigation("MaterialesyMaquinas");
+                    b.Navigation("Recurso");
                 });
 
-            modelBuilder.Entity("BD.Modelos.Ubicacion", b =>
+            modelBuilder.Entity("BD.Modelos.TipoMaterial", b =>
                 {
-                    b.HasOne("BD.Modelos.Provincia", "Provincia")
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
                         .WithMany()
-                        .HasForeignKey("ProvinciaId")
+                        .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Provincia");
+                    b.Navigation("Empresa");
+                });
+
+            modelBuilder.Entity("BD.Modelos.UnidadMedida", b =>
+                {
+                    b.HasOne("BD.Modelos.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("BD.Modelos.Usuario", b =>

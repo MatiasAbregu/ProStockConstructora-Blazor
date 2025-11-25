@@ -1,11 +1,13 @@
-﻿using System.Diagnostics;
-using BD.Modelos;
+﻿using BD.Modelos;
+using DTO.DTOs_Response;
 using DTO.DTOs_Usuarios;
-using Repositorios.Implementaciones;
-using Repositorios.Servicios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Repositorios.Implementaciones;
+using Repositorios.Servicios;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ProStockConstructora.Controllers
 {
@@ -20,34 +22,6 @@ namespace ProStockConstructora.Controllers
             this.usuarioServicio = usuarioServicio;
         }
 
-        // EN DEUSO
-        /*[HttpGet("obtener-administradores")]
-        public async Task<ActionResult<List<VerAdministradorDTO>>> ObtenerTodosLosAdministradores()
-        {
-            ValueTuple<bool, List<VerAdministradorDTO>> res = await usuarioServicio.ObtenerTodosLosAdministradores();
-
-            if (res.Item1) return StatusCode(200, res.Item2);
-            else return StatusCode(500, "Error al cargar los datos desde el servidor.");
-        }
-        */    
-
-        [HttpGet("{EmpresaId:int}")]
-        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(int EmpresaId)
-        {
-            ValueTuple<bool, List<VerUsuarioDTO>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
-
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(204, "Todavía no hay usuarios añadidos a la empresa.");
-        }
-
-        [HttpGet("obtener-usuario/{id}")]
-        public async Task<ActionResult> ObtenerUsuarioPorId(string id)
-        {
-            ValueTuple<bool, VerUsuarioDTO> res = await usuarioServicio.ObtenerUsuarioPorId(id);
-            if (res.Item1) return StatusCode(200, res.Item2);
-            return StatusCode(404, "Ese usuario no existe.");
-        }
-
         [HttpPost("iniciar-sesion")]
         public async Task<ActionResult> IniciarSesion(IniciarSesionDTO usuario)
         {
@@ -56,47 +30,57 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
-        //public async Task<ActionResult> CrearUsuario(CrearUsuarioDTO usuario)
-        //{
-        //    IdentityResult resultado = await usuarioServicio.CrearUsuario(usuario);
 
-        //    if (resultado.Succeeded) return StatusCode(200, "¡Usuario creado con éxito!");
-        //    else
-        //    {
-        //        string error = "";
-        //        foreach (IdentityError errorListado in resultado.Errors)
-        //        {
-        //            if (errorListado.Code == "DuplicateUserName")
-        //            {
-        //                error = "¡Error, el nombre de usuario ya está en uso!";
-        //                break;
-        //            }
-        //        }
-
-        //        return StatusCode(400, error);
-        //    }
-        //}
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)
+        [HttpGet("{EmpresaId:long}")]
+        public async Task<ActionResult> ObtenerUsuariosDeEmpresa(long EmpresaId)
         {
-            if (id != usuario.Id) return StatusCode(409, "Hubo un error al querer actualizar el usuario.");
+            Response<List<DatosUsuario>> res = await usuarioServicio.ObtenerUsuariosPorEmpresaId(EmpresaId);
 
-            ValueTuple<bool, string, Usuario> res = await usuarioServicio.ActualizarUsuario(id, usuario);
+            if (res.Estado) return StatusCode(200, res);
+            return StatusCode(500, res);
+        }
 
-            if (res.Item2.Contains("Error")) return StatusCode(500, res.Item2);
-            else if(!res.Item1) return StatusCode(409, res.Item2);
-            return StatusCode(200, res.Item2);
+        [HttpGet("obtener-usuario/{id:long}")]
+        public async Task<ActionResult> ObtenerUsuarioPorId(long id)
+        {
+            var res = await usuarioServicio.ObtenerUsuarioPorId(id);
+            if (res.Estado) return StatusCode(200, res);
+            return StatusCode(500, res);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Response<string>>> CrearUsuario(CrearUsuarioDTO usuario)
+        {
+            var res = await usuarioServicio.CrearUsuario(usuario);
+
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+
+        [HttpPut("{id:long}")]
+        public async Task<ActionResult> ActualizarUsuario(long id, ActualizarUsuarioDTO usuario)
+        {
+            if (id != usuario.Id)
+                return StatusCode(409, new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error al intentar actualizar el usuario.",
+                    Objeto = null
+                });
+
+            var res = await usuarioServicio.ActualizarUsuario(id, usuario);
+
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> CambiarEstadoUsuario(string id)
+        public async Task<ActionResult> CambiarEstadoUsuario(long id)
         {
-            ValueTuple<bool, string> res = await usuarioServicio.CambiarEstadoUsuario(id);
+            var res = await usuarioServicio.CambiarEstadoUsuario(id);
 
-            if(res.Item2.Contains("Error")) return StatusCode(500, res.Item2);
-            else if(!res.Item1) return StatusCode(404, res.Item2);
-            return StatusCode(200, res.Item2);
+            if(res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
     }
 }

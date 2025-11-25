@@ -10,6 +10,11 @@ using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7283/") });
+
+
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+
 // Estableciendo conexión 
 builder.Services.AddDbContext<AppDbContext>(options =>
        options.UseMySql(builder.Configuration.GetConnectionString("ConexionDB"),
@@ -31,6 +36,8 @@ builder.Services.AddScoped<IDepositoServicio, DepositoServicio>();
 builder.Services.AddScoped<IRolesServicio, RolesServicio>();
 builder.Services.AddScoped<IRecursosServicio, RecursosServicio>();
 builder.Services.AddScoped<INotaDePedidoServicio, NotaDePedidoServicio>();
+builder.Services.AddScoped<IUnidadMedidaServicio, UnidadMedidaServicio>();
+builder.Services.AddScoped<ITipoMaterialServicio, TipoMaterialServicio>();  
 builder.Services.AddScoped<IHttpServicio, HttpServicio>();
 
 builder.Services.AddScoped<HttpClient>(sp =>

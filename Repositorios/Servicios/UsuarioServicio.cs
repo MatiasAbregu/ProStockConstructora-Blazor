@@ -1,29 +1,33 @@
-﻿using System;
+﻿using BD;
+using BD.Modelos;
+using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
+using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BD;
-using BD.Modelos;
-using DTO.DTOs_Usuarios;
-using DTO.DTOs_Response;
-using Repositorios.Implementaciones;
-using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Servicios
 {
     public class UsuarioServicio : IUsuarioServicio
     {
         private readonly AppDbContext baseDeDatos;
+        private readonly IRolesServicio rolesServicio;
 
-        public UsuarioServicio(AppDbContext baseDeDatos)
+        public UsuarioServicio(AppDbContext baseDeDatos, IRolesServicio rolesServicio)
         {
             this.baseDeDatos = baseDeDatos;
+            this.rolesServicio = rolesServicio;
         }
 
-        public async Task<Response<VerUsuarioDTO>> IniciarSesion(IniciarSesionDTO usuarioDTO)
+        public async Task<Response<DatosUsuario>> IniciarSesion(IniciarSesionDTO usuarioDTO)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace Repositorios.Servicios
 
                 if (usuario == null)
                 {
-                    return new Response<VerUsuarioDTO>()
+                    return new Response<DatosUsuario>()
                     {
                         Objeto = null,
                         Estado = true,
@@ -41,7 +45,7 @@ namespace Repositorios.Servicios
                 }
                 else if (!usuario.Estado)
                 {
-                    return new Response<VerUsuarioDTO>()
+                    return new Response<DatosUsuario>()
                     {
                         Objeto = null,
                         Estado = true,
@@ -58,15 +62,16 @@ namespace Repositorios.Servicios
                 var depositosId = await baseDeDatos.DepositosUsuario.Where(u => u.UsuarioId == usuario.Id)
                                         .Select(d => d.DepositoId).ToListAsync();
 
-                return new Response<VerUsuarioDTO>()
+                return new Response<DatosUsuario>()
                 {
-                    Objeto = new VerUsuarioDTO()
+                    Objeto = new DatosUsuario()
                     {
                         Id = usuario.Id,
                         Email = usuario.Email,
                         NombreUsuario = usuario.NombreUsuario,
                         Estado = "Activo",
                         Telefono = usuario.Telefono,
+                        EmpresaId = usuario.EmpresaId,
                         Roles = roles,
                         ObrasId = obrasId,
                         DepositosId = depositosId
@@ -77,224 +82,435 @@ namespace Repositorios.Servicios
             }
             catch (Exception ex)
             {
-                return new Response<VerUsuarioDTO>()
+                Console.WriteLine(ex.Message);
+                return new Response<DatosUsuario>()
                 {
                     Objeto = null,
                     Estado = false,
-                    Mensaje = $"¡Hubo un error desde el servidor! Error: {ex.Message}"
+                    Mensaje = $"¡Hubo un error desde el servidor al iniciar sesión!"
                 };
             }
         }
 
-        public async Task<(bool, List<VerAdministradorDTO>)> ObtenerTodosLosAdministradores()
+        public async Task<Response<List<DatosUsuario>>> ObtenerUsuariosPorEmpresaId(long id)
         {
-            //try
-            //{
-            //    List<string> AdminIDs = (await gestorUsuarios.GetUsersInRoleAsync("Administrador")).Select(u => u.Id).ToList();
-            //    List<string> SuperAdminIDs =
-            //        (await gestorUsuarios.GetUsersInRoleAsync("Superadministrador")).Select(u => u.Id).ToList();
-            //    List<string> TodosLosIds = AdminIDs.Union(SuperAdminIDs).ToList();
+            try
+            {
+                var usuariosBD = await baseDeDatos.Usuarios.Where(u => u.EmpresaId == id && u.Estado)
+                .ToListAsync();
 
-            //    List<VerAdministradorDTO> usuarios = [];
+                if (usuariosBD.Count == 0) return new Response<List<DatosUsuario>>()
+                {
+                    Objeto = null,
+                    Mensaje = "No hay usuarios aún en el sistema",
+                    Estado = true
+                };
 
-            //    foreach (Usuario u in
-            //        baseDeDatos.Usuarios.Where(u => TodosLosIds.Contains(u.Id)).Include(u => u.Empresa).ToList())
-            //    {
-            //        usuarios.Add(new VerAdministradorDTO()
-            //        {
-            //            Id = u.Id,
-            //            NombreUsuario = u.UserName,
-            //            Email = u.Email,
-            //            Telefono = u.PhoneNumber,
-            //            Estado = u.Estado ? "Activo" : "Inactivo",
-            //            EmpresaId = u.EmpresaId,
-            //            NombreEmpresa = u.Empresa.NombreEmpresa
-            //        }
-            //        );
-            //    }
+                var usuarios = new List<DatosUsuario>();
+                foreach (var u in usuariosBD)
+                {
+                    var roles = await baseDeDatos.RolesUsuarios
+                                .Include(r => r.Rol)
+                                .Where(r => r.UsuarioId == u.Id)
+                                .Select(r => r.Rol.NombreRol)
+                                .ToListAsync();
 
-            //    return (true, usuarios);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine($"Error: {ex.Message}");
-            //    return (false, null);
-            //}
-            throw new NotImplementedException();
+                    var obrasId = await baseDeDatos.ObraUsuarios
+                                        .Where(o => o.UsuarioId == u.Id)
+                                        .Select(o => o.ObraId)
+                                        .ToListAsync();
+
+                    var depositosId = await baseDeDatos.DepositosUsuario
+                                            .Where(d => d.UsuarioId == u.Id)
+                                            .Select(d => d.DepositoId)
+                                            .ToListAsync();
+
+                    usuarios.Add(new DatosUsuario()
+                    {
+                        Id = u.Id,
+                        Email = u.Email,
+                        NombreUsuario = u.NombreUsuario,
+                        Estado = "Activo",
+                        Telefono = u.Telefono,
+                        EmpresaId = u.EmpresaId,
+                        Roles = roles,
+                        ObrasId = obrasId,
+                        DepositosId = depositosId
+                    });
+                }
+
+                return new Response<List<DatosUsuario>>()
+                { Estado = true, Mensaje = "¡Usuarios cargados con éxito!", Objeto = usuarios };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new Response<List<DatosUsuario>>()
+                { Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar usuarios!", Objeto = null };
+            }
         }
 
-        public async Task<List<Usuario>> ObtenerTodosLosAdministradoresDeEmpresa(string nombreEmpresa)
+        public async Task<Response<DatosUsuario>> ObtenerUsuarioPorId(long Id)
         {
-            return await baseDeDatos.Usuarios.Include(u => u.Empresa)
-                .Where(u => u.Empresa.NombreEmpresa == nombreEmpresa).ToListAsync();
+            try
+            {
+                var usuariosBD = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Id == Id && u.Estado);
+
+                if (usuariosBD == null) return new Response<DatosUsuario>()
+                {
+                    Objeto = null,
+                    Mensaje = "Ese usuario no existe en el sistema o no está disponible.",
+                    Estado = true
+                };
+
+                var roles = await baseDeDatos.RolesUsuarios
+                            .Include(r => r.Rol)
+                            .Where(r => r.UsuarioId == usuariosBD.Id)
+                            .Select(r => r.Rol.NombreRol)
+                            .ToListAsync();
+
+                var obrasId = await baseDeDatos.ObraUsuarios
+                                    .Where(o => o.UsuarioId == usuariosBD.Id)
+                                    .Select(o => o.ObraId)
+                                    .ToListAsync();
+
+                var depositosId = await baseDeDatos.DepositosUsuario
+                                        .Where(d => d.UsuarioId == usuariosBD.Id)
+                                        .Select(d => d.DepositoId)
+                                        .ToListAsync();
+
+                var usuario = new DatosUsuario()
+                {
+                    Id = usuariosBD.Id,
+                    Email = usuariosBD.Email,
+                    NombreUsuario = usuariosBD.NombreUsuario,
+                    Estado = "Activo",
+                    Telefono = usuariosBD.Telefono,
+                    EmpresaId = usuariosBD.EmpresaId,
+                    Roles = roles,
+                    ObrasId = obrasId,
+                    DepositosId = depositosId
+                };
+
+                return new Response<DatosUsuario>()
+                { Estado = true, Mensaje = "¡Usuario cargado con éxito!", Objeto = usuario };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new Response<DatosUsuario>()
+                { Estado = false, Mensaje = "¡Hubo un error desde el servidor al cargar el usuario!", Objeto = null };
+            }
         }
 
-        public async Task<(bool, List<VerUsuarioDTO>)> ObtenerUsuariosPorEmpresaId(int id)
+        public async Task<Response<string>> CrearUsuario(CrearUsuarioDTO usuario)
         {
-            //List<Usuario> usuariosBBDD = await baseDeDatos.Usuarios.Where(u => u.EmpresaId == id)
-            //                                .ToListAsync();
+            try
+            {
+                bool existe = await baseDeDatos.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+                if (existe) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "Ya existe un usuario con ese email en el sistema. Pruebe con otro.",
+                    Objeto = null
+                };
+                bool existeUnRol = await baseDeDatos.Roles.Where(r => usuario.Roles.Contains(r.NombreRol)).AnyAsync();
+                if (existeUnRol == false)
+                {
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "Uno o más de los roles que se envió no existen.",
+                        Objeto = null
+                    };
+                }
 
-            //if (usuariosBBDD.Count == 0) return (false, null);
+                var usuarioBD = new Usuario()
+                {
+                    NombreUsuario = usuario.NombreUsuario,
+                    Contrasena = usuario.Contrasena,
+                    Email = usuario.Email,
+                    EmpresaId = usuario.EmpresaId,
+                    Telefono = usuario.Celular,
+                    Estado = true
+                };
 
-            //List<VerUsuarioDTO> usuarios = new List<VerUsuarioDTO>();
+                baseDeDatos.Usuarios.Add(usuarioBD);
+                await baseDeDatos.SaveChangesAsync();
 
-            //foreach (var usuario in usuariosBBDD)
-            //{
-            //    var roles = await gestorUsuarios.GetRolesAsync(usuario);
+                var roles = await baseDeDatos.Roles
+                                .Where(r => usuario.Roles.Contains(r.NombreRol))
+                                .ToListAsync();
 
-            //    usuarios.Add(new VerUsuarioDTO()
-            //    {
-            //        Id = usuario.Id,
-            //        NombreUsuario = usuario.UserName,
-            //        Estado = usuario.Estado ? "Activo" : "Desactivado",
-            //        Email = usuario.Email,
-            //        Telefono = usuario.PhoneNumber,
-            //        Roles = roles.ToList()
-            //    });
-            //}
+                baseDeDatos.RolesUsuarios.AddRange(roles.Select(r => new RolesUsuario()
+                {
+                    UsuarioId = usuarioBD.Id,
+                    RolId = r.Id
+                }));
 
-            //return (true, usuarios);
-            throw new NotImplementedException();
+                if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                {
+                    var depositos = await baseDeDatos.Depositos
+                                        .Where(d => usuario.DepositosId.Contains(d.Id))
+                                        .ToListAsync();
+
+                    baseDeDatos.DepositosUsuario.AddRange(
+                        depositos.Select(d => new DepositoUsuario()
+                        {
+                            UsuarioId = usuarioBD.Id,
+                            DepositoId = d.Id
+                        })
+                    );
+
+                    await baseDeDatos.SaveChangesAsync();
+                }
+                else if (usuario.Roles.Contains("JEFEDEOBRA"))
+                {
+                    var obras = await baseDeDatos.Obras
+                                    .Where(o => usuario.ObrasId.Contains(o.Id))
+                                    .ToListAsync();
+
+                    baseDeDatos.ObraUsuarios.AddRange(
+                        obras.Select(o => new ObraUsuario()
+                        {
+                            UsuarioId = usuarioBD.Id,
+                            ObraId = o.Id
+                        }));
+
+                    await baseDeDatos.SaveChangesAsync();
+                }
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡Usuario creado con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error desde el servidor al crear el usuario!",
+                    Objeto = null
+                };
+            }
         }
 
-        public async Task<(bool, VerUsuarioDTO)> ObtenerUsuarioPorId(string id)
+        public async Task<Response<string>> ActualizarUsuario(long id, ActualizarUsuarioDTO usuario)
         {
-            //Usuario? usuarioBBDD = await gestorUsuarios.FindByIdAsync(id);
-            //if (usuarioBBDD == null) return (false, null);
-            //var roles = await gestorUsuarios.GetRolesAsync(usuarioBBDD);
-            //return (true, new VerUsuarioDTO()
-            //{
-            //    Id = usuarioBBDD.Id,
-            //    NombreUsuario = usuarioBBDD.UserName,
-            //    Estado = usuarioBBDD.Estado ? "Activo" : "Desactivado",
-            //    Email = usuarioBBDD.Email,
-            //    Telefono = usuarioBBDD.PhoneNumber,
-            //    Roles = roles.ToList()
-            //});
-            throw new NotImplementedException();
+            try
+            {
+                Usuario? usuarioBBDD = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+
+                if (usuarioBBDD == null) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "El usuario con ese ID no existe.",
+                    Objeto = null
+                };
+
+                bool emailEnUso = await baseDeDatos.Usuarios
+                                        .AnyAsync(u => u.Email == usuario.Email && u.Id != id);
+
+                if (emailEnUso) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "El email ya está en uso.",
+                    Objeto = null
+                };
+
+                await GestionarRolesDeUsuario(usuarioBBDD, usuario);
+                await GestionarObrasYDepositosDeUsuario(usuarioBBDD, usuario);
+
+                usuarioBBDD.Email = usuario.Email;
+                usuarioBBDD.NombreUsuario = usuario.NombreUsuario;
+
+                if (!string.IsNullOrEmpty(usuario.Contrasena)) usuarioBBDD.Contrasena = usuario.Contrasena;
+                if (!string.IsNullOrEmpty(usuario.Celular)) usuarioBBDD.Telefono = usuario.Celular;
+
+                await baseDeDatos.SaveChangesAsync();
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡Usuario actualizado con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error desde el servidor al actualizar el usuario!",
+                    Objeto = null
+                };
+            }
         }
 
-        public Task<Usuario> ObtenerUsuarioPorNombreUsuario()
+        public async Task<Response<string>> CambiarEstadoUsuario(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Usuario? usuarioBBDD = await baseDeDatos.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+
+                if (usuarioBBDD == null) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "El usuario que se desea cambiar de estado no existe",
+                    Objeto = null
+                };
+
+                usuarioBBDD.Estado = !usuarioBBDD.Estado;
+                string estado = usuarioBBDD.Estado ? "reactivado" : "desactivado";
+                await baseDeDatos.SaveChangesAsync();
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Objeto = $"Usuario {estado} con éxito",
+                    Mensaje = null
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error desde el servidor al cambiar el estado del usuario!",
+                    Objeto = null
+                };
+            }
         }
 
-        public Task<List<Usuario>> ObtenerUsuariosPorCategoria()
+        private async Task GestionarRolesDeUsuario(Usuario usuarioBBDD, ActualizarUsuarioDTO usuario)
         {
-            throw new NotImplementedException();
+            var rolesActuales = await baseDeDatos.RolesUsuarios
+                                        .Where(r => r.UsuarioId == usuarioBBDD.Id)
+                                        .Include(r => r.Rol)
+                                        .Select(r => r.Rol.NombreRol)
+                                        .ToListAsync();
+
+            var nombresRolesAEliminar = rolesActuales.Except(usuario.Roles).ToList();
+            var rolesAEliminar = await rolesServicio.BuscarRolesPorNombres(nombresRolesAEliminar);
+
+            if (rolesAEliminar.Count > 0)
+            {
+                var registrosAEliminar = await baseDeDatos.RolesUsuarios
+                    .Where(u => u.UsuarioId == usuarioBBDD.Id &&
+                            rolesAEliminar.Select(r => r.Id).Contains(u.RolId))
+                    .ToListAsync();
+
+                baseDeDatos.RolesUsuarios.RemoveRange(registrosAEliminar);
+            }
+
+            var nombresRolesAAnadir = usuario.Roles.Except(rolesActuales).ToList();
+            var rolesAAnadir = await rolesServicio.BuscarRolesPorNombres(nombresRolesAAnadir);
+
+            if (rolesAAnadir.Count > 0)
+            {
+                foreach (var rol in rolesAAnadir)
+                {
+                    baseDeDatos.RolesUsuarios
+                        .Add(new RolesUsuario() { UsuarioId = usuarioBBDD.Id, RolId = rol.Id });
+                }
+            }
         }
 
-        //public async Task<IdentityResult> CrearUsuario(CrearUsuarioDTO usuario)
-        //{
-        //    using var transaction = await baseDeDatos.Database.BeginTransactionAsync();
-
-        //    Usuario UsuarioBD = new(usuario.NombreUsuario, usuario.EmpresaId, usuario.Email, usuario.Celular);
-        //    IdentityResult resultado = await gestorUsuarios.CreateAsync(UsuarioBD, usuario.NombreUsuario);
-
-        //    if (resultado.Succeeded)
-        //    {
-        //        resultado = await gestorUsuarios.AddToRolesAsync(UsuarioBD, usuario.Roles);
-        //        if (!resultado.Succeeded)
-        //        {
-        //            await transaction.RollbackAsync();
-        //            return resultado;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (IdentityError error in resultado.Errors)
-        //        {
-        //            Debug.WriteLine(error.Description);
-        //        }
-        //        await transaction.RollbackAsync();
-        //        return resultado;
-        //    }
-        //    await transaction.CommitAsync();
-        //    return resultado;
-        //}
-
-        public async Task<(bool, string, Usuario)> ActualizarUsuario(string id, ActualizarUsuarioDTO usuario)
+        private async Task GestionarObrasYDepositosDeUsuario(Usuario usuarioBBDD, ActualizarUsuarioDTO usuario)
         {
-            //Usuario? usuarioBBDD = await gestorUsuarios.FindByIdAsync(id);
+            if (usuario.Roles.Contains("JEFEDEOBRA"))
+            {
+                var obrasUsuario = await baseDeDatos.ObraUsuarios
+                                            .Where(o => o.UsuarioId == usuarioBBDD.Id)
+                                            .Select(o => o.ObraId)
+                                            .ToListAsync();
 
-            //using var transaction = await baseDeDatos.Database.BeginTransactionAsync();
+                var obrasAEliminar = obrasUsuario.Except(usuario.ObrasId).ToList();
+                var obrasAAnadir = usuario.ObrasId.Except(obrasUsuario).ToList();
 
-            //if (usuarioBBDD == null) return (false, "El usuario que se desea actualizar no existe", null);
+                if (obrasAEliminar.Count > 0)
+                {
+                    baseDeDatos.ObraUsuarios.RemoveRange(
+                        await baseDeDatos.ObraUsuarios
+                            .Where(o => o.UsuarioId == usuarioBBDD.Id && obrasAEliminar.Contains(o.ObraId))
+                            .ToListAsync()
+                    );
+                }
 
-            //if (!string.IsNullOrEmpty(usuario.NombreUsuario))
-            //{
-            //    if (usuarioBBDD.UserName != usuario.NombreUsuario)
-            //    {
-            //        var resName = await gestorUsuarios.FindByNameAsync(usuario.NombreUsuario);
-            //        if (resName != null) return (false, "El usuario con ese nombre ya existe", null);
-            //        usuarioBBDD.UserName = usuario.NombreUsuario;
-            //    }
-            //}
+                if (obrasAAnadir.Count > 0)
+                {
+                    baseDeDatos.ObraUsuarios.AddRange(
+                        await baseDeDatos.Obras
+                              .Where(o => obrasAAnadir.Contains(o.Id))
+                              .Select(o => new ObraUsuario()
+                              {
+                                  UsuarioId = usuarioBBDD.Id,
+                                  ObraId = o.Id
+                              })
+                              .ToListAsync()
+                              );
+                }
 
-            //if (!string.IsNullOrEmpty(usuario.Celular))
-            //    usuarioBBDD.PhoneNumber = usuario.Celular;
+                var depositosUsuario = await baseDeDatos.DepositosUsuario
+                                            .Where(d => d.UsuarioId == usuarioBBDD.Id)
+                                            .ToListAsync();
+                baseDeDatos.DepositosUsuario.RemoveRange(depositosUsuario);
+            }
+            else if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
+            {
+                var depositosUsuario = await baseDeDatos.DepositosUsuario
+                                            .Where(d => d.UsuarioId == usuarioBBDD.Id)
+                                            .Select(d => d.DepositoId)
+                                            .ToListAsync();
 
-            //if (!string.IsNullOrEmpty(usuario.Email))
-            //    usuarioBBDD.Email = usuario.Email;
+                var depositosAEliminar = depositosUsuario.Except(usuario.DepositosId).ToList();
+                var depositosAAnadir = usuario.DepositosId.Except(depositosUsuario).ToList();
 
-            //IdentityResult res;
+                if (depositosAEliminar.Count > 0)
+                {
+                    baseDeDatos.DepositosUsuario.RemoveRange(
+                        await baseDeDatos.DepositosUsuario
+                            .Where(d => d.UsuarioId == usuarioBBDD.Id && depositosAEliminar.Contains(d.DepositoId))
+                            .ToListAsync()
+                    );
+                }
 
-            //if (usuario.Roles.Count > 0)
-            //{
-            //    var rolesActuales = await gestorUsuarios.GetRolesAsync(usuarioBBDD);
+                if (depositosAAnadir.Count > 0)
+                {
+                    baseDeDatos.DepositosUsuario.AddRange(
+                        await baseDeDatos.Depositos
+                            .Where(d => depositosAAnadir.Contains(d.Id))
+                            .Select(d => new DepositoUsuario()
+                            {
+                                UsuarioId = usuarioBBDD.Id,
+                                DepositoId = d.Id
+                            }).ToListAsync()
+                    );
+                }
 
-            //    var rolesNormalizados =
-            //        rolesActuales.Select(r => Regex.Replace(r.Replace(" ", "").ToUpperInvariant()
-            //        .Normalize(NormalizationForm.FormD), "[\u0300-\u036f]", string.Empty
-            //        )).ToList();
+                var obrasUsuario = await baseDeDatos.ObraUsuarios
+                                            .Where(o => o.UsuarioId == usuarioBBDD.Id)
+                                            .ToListAsync();
+                baseDeDatos.ObraUsuarios.RemoveRange(obrasUsuario);
+            }
+            else
+            {
+                var depositosUsuario = await baseDeDatos.DepositosUsuario
+                                            .Where(d => d.UsuarioId == usuarioBBDD.Id)
+                                            .ToListAsync();
+                var obrasUsuario = await baseDeDatos.ObraUsuarios
+                                            .Where(o => o.UsuarioId == usuarioBBDD.Id)
+                                            .ToListAsync();
 
-            //    var rolesAEliminar = rolesNormalizados.Except(usuario.Roles).ToList();
-            //    var rolesAAnadir = usuario.Roles.Except(rolesNormalizados).ToList();
-
-            //    if (rolesAEliminar.Count > 0)
-            //    {
-            //        res = await gestorUsuarios.RemoveFromRolesAsync(usuarioBBDD, rolesAEliminar);
-            //        if (!res.Succeeded)
-            //        {
-            //            foreach (var error in res.Errors) Debug.WriteLine($"Error: {error.Description}");
-            //            await transaction.RollbackAsync();
-            //            return (false, "Error al eliminar roles", null);
-            //        }
-            //    }
-
-            //    if (rolesAAnadir.Count > 0)
-            //    {
-            //        res = await gestorUsuarios.AddToRolesAsync(usuarioBBDD, rolesAAnadir);
-            //        if (!res.Succeeded)
-            //        {
-            //            await transaction.RollbackAsync();
-            //            return (false, "Error al añadir roles", null);
-            //        }
-            //    }
-            //}
-
-            //res = await gestorUsuarios.UpdateAsync(usuarioBBDD);
-            //if (!res.Succeeded) await transaction.RollbackAsync();
-
-            //await transaction.CommitAsync();
-            //return (true, "Usuario actualizado con éxito", usuarioBBDD);
-            throw new NotImplementedException();
-        }
-
-        public async Task<(bool, string)> CambiarEstadoUsuario(string id)
-        {
-            //Usuario? usuarioBBDD = await gestorUsuarios.FindByIdAsync(id);
-
-            //if (usuarioBBDD == null) return (false, "El usuario que se desea cambiar de estado no existe");
-
-            //usuarioBBDD.Estado = !usuarioBBDD.Estado;
-            //string estado = usuarioBBDD.Estado ? "reactivado" : "desactivado";
-
-            //var res = await gestorUsuarios.UpdateAsync(usuarioBBDD);
-
-            //if (!res.Succeeded) return (false, "Ocurrio un error al cambiar estado del usuario");
-            //return (true, $"Usuario {estado} con éxito");
-            throw new NotImplementedException();
+                baseDeDatos.DepositosUsuario.RemoveRange(depositosUsuario);
+                baseDeDatos.ObraUsuarios.RemoveRange(obrasUsuario);
+            }
         }
     }
 }

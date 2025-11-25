@@ -1,7 +1,334 @@
 ﻿@page "/usuarios"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion;
+@inject NavigationManager navManager;
 
-<h3>ListaUsuarios</h3>
+<PageTitle>Lista de usuarios - ProStock</PageTitle>
+
+@if (datosSesion.Usuario != null && datosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Usuarios</p>
+            <div class="botonera">
+                <a class="btn btn-add btn-success" href="/usuarios/crear">+</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Correo</th>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!String.IsNullOrEmpty(mensaje) && usuarios?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">@mensaje</td>
+                        </tr>
+                    }
+                    else if (usuarios?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">@mensaje</td>
+                        </tr>
+                    }
+                    else if (usuarios?.Count > 0)
+                    {
+                        @foreach (var usuario
+                                        in usuarios.Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                        {
+                            <tr>
+                                <td>@usuario.Email</td>
+                                <td>@usuario.NombreUsuario</td>
+                                <td>
+                                    @(usuario.Roles[0] == "ADMINISTRADOR" ? "Administrador" :
+                                      usuario.Roles[0] == "JEFEDEOBRA" ? "Jefe de obra" : "Jefe de depósito")
+                                </td>
+                                <td class="col-editar">
+                                    <button class="btn btn-outline-info" @onclick="() => {
+                                        MostraModalInfo = true;
+                                        usuarioParaModal = usuario;
+                                        }">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <a class="btn btn-outline-warning" href=@($"/usuarios/editar/{usuario.Id}")>
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <button class="btn @(usuario.Estado == "Activo" ? "btn-outline-danger" : "btn-outline-success mx-1")"
+                                            @onclick="() => { MostraModal = true; usuarioParaModal = usuario; }">
+                                        @if (usuario.Estado == "Activo")
+                                        {
+                                            <i class="bi bi-trash-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-plus-circle-fill"></i>
+                                        }
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@usuarios?.Count registros totales</p>
+            </div>
+        </div>
+    </article>
+
+    @if (!string.IsNullOrEmpty(mensajeEstado))
+    {
+        <p class="msg-estado">@mensajeEstado</p>
+    }
+
+    @if (MostraModal)
+    {
+        <div class="modal-backdrop show"></div>
+        <div class="modal fade show" id="modalConfirmarEliminar" tabindex="-1" style="display: block" aria-labelledby="confirmarEliminar" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">¿Desactivar usuario?</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                @onclick="() => {
+                                MostraModal = false;
+                                usuarioParaModal = null;
+                            }"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Seguro que deseas desactivar al usuario: <strong>@usuarioParaModal?.NombreUsuario</strong>?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() =>
+                        { MostraModal = false; usuarioParaModal = null; }">
+                    Cancelar
+                </button>
+                <button class="btn btn-danger" data-bs-dismiss="modal"
+                        @onclick="async() => {
+                        MostraModal = false; 
+                        await CambiarEstado(usuarioParaModal.Id);
+                        }">
+                    Finalizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+    @if (MostraModalInfo)
+    {
+        <div class="modal-backdrop show"></div>
+        <div class="modal fade show" id="modalInfo" tabindex="-1" style="display: block" aria-labelledby="modalInfo" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Datos de @(usuarioParaModal.NombreUsuario):</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                @onclick="() => {
+                                MostraModalInfo = false;
+                                usuarioParaModal = null;
+                            }"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <input disabled class="form-control my-2" value="Correo: @usuarioParaModal.Email" />
+                    <input disabled class="form-control my-2" value="Teléfono: @usuarioParaModal.Telefono" />
+                    <div class="my-3 px-4 overflow-auto" style="max-height: 400px">
+                        @if (usuarioParaModal.Roles.Contains("JEFEDEOBRA"))
+                        {
+                                <label>Obras en las que está a cargo:</label>
+                                @if (obrasBD != null)
+                                {
+                                    @if (obrasBD.Any(o => usuarioParaModal.ObrasId.Contains(o.Id)))
+                                    {
+                                        @foreach(var obra in obrasBD.Where(o => usuarioParaModal.ObrasId.Contains(o.Id)))
+                                        {
+                                            <div class="card my-2 py-3">
+                                                <label class="form-check-label">
+                                                    @obra.NombreObra (@obra.CodigoObra)
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>El usuario no tiene obras asignadas.</p>
+                                    }
+                                } 
+                                else
+                                {
+                                     <p>Hubo un error al cargar las obras desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                                }
+                            } 
+                            else if (usuarioParaModal.Roles.Contains("JEFEDEDEPOSITO"))
+                            {
+                                <label>Depósitos en los que está a cargo:</label>
+                                @if (depositosBD != null)
+                                {
+                                   @if (depositosBD.Any(d => usuarioParaModal.DepositosId.Contains(d.Id)))
+                                    {
+                                        @foreach(var deposito in depositosBD.Where(d => usuarioParaModal.DepositosId.Contains(d.Id)))
+                                        {
+                                            <div class="card my-2 py-3">
+                                                <label class="form-check-label">
+                                                    @deposito.NombreDeposito (@deposito.CodigoDeposito)
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>El usuario no tiene depósitos asignados.</p>
+                                    } 
+                                } 
+                                else
+                                {
+                                     <p>Hubo un error al cargar los depósitos desde el servidor. Reintente más tarde o contacte con un administrador.</p>
+                                }                               
+                            }
+                        </div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button class="btn btn-danger" data-bs-dismiss="modal" @onclick="() =>
+                        { MostraModalInfo = false; usuarioParaModal = null; }">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+}
+else
+{
+    navManager.NavigateTo("/");
+}
 
 @code {
+    private DatosUsuario datosDeUsuario;
+    private List<DatosUsuario> usuarios = new();
+    private string mensaje, mensajeEstado;
+    private int numeroPagina = 1;
+    private bool MostraModal = false, MostraModalInfo = false;
+    private DatosUsuario usuarioParaModal;
 
+    private List<ObraEmpresaDTO> obrasBD;
+    private List<DepositoEmpresaDTO> depositosBD;
+
+    protected async override void OnInitialized()
+    {
+        base.OnInitialized();
+        datosDeUsuario = datosSesion.Usuario;
+        if (datosSesion.Usuario != null)
+        {
+            await CargarUsuarios();
+            await CargarObras();
+            await CargarDepositos();
+        }
+    }
+
+    private async Task CargarUsuarios()
+    {
+        var res = await http.Get<Response<List<DatosUsuario>>>($"api/usuario/{datosDeUsuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+            usuarios = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CambiarEstado(long usuarioId)
+    {
+        var res = await http.Delete<Response<string>>($"api/usuario/{usuarioId}");
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null)
+            {
+                await CargarUsuarios();
+                mensajeEstado = res.Respuesta.Objeto;
+                StateHasChanged();
+                await Task.Delay(2500);
+                mensajeEstado = "";
+            }
+            else mensajeEstado = res.Respuesta.Mensaje;
+        }
+    }
+
+    private async Task SiguientePagina()
+    {
+        if (usuarios.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CargarObras()
+    {
+        var res = await http.Get<Response<List<ObraEmpresaDTO>>>($"api/obra/empresa/{datosDeUsuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            obrasBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+
+    private async Task CargarDepositos()
+    {
+        var res = await http.Get<Response<List<DepositoEmpresaDTO>>>($"api/deposito/empresa/{datosDeUsuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            depositosBD = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+
+    private void AgregarOQuitarObraDeListado(ChangeEventArgs e, long obraId)
+    {
+        if ((bool)e.Value)
+        {
+            if (!datosDeUsuario.ObrasId.Contains(obraId))
+                datosDeUsuario.ObrasId.Add(obraId);
+        }
+        else
+        {
+            datosDeUsuario.ObrasId.Remove(obraId);
+        }
+    }
+
+    private void AgregarOQuitarDepositoDeListado(ChangeEventArgs e, long depositoId)
+    {
+        if ((bool)e.Value)
+        {
+            if (!datosDeUsuario.DepositosId.Contains(depositoId))
+                datosDeUsuario.DepositosId.Add(depositoId);
+        }
+        else
+        {
+            datosDeUsuario.DepositosId.Remove(depositoId);
+        }
+    }
 }
