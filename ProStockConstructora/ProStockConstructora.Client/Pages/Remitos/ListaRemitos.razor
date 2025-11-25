@@ -3,12 +3,11 @@
 @inject NavigationManager Navigation
 
 <PageTitle>Remitos- ProStockConstructora</PageTitle>
-
 <article class="p-4">
     <div class="divBotonera">
         <p class="cabecera fw-bolder">Remitos</p>
-        <div>
-            <a class="btn btn-add btn-success" href=@($"remitos/crear")>+</a>
+        <div class="botonera">
+            <a class="btn btn-add btn-success" href="/remitos/crear">+</a>
         </div>
     </div>
     <div class="table-responsive">
@@ -22,6 +21,7 @@
                     <th>Estado</th>
                     <th>Fecha Emision</th>
                     <th>Fecha Recibido</th>
+                    <th>Acciones</th>
                     <th></th>
                 </tr>
             </thead>
@@ -29,12 +29,12 @@
                 @if(remitos?.Count == 0)
                 {
                     <tr>
-                        <td class="text-center" colspan="7">No hay remitos para mostrar.</td>
+                        <td class="text-center" colspan="8">No hay remitos para mostrar.</td>
                     </tr>
                 }
                 else
                 {
-                    @foreach (var remito in remitos.Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                    @foreach (var remito in remitos)
                     {
                         <tr>
                             <td>@remito.NumeroRemito</td>
@@ -52,10 +52,10 @@
                                        @remito.EstadoRemito   
                                 </span>
                             </td>
-                            <td>@remito.FechaEmision.ToString("dd/MM/yyyy")></td>
+                            <td>@remito.FechaEmision.ToString("dd/MM/yyyy")</td>
                             <td>@(remito.FechaRecepcion.HasValue ? remito.FechaRecepcion.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                             <td>
-                                 <a class="btn btn-outline-info"href=@($"/detalles")>
+                                 <a class="btn btn-outline-info" href=@($"/remitos/detalles/{remito.Id}")>
                                  <i class="bi bi-file-earmark-text"></i></a>
                                  <a class="btn btn-outline-primary" href=@($"/remitos/editar/{remito.Id}")>
                                  <i class="bi bi-pencil"></i></a>
@@ -91,7 +91,7 @@
 
     private async Task CargarRemitos()
     {
-        var res = await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito");
+        var res = await Http.Get<Response<List<VerRemitoDTO>>>("api/remito");
         if(res.Respuesta != null)
         {
             if(res.Respuesta.Estado)
@@ -103,22 +103,18 @@
 
     }
 
-
     private async Task SiguientePagina()
     {
-        if (remitos.Count > numeroPagina * 10)
-        {
-            numeroPagina++;
-            StateHasChanged();
-        }
+        numeroPagina++;
+        await CargarRemitos();
     }
-
     private async Task AnteriorPagina()
     {
         if (numeroPagina > 1)
         {
             numeroPagina--;
-            StateHasChanged();
+            await CargarRemitos();
         }
     }
+
 }

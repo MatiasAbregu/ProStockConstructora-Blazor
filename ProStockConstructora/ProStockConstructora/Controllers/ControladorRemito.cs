@@ -16,7 +16,13 @@ namespace ProStockConstructora.Controllers
         {
             this.remitoServicio = remitoServicio;
         }
-
+        [HttpGet]
+        public async Task<ActionResult> ObtenerRemitos()
+        {
+            var res = await remitoServicio.ObtenerRemitos();
+            if (res.Estado) return Ok(res.Objeto);
+            else return StatusCode(500, res);
+        }
         [HttpGet("{id:long}")]
         public async  Task<ActionResult> ObtenerRemitoPorId([FromRoute] long id)
         {

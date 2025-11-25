@@ -14,5 +14,6 @@ namespace Repositorios.Implementaciones
         public Task<Response<string>> CrearRemito(CrearRemitoDTO remitoDTO);
         public Task<Response<VerRemitoDTO>> ObtenerRemitoPorId(long id);
         public Task<Response<VerRemitoDTO>> ObtenerRemitoPorNotaDePedidoId(long notaDePedidoId);
+        Task<Response<List<VerRemitoDTO>>> ObtenerRemitos();
     }
 }

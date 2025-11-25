@@ -9,7 +9,9 @@ namespace DTO.DTOs_Recursos
 {
     public class TipoMaterialDTO
     {
-        public int? Id { get; set; }
-        public string? Nombre { get; set; }
+        public long Id { get; set; }
+        [Required(ErrorMessage = "El nombre del tipo de material es obligatorio.")]
+        public string Nombre { get; set; }
+        public long EmpresaId { get; set; }
     }
 }

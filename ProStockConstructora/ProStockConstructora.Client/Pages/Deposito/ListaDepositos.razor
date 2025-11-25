@@ -26,7 +26,7 @@
                         <th>Nombre</th>
                         <th>Tipo</th>
                         <th>Domicilio</th>
-                        @if (ObraId == null)
+                        @if (usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0)
                         {
                             <th>Obra</th>
                         }
@@ -37,13 +37,17 @@
                     @if (!String.IsNullOrEmpty(mensaje) && depositos?.Count == 0)
                     {
                         <tr>
-                            <td class="text-center" colspan="@(ObraId == null ? 6 : 5)">@mensaje</td>
+                            <td class="text-center" 
+                            colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
+                            @mensaje</td>
                         </tr>
                     }
                     else if (depositos?.Count == 0)
                     {
                         <tr>
-                            <td class="text-center" colspan="@(ObraId == null ? 6 : 5)">@mensaje</td>
+                            <td class="text-center" 
+                                colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
+                            @mensaje</td>
                         </tr>
                     }
                     else if (depositos?.Count > 0)
@@ -61,20 +65,20 @@
                                     </span>
                                 </td>
                                 <td>@deposito.Domicilio</td>
-                                @if (ObraId == null)
+                                @if (usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0)
                                 {
                                     <td>
                                         @deposito.Obra
                                     </td>
                                 }
                                 <td>
-                                    <a class="btn btn-outline-info" href=@($"/recursos")>
+                                    <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{deposito.Id}/recursos")>
                                         <i class="bi bi-tools"></i>
                                     </a>
                                     <a class="btn btn-outline-secondary mx-1" href=@($"/notadepedidos")>
                                         <i class="bi bi-file-earmark-text"></i>
                                     </a>
-                                    @if (ObraId != null)
+                                    @if (usuario.Roles.Contains("ADMINISTRADOR") || usuario.Roles.Contains("JEFEDEOBRA"))
                                     {
                                         <a class="btn btn-outline-warning mx-1" href=@($"/obras/{ObraId}/depositos/editar/{deposito.Id}")>
                                             <i class="bi bi-pencil"></i>
@@ -105,7 +109,7 @@ else
 
 @code {
     [Parameter]
-    public long? ObraId { get; set; }
+    public long ObraId { get; set; }
     private List<VerDepositoDTO>? depositos = new();
     private DatosUsuario usuario = new();
 

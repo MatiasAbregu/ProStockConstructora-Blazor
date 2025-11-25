@@ -1,0 +1,210 @@
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/recursos/crear"
+@inject IHttpServicio http
+@inject NavigationManager navManager
+@inject DatosSesion datosSesion
+
+<PageTitle>Agregar Recurso - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Crear recurso</p>
+            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+        </div>
+
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger text-center mx-2 mt-2">
+                    @Mensaje
+                </div>
+            }
+            <EditForm Model="recurso" class="d-flex flex-column" OnValidSubmit="CrearRecursoMetodo">
+                <DataAnnotationsValidator />
+                <div class="my-3 px-3">
+                    <label class="form-label">Código ISO</label>
+                    <InputText class="form-control" @bind-Value="recurso.CodigoISO" />
+                    <ValidationMessage For="@(() => recurso.CodigoISO)" />
+                    <p class="legend m-0" @onclick="() => MostraModal = true">
+                        Si desea añadir un recurso existente por su código ISO a este depósito haga click aquí
+                    </p>
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Nombre del Recurso</label>
+                    <InputText class="form-control" @bind-Value="recurso.Nombre" />
+                    <ValidationMessage For="@(() => recurso.Nombre)" />
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Tipo de Material</label>
+                    <div class="d-flex gap-2">
+                        <InputSelect class="form-select" @bind-Value="recurso.TipoMaterialId">
+                            @foreach (var tipo in listadoTipoMaterial)
+                            {
+                                <option value="@tipo.Id">@tipo.Nombre</option>
+                            }
+                        </InputSelect>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/tipo-material")>
+                            <span class="material-symbols-outlined" title="Agregar tipo de material">home_improvement_and_tools</span> +
+                        </a>
+                    </div>
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Unidad de Medida</label>
+                    <div class="d-flex gap-2">
+                        <InputSelect class="form-select" @bind-Value="recurso.UnidadDeMedidaId">
+                            @foreach (var unidad in listadoUnidadDeMedida)
+                            {
+                                <option value="@unidad.Id">@unidad.Nombre</option>
+                            }
+                        </InputSelect>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/unidad-medida")>
+                            <span class="material-symbols-outlined" title="Agregar unidad de medida">square_foot</span> +
+                        </a>
+                    </div>
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Cantidad</label>
+                    <InputNumber class="form-control" @bind-Value="recurso.Cantidad" />
+                    <ValidationMessage For="@(() => recurso.Cantidad)" />
+                </div>
+                <button class="btn btn-success mb-2 btn-submit" type="submit">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
+            </EditForm>
+        </div>
+    </article>
+
+    @if (MostraModal)
+    {
+        <div class="modal-backdrop show"></div>
+        <div class="modal fade show" id="modalCargarISO" tabindex="-1" style="display: block" aria-labelledby="CargarISO" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">Añadir recurso a depósito por código ISO</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                @onclick="() => MostraModal = false"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        @if (!string.IsNullOrEmpty(MensajeModal))
+                        {
+                            <div class="alert alert-danger text-center mx-2 mt-2">
+                                @MensajeModal
+                            </div>
+                        }
+                        <EditForm EditContext="editContext">
+                            <DataAnnotationsValidator />
+                            <div class="my-3 px-3">
+                                <label class="form-label">Código ISO</label>
+                                <InputText class="form-control" @bind-Value="recursoISO.CodigoISO" />
+                                <ValidationMessage For="@(() => recursoISO.CodigoISO)" />
+                            </div>
+                            <div class="my-3 px-3">
+                                <label class="form-label">Cantidad</label>
+                                <InputNumber class="form-control" @bind-Value="recursoISO.Cantidad" />
+                                <ValidationMessage For="@(() => recursoISO.Cantidad)" />
+                            </div>
+                        </EditForm>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => MostraModal = false">Cancelar</button>
+                        <button class="btn btn-success" data-bs-dismiss="modal" @onclick="CargarRecursoPorCodigoISO">
+                            Añadir recurso al depósito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long ObraId { get; set; }
+    [Parameter]
+    public long DepositoId { get; set; }
+
+    private DatosUsuario usuario = new();
+    private RecursosCrearDTO recurso = new();
+    private RecursoPorISODTO recursoISO = new();
+    private EditContext editContext;
+
+    private List<TipoMaterialDTO> listadoTipoMaterial = new();
+    private List<UnidadDeMedidaDTO> listadoUnidadDeMedida = new();
+
+    private string Mensaje, MensajeModal;
+    private bool Autenticado = true, MostraModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+            editContext = new(recursoISO);
+            await ObtenerTiposMaterial();
+            await ObtenerUnidadesDeMedida();
+        }
+        else Autenticado = false;
+    }
+
+    private async Task CargarRecursoPorCodigoISO()
+    {
+        if (editContext.Validate())
+        {
+            recursoISO.EmpresaId = usuario.EmpresaId;
+            recursoISO.DepositoId = DepositoId;
+
+            var res = await http.Post<RecursoPorISODTO, Response<string>>($"api/recursos/codigo-iso", recursoISO);
+            if (res.Respuesta != null)
+            {
+                if (!string.IsNullOrEmpty(res.Respuesta.Objeto))
+                    navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/recursos");
+                else MensajeModal = res.Respuesta.Mensaje.Contains("exito") ? string.Empty : res.Respuesta.Mensaje;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task CrearRecursoMetodo()
+    {
+        recurso.EmpresaId = usuario.EmpresaId;
+        recurso.DepositoId = DepositoId;
+
+        var res = await http.Post<RecursosCrearDTO, Response<string>>($"api/recursos", recurso);
+        if (res.Respuesta != null)
+        {
+            if (!string.IsNullOrEmpty(res.Respuesta.Objeto))
+                navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/recursos");
+            else Mensaje = res.Respuesta.Mensaje.Contains("exito") ? string.Empty : res.Respuesta.Mensaje;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ObtenerTiposMaterial()
+    {
+        var res = await http.Get<Response<List<TipoMaterialDTO>>>($"api/tipo-material/empresa/{usuario.EmpresaId}");
+        if (res.Respuesta != null)
+        {
+            listadoTipoMaterial = res.Respuesta.Objeto;
+            recurso.TipoMaterialId = listadoTipoMaterial.First().Id;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ObtenerUnidadesDeMedida()
+    {
+        var res = await http.Get<Response<List<UnidadDeMedidaDTO>>>($"api/unidad-medida/empresa/{usuario.EmpresaId}");
+        if (res.Respuesta != null)
+        {
+            listadoUnidadDeMedida = res.Respuesta.Objeto;
+            recurso.UnidadDeMedidaId = listadoUnidadDeMedida.First().Id;
+            StateHasChanged();
+        }
+    }
+}

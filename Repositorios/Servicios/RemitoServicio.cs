@@ -2,6 +2,7 @@
 using BD.Modelos;
 using DTO.DTOs_Remitos;
 using DTO.DTOs_Response;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repositorios.Implementaciones;
 using System;
@@ -20,18 +21,56 @@ namespace Repositorios.Servicios
         {
             baseDeDatos = BaseDeDatos;
         }
-        public async Task<Response<VerRemitoDTO>> ObtenerRemitoPorId(long id)
+        public async Task<Response<List<VerRemitoDTO>>> ObtenerRemitos()
         {
             try
             {
-                var remito = await baseDeDatos.Remitos.FirstOrDefaultAsync(r => r.Id == id);
+                var remitos = await baseDeDatos.Remitos.ToListAsync();
+                var remitosDTO = remitos.Select(r => new VerRemitoDTO
+                {
+                    Id = r.Id,
+                    NumeroRemito = r.NumeroRemito,
+                    NotaDePedidoId = r.NotaDePedidoId,
+                    DepositoOrigenId = r.DepositoOrigenId,
+                    DepositoDestinoId = r.DepositoDestinoId,
+                    EstadoRemito = r.EstadoRemito,
+                    FechaEmision = r.FechaEmision,
+                    FechaRecepcion = r.FechaRecepcion
+                }).ToList();
+                return new Response<List<VerRemitoDTO>>
+                {
+                    Objeto = remitosDTO,
+                    Mensaje = "Remitos obtenidos con éxito.",
+                    Estado = true
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException.Message}");
+                return new Response<List<VerRemitoDTO>>
+                {
+                    Objeto = null,
+                    Mensaje = "Error al obtener los remitos.",
+                    Estado = false
+                };
+            }
+        }
+        public async Task<Response<VerRemitoDTO>> ObtenerRemitoPorId([FromRoute]long id)
+        {
+            try
+            {
+                var remito = await baseDeDatos.Remitos
+                    .Include(r => r.NotaDePedido)
+                    .Include(r => r.DepositoOrigenId)
+                    .Include(r => r.DepositoDestinoId)
+                    .FirstOrDefaultAsync(r => r.Id == id);
                 if (remito == null)
                 {
                     return new Response<VerRemitoDTO>
                     {
                         Objeto = null,
                         Mensaje = "No existe el remito con ese ID.",
-                        Estado = true
+                        Estado = false
                     };
                 }
                 var remitoDTO = new VerRemitoDTO()

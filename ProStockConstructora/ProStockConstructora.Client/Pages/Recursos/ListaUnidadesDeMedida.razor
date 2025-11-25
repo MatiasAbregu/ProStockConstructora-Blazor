@@ -1,4 +1,4 @@
-﻿@page "/recursos/unidad-medida"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/recursos/unidad-medida"
 @inject IHttpServicio http
 @inject NavigationManager navManager
 @inject DatosSesion datosSesion
@@ -10,7 +10,8 @@
     <article class="p-4">
     <div class="cabecera">
             <p class="fw-bolder">Unidades de medida</p>
-            <a class="btn btn-secondary" href="/recursos"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+            <a class="btn btn-secondary" 
+            href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
     </div>  
 
     <div class="row">
@@ -27,11 +28,13 @@
                 <InputText class="form-control" @bind-Value="unidad.Nombre" />
                 <ValidationMessage For="@(() => unidad.Nombre)" />
             </div>
+
             <div class="my-3 px-3">
                 <label class="form-label">Simbolo</label>
                 <InputText class="form-control" @bind-Value="unidad.Simbolo" />
                 <ValidationMessage For="@(() => unidad.Simbolo)" />
             </div>
+
             <div class="d-flex justify-content-end gap-2 mb-2">
                 @if(IdMarca != 0)
                 {
@@ -90,7 +93,7 @@
                             </tr>
                         }
                     }
-                </tbody>
+                  </tbody>
             </table>
         </div>
     </div>
@@ -103,6 +106,11 @@ else
 }
 
 @code {
+    [Parameter]
+    public long ObraId { get; set; }
+    [Parameter]
+    public long DepositoId {get;set;}
+
     private DatosUsuario usuario = new();
     private EditContext editContext;
     private List<UnidadDeMedidaDTO> listadoUnidades = new();

@@ -9,7 +9,7 @@ using Repositorios.Servicios;
 
 namespace ProStockConstructora.Controllers
 {
-    [Route("api/tipoMaterial")]
+    [Route("api/tipo-material")]
     [ApiController]
     public class ControladorTipoMaterial : ControllerBase
     {
@@ -22,31 +22,39 @@ namespace ProStockConstructora.Controllers
             this.tipoMaterialServicio = tipoMaterialServicio;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ObtenerTiposDeMaterial()
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerTiposDeMaterial(long EmpresaId)
         {
-            Response<List<TipoMaterialDTO>> resultado = await tipoMaterialServicio.ObtenerTiposDeMaterial();
-            if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Objeto);
+            var resultado = await tipoMaterialServicio.ObtenerTiposDeMaterial(EmpresaId);
+            if (resultado.Estado) return StatusCode(200, resultado);
+            else return StatusCode(500, resultado);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CrearTipoMaterial([FromBody] TipoMaterialDTO tipoMaterialDTO)
+        [HttpGet("tipoMaterial/{Id:long}")]
+        public async Task<IActionResult> ObtenerTipoMaterialPorId(long Id)
         {
-            Response<string> resultado = await tipoMaterialServicio.TipoMaterialCargar(tipoMaterialDTO);
+            Response<TipoMaterialDTO> resultado = await tipoMaterialServicio.ObtenerTipoMaterialPorId(Id);
             if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Mensaje);
+                return StatusCode(500, resultado);
+            return Ok(resultado);
+        }
+
+        [HttpPost("{empresaId:long}")]
+        public async Task<IActionResult> CrearTipoMaterial(long empresaId, [FromBody] TipoMaterialDTO tipoMaterialDTO)
+        {
+            Response<string> resultado = await tipoMaterialServicio.TipoMaterialCargar(tipoMaterialDTO, empresaId);
+            if (!resultado.Estado)
+                return StatusCode(500, resultado);
+            return Ok(resultado);
         }
 
         [HttpPut("{Id:long}")]
-        public async Task<IActionResult> ModificarTipoMaterial([FromBody] TipoMaterialDTO tipoMaterialDTO, [FromRoute] long Id)
+        public async Task<IActionResult> ModificarTipoMaterial([FromRoute] long Id, [FromBody] TipoMaterialDTO tipoMaterialDTO)
         {
             Response<string> resultado = await tipoMaterialServicio.TipoMaterialModificar(tipoMaterialDTO, Id);
             if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Mensaje);
+                return StatusCode(500, resultado);
+            return Ok(resultado);
         }
     }
 }

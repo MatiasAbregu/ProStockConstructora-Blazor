@@ -3,12 +3,7 @@
   "WorkspaceRootPath": "C:\\ProStockConstrucciones\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\ProStockConstrucciones\\BD\\Migrations\\20251125202057_Remitos01.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -23,15 +18,18 @@
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\deposito\\listadepositos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora\\controllers\\controladordeposito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladordeposito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\servicios\\remitoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostockconstrucciones\\repositorios\\implementaciones\\iremitoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostockconstrucciones\\prostockconstructora\\prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -41,7 +39,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -77,43 +75,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ControladorDeposito.cs",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorDeposito.cs",
-              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
-              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorDeposito.cs",
-              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorDeposito.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAARAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "20251125202057_Remitos01.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\BD\\Migrations\\20251125202057_Remitos01.cs",
+              "RelativeDocumentMoniker": "..\\BD\\Migrations\\20251125202057_Remitos01.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\BD\\Migrations\\20251125202057_Remitos01.cs",
+              "RelativeToolTip": "..\\BD\\Migrations\\20251125202057_Remitos01.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T19:13:58.329Z"
+              "WhenOpened": "2025-11-25T20:20:59.571Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA4AAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-24T18:54:52.194Z"
+              "DocumentIndex": 5,
+              "Title": "RemitoServicio.cs",
+              "DocumentMoniker": "C:\\ProStockConstrucciones\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "ToolTip": "C:\\ProStockConstrucciones\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "RelativeToolTip": "..\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAABgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T18:40:30.7Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "ListaDepositos.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\ListaDepositos.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Deposito\\ListaDepositos.razor",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\ListaDepositos.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\ListaDepositos.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAAGQAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-24T18:26:18.119Z"
+              "WhenOpened": "2025-11-24T18:26:18.119Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "CrearDeposito.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Deposito\\CrearDeposito.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Deposito\\CrearDeposito.razor",
@@ -121,35 +122,38 @@
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Deposito\\CrearDeposito.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-21T19:47:28.536Z"
+              "WhenOpened": "2025-11-21T19:47:28.536Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "CrearRemitos.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
-              "ViewState": "AgIAABEAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAAAcAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-21T19:46:41.064Z"
+              "WhenOpened": "2025-11-21T19:46:41.064Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "ListaRemitos.razor",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-18T18:44:03.745Z"
+              "WhenOpened": "2025-11-18T18:44:03.745Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "IRemitoServicio.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
@@ -157,17 +161,18 @@
               "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAgwA4AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T18:40:28.405Z"
+              "WhenOpened": "2025-11-18T18:40:28.405Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "ControladorRemito.cs",
               "DocumentMoniker": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorRemito.cs",
               "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorRemito.cs",
               "ToolTip": "C:\\ProStockConstrucciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorRemito.cs",
               "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorRemito.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAABMAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAA9wBgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-13T22:22:39.546Z",
               "EditorCaption": ""
