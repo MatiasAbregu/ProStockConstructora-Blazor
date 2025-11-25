@@ -1,0 +1,108 @@
+﻿@page "/recursos"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion
+@inject NavigationManager navManager
+
+<PageTitle>Recursos - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4 container">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h3 class="fw-bold text-primary">Listado de Recursos</h3>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarRecurso">
+                    <span class="material-symbols-outlined" title="Agregar recurso.">construction</span> +
+                </button>
+
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarUnidadMedida">
+                    <span class="material-symbols-outlined" title="Agregar unidad de medida.">square_foot</span> +
+                </button>
+
+                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarTipoMaterial">
+                    <span class="material-symbols-outlined" title="Agregar tipo de material.">home_improvement_and_tools</span> +
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla responsive -->
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código ISO</th>
+                        <th>Nombre</th>
+                        <th>Tipo de Material</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!string.IsNullOrEmpty(Mensaje) && (listaRecursos == null || listaRecursos.Count == 0))
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">@Mensaje</td>
+                        </tr>
+                    }
+                    else if (listaRecursos == null || listaRecursos.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No hay recursos cargados aún.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var recurso in listaRecursos)
+                        {
+                            <tr>
+                                <td>@recurso.CodigoISO</td>
+                                <td>@recurso.Nombre</td>
+                                <td>@recurso.TipoMaterial (@recurso.UnidadMedida)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    private DatosUsuario usuario;
+
+    // Renombrada la lista para evitar conflicto con el nombre de la página/clase "Recursos"
+    private List<RecursosPagPrincipalDTO> listaRecursos = new();
+    private string Mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+            await CargarRecursos();
+        }
+        else navManager.NavigateTo("/");      
+    }
+
+    // 🔹 Carga la lista de recursos desde el endpoint
+    private async Task CargarRecursos()
+    {
+        var res = await http.Get<Response<List<RecursosPagPrincipalDTO>>>($"api/recursos/materialesYmaquinarias/{usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            listaRecursos = res.Respuesta.Objeto;
+        }
+    }
+
+    // 🔹 Navega a la página para agregar una Unidad de Medida
+    private void IrAgregarUnidadMedida() => navManager.NavigateTo("/recursos/unidad-medida");
+
+    // 🔹 Navega a la página para agregar un Recurso
+    private void IrAgregarRecurso() => navManager.NavigateTo("/recursos/agregar-recurso");
+
+    // 🔹 Navega a la página para agregar un Tipo de Material
+    private void IrAgregarTipoMaterial() => navManager.NavigateTo("/recursos/tipo-material");
+}

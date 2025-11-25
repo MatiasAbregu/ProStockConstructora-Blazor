@@ -12,7 +12,7 @@ namespace Repositorios.Implementaciones
     {
         public Task<Response<string>> ActualizarRemito(long id, ActualizarRemitoDTO remitoDTO);
         public Task<Response<string>> CrearRemito(CrearRemitoDTO remitoDTO);
-        public Task<Response<ActualizarRemitoDTO>> ObtenerRemitoPorId(long id);
-        public Task<Response<ActualizarRemitoDTO>> ObtenerRemitoPorNotaDePedidoId(long notaDePedidoId);
+        public Task<Response<VerRemitoDTO>> ObtenerRemitoPorId(long id);
+        public Task<Response<VerRemitoDTO>> ObtenerRemitoPorNotaDePedidoId(long notaDePedidoId);
     }
 }

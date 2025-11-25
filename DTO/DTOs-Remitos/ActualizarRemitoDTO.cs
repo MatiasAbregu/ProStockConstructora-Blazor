@@ -14,10 +14,8 @@ namespace DTO.DTOs_Remitos
         public long? NotaDePedidoId { get; set; }
         public long? DepositoOrigenId { get; set; }
         public long? DepositoDestinoId { get; set; }
-        public EstadoRemito EstadoRemito { get; set; } = EstadoRemito.Pendiente;
-        public string? NombreTransportista { get; set; }
+        public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
         public DateTime? FechaEmision { get; set; }
-        public DateTime? FechaLimite { get; set; }
         public DateTime? FechaRecepcion { get; set; }
     }
 }

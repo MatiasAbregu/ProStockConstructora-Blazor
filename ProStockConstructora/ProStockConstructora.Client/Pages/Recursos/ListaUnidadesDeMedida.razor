@@ -1,0 +1,188 @@
+﻿@page "/recursos/unidad-medida"
+@inject IHttpServicio http
+@inject NavigationManager navManager
+@inject DatosSesion datosSesion
+
+<PageTitle>Unidades de medida - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4">
+    <div class="cabecera">
+            <p class="fw-bolder">Unidades de medida</p>
+            <a class="btn btn-secondary" href="/recursos"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+    </div>  
+
+    <div class="row">
+        <EditForm EditContext="editContext" class="card col-12 col-md-6" style="height: fit-content">
+            <DataAnnotationsValidator />
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger text-center mx-2 mt-2">
+                    @Mensaje
+                </div>
+            }
+            <div class="my-3 px-3">
+                <label class="form-label">Nombre</label>
+                <InputText class="form-control" @bind-Value="unidad.Nombre" />
+                <ValidationMessage For="@(() => unidad.Nombre)" />
+            </div>
+            <div class="my-3 px-3">
+                <label class="form-label">Simbolo</label>
+                <InputText class="form-control" @bind-Value="unidad.Simbolo" />
+                <ValidationMessage For="@(() => unidad.Simbolo)" />
+            </div>
+            <div class="d-flex justify-content-end gap-2 mb-2">
+                @if(IdMarca != 0)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="() => ActualizarUnidad(unidad.Id)">
+                        <i class="bi bi-check-lg me-1"></i> Actualizar
+                    </button>
+                } else
+                {
+                    <button type="button" class="btn btn-success" @onclick="CrearUnidad">
+                        <i class="bi bi-check-lg me-1"></i> Crear
+                    </button>
+                }          
+            </div>
+        </EditForm>
+
+        <div class="table-responsive mt-2 col-12 col-md-6 overflow-auto" style="max-height: 70vh" 
+        @onclick="() => { IdMarca = 0; unidad = new(); }">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Símbolo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (unidad == null && listadoUnidades.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No hay unidades de medida cargadas aún.</td>
+                        </tr>
+                    }
+                    else if (listadoUnidades != null)
+                    {
+                        @foreach (var u in listadoUnidades)
+                        {
+                            <tr class="@(IdMarca == u.Id ? "table-primary" : "")">
+                                <td>@u.Nombre</td>
+                                <td>@u.Simbolo</td>
+                                <td>
+                                    <button class="btn @(IdMarca == u.Id ? "btn-warning" : "btn-outline-warning") mx-1" 
+                                    @onclick:stopPropagation="true"
+                                    @onclick="async() => {                                  
+                                            if(IdMarca == u.Id) {
+                                                IdMarca = 0;
+                                                unidad = new();
+                                            }
+                                            else {
+                                                IdMarca = u.Id;
+                                                await CargarUnidadDeMedida(u.Id);
+                                            }
+                                        }">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</article>
+
+} 
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    private DatosUsuario usuario = new();
+    private EditContext editContext;
+    private List<UnidadDeMedidaDTO> listadoUnidades = new();
+    private UnidadDeMedidaDTO unidad = new();
+    private string Mensaje = string.Empty;
+    private long IdMarca = 0;
+    private bool Autenticado = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+            editContext = new EditContext(unidad);
+            await CargarUnidades();
+        }
+        else Autenticado = false;
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {   
+        if(usuario == null && !Autenticado) navManager.NavigateTo("/");  
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task CargarUnidades()
+    {
+        var res = await http.Get<Response<List<UnidadDeMedidaDTO>>>($"api/unidad-medida/empresa/{usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            listadoUnidades = res.Respuesta.Objeto;       
+            StateHasChanged();
+        } 
+    }
+
+    private async Task CrearUnidad()
+    {
+        if (editContext.Validate())
+        {
+            unidad.EmpresaId = usuario.EmpresaId;
+            var res = await http.Post<UnidadDeMedidaDTO, Response<string>>("api/unidad-medida", unidad);
+
+            if (res.Respuesta != null)
+            {
+                Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+                unidad = new();
+                editContext = new(unidad);
+                StateHasChanged();
+                await CargarUnidades();
+            }
+        }
+    }
+
+    private async Task ActualizarUnidad(long id)
+    {
+        if (editContext.Validate())
+        {
+            unidad.EmpresaId = usuario.EmpresaId;
+            var res = await http.Put<UnidadDeMedidaDTO, Response<string>>($"api/unidad-medida/{id}", unidad);
+
+            if (res.Respuesta != null)
+            {
+                Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+                StateHasChanged();
+                await CargarUnidades();
+            }
+        }        
+    }
+
+    private async Task CargarUnidadDeMedida(long id)
+    {
+        var res = await http.Get<Response<UnidadDeMedidaDTO>>($"api/unidad-medida/{id}");
+        if (res.Respuesta != null)
+        {
+            unidad = res.Respuesta.Objeto;
+            editContext = new(unidad);
+            IdMarca = 0;
+            StateHasChanged();
+        }       
+    }
+}

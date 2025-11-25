@@ -26,12 +26,9 @@ namespace BD.Modelos
         public required long DepositoDestinoId { get; set; }
         public Deposito Destino { get; set; }
 
-        public EstadoRemito EstadoRemito { get; set; } = EstadoRemito.Pendiente;
-
-        public string? NombreTransportista { get; set; }
+        public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
 
         public required DateTime FechaEmision { get; set; }
-        public required DateTime FechaLimite { get; set; }
         public DateTime? FechaRecepcion { get; set; }
 
         // HACER EN DTO

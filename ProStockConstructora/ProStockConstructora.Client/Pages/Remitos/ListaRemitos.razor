@@ -1,5 +1,4 @@
-﻿@page "/notadepedidos/{notaDePedidoId:long}/remitos"
-@page "/notadepedidos/remitos"
+﻿@page "/remito"
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 
@@ -9,20 +8,20 @@
     <div class="divBotonera">
         <p class="cabecera fw-bolder">Remitos</p>
         <div>
-            <a class="btn btn-add btn-success" href=@($"notadepedidos/remitos/crear")>+</a>
+            <a class="btn btn-add btn-success" href=@($"remitos/crear")>+</a>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table">
             <thead class="table-dark">
                 <tr>
-                    <th>N° Remito</th>
-                    <th>Nota Pedido</th>
-                    <th>Deposito Origen</th>
-                    <th>Deposito Destino</th>
+                    <th>N°Remito</th>
+                    <th>N°Pedido</th>
+                    <th>D-Origen</th>
+                    <th>D-Destino</th>
                     <th>Estado</th>
-                    <th>Nombre Transportista</th>
-                    <th>Fecha Emision/Fecha Recibido</th>
+                    <th>Fecha Emision</th>
+                    <th>Fecha Recibido</th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,19 +42,23 @@
                             <td>@remito.DepositoOrigenId</td>
                             <td>@remito.DepositoDestinoId</td>
                             <td>
-                                <span class="badge @(remito.EstadoRemito.ToString() == "En tránsito"
-                                      ? "bg-primary" : remito.EstadoRemito.ToString() == "Entregado"
-                                      ? "bg-success" : "bg-danger")">
-                                    @remito.EstadoRemito
+                                <span class="badge @(remito.EstadoRemito.ToString() == "Pendiente"
+                                              ? "bg-warning"
+                                              : remito.EstadoRemito.ToString() == "EnTransito"
+                                               ? "bg-primary"
+                                               : remito.EstadoRemito.ToString() == "Recibido"
+                                               ? "bg-success"
+                                               : "bg-danger")">
+                                       @remito.EstadoRemito   
                                 </span>
                             </td>
-                            <td>@remito.NombreTransportista</td>
-                            <td>@remito.FechaEmision.ToString("dd/MM/yyyy") / @(remito.FechaRecepcion.HasValue ? remito.FechaRecepcion.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                            <td>@remito.FechaEmision.ToString("dd/MM/yyyy")></td>
+                            <td>@(remito.FechaRecepcion.HasValue ? remito.FechaRecepcion.Value.ToString("dd/MM/yyyy") : "N/A")</td>
                             <td>
                                  <a class="btn btn-outline-info"href=@($"/detalles")>
-                                     <i class="bi bi-file-earmark-text"></i>></a>
-                                     <a class="btn btn-outline-primary" href=@($"/notadepedidos/{notaDePedidoId}remitos/editar/{remito.Id}")>
-                                         <i class="bi bi-pencil"></i></a>
+                                 <i class="bi bi-file-earmark-text"></i></a>
+                                 <a class="btn btn-outline-primary" href=@($"/remitos/editar/{remito.Id}")>
+                                 <i class="bi bi-pencil"></i></a>
                             </td>
                         </tr>
                     }

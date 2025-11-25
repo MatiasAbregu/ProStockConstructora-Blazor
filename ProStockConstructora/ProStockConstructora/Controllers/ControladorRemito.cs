@@ -24,7 +24,7 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return Ok(res.Objeto);
             else return StatusCode(500, res);
         }
-        [HttpGet("notadepedidos/{notaDePedidoId:long}")]
+        [HttpGet("notadepedido/{notaDePedidoId:long}")]
         public async Task<ActionResult> ObtenerRemitoPorNotaDePedidoId([FromRoute] long notaDePedidoId)
         {
             var res = await remitoServicio.ObtenerRemitoPorNotaDePedidoId(notaDePedidoId);

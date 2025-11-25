@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseDeDatosSinUbicacion : Migration
+    public partial class BaseDeDatosTipoYUnidad : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,38 +57,6 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "TipoMateriales",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipoMateriales", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UnidadMedidas",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Simbolo = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UnidadMedidas", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Obras",
                 columns: table => new
                 {
@@ -106,6 +74,52 @@ namespace BD.Migrations
                     table.PrimaryKey("PK_Obras", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Obras_Empresa_EmpresaId",
+                        column: x => x.EmpresaId,
+                        principalTable: "Empresa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "TipoMateriales",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmpresaId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoMateriales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TipoMateriales_Empresa_EmpresaId",
+                        column: x => x.EmpresaId,
+                        principalTable: "Empresa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UnidadMedidas",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Simbolo = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmpresaId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnidadMedidas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UnidadMedidas_Empresa_EmpresaId",
                         column: x => x.EmpresaId,
                         principalTable: "Empresa",
                         principalColumn: "Id",
@@ -143,6 +157,33 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Depositos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CodigoDeposito = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NombreDeposito = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TipoDeposito = table.Column<int>(type: "int", nullable: false),
+                    ObraId = table.Column<long>(type: "bigint", nullable: false),
+                    Domicilio = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Depositos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Depositos_Obras_ObraId",
+                        column: x => x.ObraId,
+                        principalTable: "Obras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Recursos",
                 columns: table => new
                 {
@@ -170,33 +211,6 @@ namespace BD.Migrations
                         column: x => x.UnidadMedidaId,
                         principalTable: "UnidadMedidas",
                         principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Depositos",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CodigoDeposito = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NombreDeposito = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoDeposito = table.Column<int>(type: "int", nullable: false),
-                    ObraId = table.Column<long>(type: "bigint", nullable: false),
-                    Domicilio = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Depositos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Depositos_Obras_ObraId",
-                        column: x => x.ObraId,
-                        principalTable: "Obras",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -601,6 +615,28 @@ namespace BD.Migrations
                 name: "IX_Stocks_MaterialesyMaquinasId",
                 table: "Stocks",
                 column: "MaterialesyMaquinasId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TipoMateriales_EmpresaId",
+                table: "TipoMateriales",
+                column: "EmpresaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TipoMateriales_Nombre_EmpresaId",
+                table: "TipoMateriales",
+                columns: new[] { "Nombre", "EmpresaId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnidadMedidas_EmpresaId",
+                table: "UnidadMedidas",
+                column: "EmpresaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnidadMedidas_Nombre_EmpresaId",
+                table: "UnidadMedidas",
+                columns: new[] { "Nombre", "EmpresaId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",

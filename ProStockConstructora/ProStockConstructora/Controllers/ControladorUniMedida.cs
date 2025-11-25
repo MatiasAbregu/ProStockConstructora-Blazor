@@ -9,7 +9,7 @@ using Repositorios.Servicios;
 
 namespace ProStockConstructora.Controllers
 {
-    [Route("api/uniMedida")]
+    [Route("api/unidad-medida")]
     [ApiController]
     public class ControladorUniMedida : ControllerBase
     {
@@ -22,31 +22,40 @@ namespace ProStockConstructora.Controllers
             this.unidadMedidaServicio = unidadMedidaServicio;
         }
 
+        [HttpGet("empresa/{Id:long}")]
+        public async Task<IActionResult> ObtenerUnidadesDeMedida(long Id)
+        {
+            var resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida(Id);
+            if (!resultado.Estado)
+                return StatusCode(500, resultado);
+            return Ok(resultado);
+        }
+
+        [HttpGet("{Id:long}")]
+        public async Task<IActionResult> ObtenerUnidadDeMedidaPorId([FromRoute] long Id)
+        {
+            var resultado = await unidadMedidaServicio.ObtenerUnidadDeMedidaPorId(Id);
+            if (!resultado.Estado)
+                return StatusCode(500, resultado);
+            return Ok(resultado);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CrearUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO)
         {
-            Response<string> resultado = await unidadMedidaServicio.UnidadDeMedidaCargar(unidadDeMedidaDTO);
-            if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Mensaje);
+            var res = await unidadMedidaServicio.UnidadDeMedidaCargar(unidadDeMedidaDTO);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> ObtenerUnidadesDeMedida()
-        {
-            Response<List<UnidadDeMedidaDTO>> resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida();
-            if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Objeto);
-        }
+       
 
         [HttpPut("{Id:long}")]
         public async Task<IActionResult> ModificarUnidadMedida([FromBody] UnidadDeMedidaDTO unidadDeMedidaDTO,[FromRoute] long Id)
         {
             Response<string> resultado = await unidadMedidaServicio.UnidadDeMedidaModificar(unidadDeMedidaDTO, Id);
             if (!resultado.Estado)
-                return StatusCode(500, resultado.Mensaje);
-            return Ok(resultado.Mensaje);
+                return StatusCode(500, resultado);
+            return Ok(resultado);
         }
     }
 }

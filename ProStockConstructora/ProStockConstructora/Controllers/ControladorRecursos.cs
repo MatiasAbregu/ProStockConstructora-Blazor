@@ -35,9 +35,7 @@ namespace ProStockConstructora.Controllers
             resultado = await recursosServicio.RecursosVerDTO(EmpresaId);
             if (!resultado.Estado)
                 return StatusCode(500, resultado);
-            else if (resultado.Objeto == null || resultado.Objeto.Count == 0)
-                return StatusCode(200, "No hay materiales y maquinarias registradas.");
-            return Ok(resultado.Objeto);
+            return Ok(resultado);
         }
 
         [HttpGet("deposito/{DepositoId}")]
@@ -57,9 +55,9 @@ namespace ProStockConstructora.Controllers
         {
             var res = await recursosServicio.ObtenerRecursoPorStockId(stockId);
 
-            if (res.Item1) 
+            if (res.Item1)
                 return StatusCode(200, res.Item2);
-            else 
+            else
                 return StatusCode(404, "No se encontro el stock.");
         }
 
@@ -69,7 +67,7 @@ namespace ProStockConstructora.Controllers
             var res = await recursosServicio.VerificarRecursoPorCodigoISO(CodigoISO);
             if (res.Item1)
                 return StatusCode(200, res.Item2);
-            else 
+            else
                 return StatusCode(404, res.Item2);
         }
 
@@ -104,7 +102,7 @@ namespace ProStockConstructora.Controllers
             return Ok("Recurso actualizado con exito.");
         }
 
-        [HttpDelete("deposito/eliminartock/{stockId:int}")]
+        [HttpDelete("deposito/eliminarStock/{stockId:int}")]
         public async Task<IActionResult> RecursoEliminarStock(int stockId)
         {
             if (stockId <= 0)
