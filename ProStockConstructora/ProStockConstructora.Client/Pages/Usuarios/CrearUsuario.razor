@@ -298,6 +298,7 @@ else
     {
         usuario.ObrasId = obrasId;
         usuario.DepositosId = depositosId;
+        Console.WriteLine("Roles recibidos: " + string.Join(", ", usuario.Roles ?? new List<string>()));
         var res = await http.Post<CrearUsuarioDTO, Response<string>>("api/usuario", usuario);
         if (res.Respuesta != null)
         {
