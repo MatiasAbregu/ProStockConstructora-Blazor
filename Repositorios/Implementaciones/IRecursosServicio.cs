@@ -6,13 +6,19 @@ namespace Repositorios.Implementaciones
 {
     public interface IRecursosServicio
     {
-        Task<Response<string>> RecursoCargar(RecursosCargarDTO recursosCargarDTO, long depositoId);
-        Task<(bool, string)> RecursosTransladarAdeposito(RecursosTransladarDepositoDTO RecursosTransladarDepositoDTO);
-        Task<Response<List<RecursosPagPrincipalDTO>>> RecursosVerDTO(int empresaId);
-        Task<(bool, List<RecursosVerDepositoDTO>)> RecursosVerDepositoDTO(int depositoId);
-        Task<(bool, RecursoStockVerDTO)> ObtenerRecursoPorStockId(int stockId);
-        Task<(bool, string)> RecursoEliminarStock(int stockId);
-        Task<(bool, object)> VerificarRecursoPorCodigoISO(string codigoISO);
-        Task<(bool, string)> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId);
+        // GETs
+        Task<Response<List<RecursosVerDTO>>> ObtenerRecursosEmpresa(long empresaId);
+        Task<Response<List<RecursosVerDTO>>> ObtenerRecursosDeposito(long depositoId);
+        Task<Response<RecursosActualizarDTO>> ObtenerRecursoPorIdYODeposito(long? DepositoId, long RecursoId);
+
+        // POSTs
+        Task<Response<string>> RecursoCrear(RecursosCrearDTO recursoDTO);
+        Task<Response<string>> RecursoAnadirPorISO(RecursoPorISODTO recursoDTO);
+        
+        //Task<Response<string>> RecursosTransladarAdeposito(RecursosTransladarDepositoDTO RecursosTransladarDepositoDTO);      
+        //Task<Response<List<RecursoStockVerDTO>>> ObtenerRecursoPorStockId(long stockId);
+        //Task<Response<string>> RecursoEliminarStock(long stockId);
+        //Task<Response<object>> VerificarRecursoPorCodigoISO(string codigoISO);
+        //Task<Response<string>> RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId);
     }
 }

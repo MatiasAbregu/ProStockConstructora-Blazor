@@ -1,0 +1,140 @@
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/recursos/crear/editar/{RecursoId:long}"
+@page "/recursos/editar/{RecursoId:long}"
+@inject IHttpServicio http
+@inject DatosSesion datosSesion
+@inject NavigationManager navManager
+
+<PageTitle>Actualizar recurso - ProStockConstructora</PageTitle>
+
+@if (datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Actualizar recurso</p>
+            <a class="btn btn-secondary"
+               href=@(ObraId != null && ObraId != 0 && DepositoId != null && DepositoId != 0
+                          ? $"/obras/{ObraId}/depositos/{DepositoId}/recursos"
+                          : $"/recursos")>
+                <i class="fas fa-arrow-circle-left"></i>&ensp; Atrás
+            </a>
+        </div>
+
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger text-center mx-2 mt-2">
+                    @Mensaje
+                </div>
+            }
+            <EditForm Model="recurso" class="d-flex flex-column">
+                <DataAnnotationsValidator />
+                <div class="my-3 px-3">
+                    <label class="form-label">Código ISO</label>
+                    <InputText class="form-control" @bind-Value="recurso.CodigoISO" />
+                    <ValidationMessage For="@(() => recurso.CodigoISO)" />
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Nombre del Recurso</label>
+                    <InputText class="form-control" @bind-Value="recurso.Nombre" />
+                    <ValidationMessage For="@(() => recurso.Nombre)" />
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Tipo de Material</label>
+                    <div class="d-flex gap-2">
+                        <InputSelect class="form-select" @bind-Value="recurso.TipoMaterialId">
+                            @foreach (var tipo in listadoTipoMaterial)
+                            {
+                                <option value="@tipo.Id">@tipo.Nombre</option>
+                            }
+                        </InputSelect>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/tipo-material")>
+                            <span class="material-symbols-outlined" title="Agregar tipo de material">home_improvement_and_tools</span> +
+                        </a>
+                    </div>
+                </div>
+                <div class="my-3 px-3">
+                    <label class="form-label">Unidad de Medida</label>
+                    <div class="d-flex gap-2">
+                        <InputSelect class="form-select" @bind-Value="recurso.UnidadDeMedidaId">
+                            @foreach (var unidad in listadoUnidadDeMedida)
+                            {
+                                <option value="@unidad.Id">@unidad.Nombre</option>
+                            }
+                        </InputSelect>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/unidad-medida")>
+                            <span class="material-symbols-outlined" title="Agregar unidad de medida">square_foot</span> +
+                        </a>
+                    </div>
+                </div>
+               
+                @if (ObraId != null && ObraId != 0 && DepositoId != null && DepositoId != 0)
+                {
+                    <div class="my-3 px-3">
+                        <label class="form-label">Cantidad</label>
+                        <InputNumber class="form-control" @bind-Value="recurso.Cantidad" />
+                        <ValidationMessage For="@(() => recurso.Cantidad)" />
+                    </div>
+                }
+
+                <button class="btn btn-success mb-2 btn-submit" type="submit">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
+            </EditForm>
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long? ObraId { get; set; }
+    [Parameter]
+    public long? DepositoId { get; set; }
+    [Parameter]
+    public long RecursoId { get; set; }
+
+    private DatosUsuario usuario;
+    private RecursosActualizarDTO recurso = new();
+    private List<TipoMaterialDTO> listadoTipoMaterial = new();
+    private List<UnidadDeMedidaDTO> listadoUnidadDeMedida = new();
+
+    private string Mensaje;
+    private bool Autenticado = true, MostraModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (datosSesion.Usuario != null)
+        {
+            usuario = datosSesion.Usuario;
+            await ObtenerTiposMaterial();
+            await ObtenerUnidadesDeMedida();
+        }
+        else Autenticado = false;
+    }
+
+    private async Task ObtenerTiposMaterial()
+    {
+        var res = await http.Get<Response<List<TipoMaterialDTO>>>($"api/tipo-material/empresa/{usuario.EmpresaId}");
+        if (res.Respuesta != null)
+        {
+            listadoTipoMaterial = res.Respuesta.Objeto;
+            recurso.TipoMaterialId = listadoTipoMaterial.First().Id;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ObtenerUnidadesDeMedida()
+    {
+        var res = await http.Get<Response<List<UnidadDeMedidaDTO>>>($"api/unidad-medida/empresa/{usuario.EmpresaId}");
+        if (res.Respuesta != null)
+        {
+            listadoUnidadDeMedida = res.Respuesta.Objeto;
+            recurso.UnidadDeMedidaId = listadoUnidadDeMedida.First().Id;
+            StateHasChanged();
+        }
+    }
+}

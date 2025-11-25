@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BD.Modelos
 {
 
-    [Index(nameof(CodigoISO), IsUnique = true)]
+    [Index(nameof(CodigoISO), nameof(EmpresaId), IsUnique = true)]
     public class Recursos
     {
         [Key]
@@ -25,6 +25,7 @@ namespace BD.Modelos
         public long? TipoMaterialId { get; set; }
         public TipoMaterial TipoMaterial { get; set; }
 
-        public string? Descripcion { get; set; }
+        public long EmpresaId { get; set; }
+        public Empresa Empresa { get; set; }
     }
 }

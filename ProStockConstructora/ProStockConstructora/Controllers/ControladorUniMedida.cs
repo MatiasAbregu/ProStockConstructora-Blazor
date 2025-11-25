@@ -22,13 +22,12 @@ namespace ProStockConstructora.Controllers
             this.unidadMedidaServicio = unidadMedidaServicio;
         }
 
-        [HttpGet("empresa/{Id:long}")]
-        public async Task<IActionResult> ObtenerUnidadesDeMedida(long Id)
+        [HttpGet("empresa/{EmpresaId:long}")]
+        public async Task<IActionResult> ObtenerUnidadesDeMedida(long EmpresaId)
         {
-            var resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedida(Id);
-            if (!resultado.Estado)
-                return StatusCode(500, resultado);
-            return Ok(resultado);
+            var resultado = await unidadMedidaServicio.ObtenerUnidadesDeMedidaPorEmpresa(EmpresaId);
+            if (resultado.Estado) return StatusCode(200, resultado);
+            else return StatusCode(500, resultado);
         }
 
         [HttpGet("{Id:long}")]

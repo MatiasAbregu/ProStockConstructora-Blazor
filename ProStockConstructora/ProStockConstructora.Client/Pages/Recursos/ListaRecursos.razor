@@ -1,4 +1,5 @@
 ﻿@page "/recursos"
+@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/recursos"
 @inject IHttpServicio http
 @inject DatosSesion datosSesion
 @inject NavigationManager navManager
@@ -7,25 +8,30 @@
 
 @if (datosSesion.Usuario != null)
 {
-    <article class="p-4 container">
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <h3 class="fw-bold text-primary">Listado de Recursos</h3>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarRecurso">
-                    <span class="material-symbols-outlined" title="Agregar recurso.">construction</span> +
-                </button>
-
-                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarUnidadMedida">
-                    <span class="material-symbols-outlined" title="Agregar unidad de medida.">square_foot</span> +
-                </button>
-
-                <button class="btn btn-outline-success d-flex align-items-center" @onclick="IrAgregarTipoMaterial">
-                    <span class="material-symbols-outlined" title="Agregar tipo de material.">home_improvement_and_tools</span> +
-                </button>
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">
+                @((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0)
+                            ? "Listado de recursos del depósito CODE-ISO" : "Listado de recursos general de la empresa")
+            </p>
+            <div class="botonera">
+                @if ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
+                {
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/crear")>
+                            <span class="material-symbols-outlined" title="Agregar recurso">construction</span> +
+                        </a>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/unidad-medida")>
+                            <span class="material-symbols-outlined" title="Agregar unidad de medida">square_foot</span> +
+                        </a>
+                        <a class="btn btn-outline-success d-flex align-items-center" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/tipo-material")>
+                            <span class="material-symbols-outlined" title="Agregar tipo de material">home_improvement_and_tools</span> +
+                        </a>
+                    </div>
+                }
             </div>
         </div>
 
-        <!-- Tabla responsive -->
         <div class="table-responsive">
             <table class="table">
                 <thead class="table-dark">
@@ -33,34 +39,62 @@
                         <th>Código ISO</th>
                         <th>Nombre</th>
                         <th>Tipo de Material</th>
+                        @if ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
+                        {
+                            <th>Cantidad</th>
+                        }
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!string.IsNullOrEmpty(Mensaje) && (listaRecursos == null || listaRecursos.Count == 0))
+                    @if (!string.IsNullOrEmpty(Mensaje))
                     {
                         <tr>
-                            <td colspan="3" class="text-center">@Mensaje</td>
+                            <td colspan="@((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0) ? 5 : 4)" class="text-center">@Mensaje</td>
                         </tr>
                     }
-                    else if (listaRecursos == null || listaRecursos.Count == 0)
+                    else if (listaRecursos?.Count > 0)
                     {
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">No hay recursos cargados aún.</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var recurso in listaRecursos)
+                        @foreach (var recurso
+                                        in listaRecursos.Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
                         {
                             <tr>
                                 <td>@recurso.CodigoISO</td>
                                 <td>@recurso.Nombre</td>
                                 <td>@recurso.TipoMaterial (@recurso.UnidadMedida)</td>
+                                @if ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
+                                {
+                                    <td>@recurso.Cantidad</td>
+                                    <td>
+                                        <a class="btn btn-outline-warning" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/crear/editar/{recurso.Id}")>
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <button class="btn btn-outline-danger" @onclick="() => {}"> @* Enviar a deposito "desechos" que usuario elija *@
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a class="btn btn-outline-warning" href=@($"/recursos/editar/{recurso.Id}")>
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                    </td>
+                                }
                             </tr>
                         }
                     }
                 </tbody>
             </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@listaRecursos?.Count registros totales</p>
+            </div>
         </div>
     </article>
 }
@@ -71,38 +105,56 @@ else
 
 @code {
     private DatosUsuario usuario;
+    [Parameter]
+    public long? ObraId { get; set; }
+    [Parameter]
+    public long? DepositoId { get; set; }
 
-    // Renombrada la lista para evitar conflicto con el nombre de la página/clase "Recursos"
-    private List<RecursosPagPrincipalDTO> listaRecursos = new();
-    private string Mensaje = string.Empty;
+    private int numeroPagina = 1;
+    private List<RecursosVerDTO> listaRecursos = new();
+    private string Mensaje;
 
     protected override async Task OnInitializedAsync()
     {
-        if(datosSesion.Usuario != null)
+        if (datosSesion.Usuario != null)
         {
             usuario = datosSesion.Usuario;
+            listaRecursos = new();
             await CargarRecursos();
         }
-        else navManager.NavigateTo("/");      
+        else navManager.NavigateTo("/");
+        StateHasChanged();
     }
 
-    // 🔹 Carga la lista de recursos desde el endpoint
     private async Task CargarRecursos()
     {
-        var res = await http.Get<Response<List<RecursosPagPrincipalDTO>>>($"api/recursos/materialesYmaquinarias/{usuario.EmpresaId}");
+        var res = (ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0)
+                        ? await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/deposito/{DepositoId}")
+                        : await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/empresa/{usuario.EmpresaId}");
 
         if (res.Respuesta != null)
         {
+            Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
             listaRecursos = res.Respuesta.Objeto;
+            StateHasChanged();
         }
     }
 
-    // 🔹 Navega a la página para agregar una Unidad de Medida
-    private void IrAgregarUnidadMedida() => navManager.NavigateTo("/recursos/unidad-medida");
+    private async Task SiguientePagina()
+    {
+        if (listaRecursos.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
 
-    // 🔹 Navega a la página para agregar un Recurso
-    private void IrAgregarRecurso() => navManager.NavigateTo("/recursos/agregar-recurso");
-
-    // 🔹 Navega a la página para agregar un Tipo de Material
-    private void IrAgregarTipoMaterial() => navManager.NavigateTo("/recursos/tipo-material");
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
+    }
 }
