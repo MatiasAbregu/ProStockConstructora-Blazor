@@ -9,7 +9,7 @@ namespace DTO.Enum
     public enum EnumEstadoNotaPedido
     {
         Pendiente = 0,
-        Disponible = 1,
-        NoDisponible = 2,
+        Aprobada = 1,
+        Rechazada = 2,
     }
 }

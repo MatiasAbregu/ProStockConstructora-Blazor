@@ -1,7 +1,6 @@
 ﻿using BD;
 using BD.Enums;
 using BD.Modelos;
-using DTO.DTOs_MaterialesYmaquinarias;
 using DTO.DTOs_Recursos;
 using DTO.DTOs_Response;
 using DTO.DTOs_Usuarios;
@@ -45,7 +44,7 @@ namespace Repositorios.Servicios
                           .ThenInclude(r => r.UnidadMedida)
                    .Select(s => new RecursosVerDTO
                    {
-                       Id = s.Id,
+                       Id = s.Recurso.Id,
                        CodigoISO = s.Recurso.CodigoISO,
                        Nombre = s.Recurso.Nombre,
                        TipoMaterial = s.Recurso.TipoMaterial.Nombre,
@@ -97,6 +96,7 @@ namespace Repositorios.Servicios
                         .Include(r => r.UnidadMedida).Include(r => r.TipoMaterial)
                         .Select(s => new RecursosVerDTO()
                         {
+                            Id = s.Id,
                             CodigoISO = s.CodigoISO,
                             Nombre = s.Nombre,
                             UnidadMedida = s.UnidadMedida.Simbolo,
@@ -133,7 +133,83 @@ namespace Repositorios.Servicios
 
         public async Task<Response<RecursosActualizarDTO>> ObtenerRecursoPorIdYODeposito(long? DepositoId, long RecursoId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (DepositoId != null && DepositoId != 0)
+                {
+                    var existe = await baseDeDatos.Depositos.AnyAsync(d => d.Id == DepositoId);
+                    if(!existe) return new Response<RecursosActualizarDTO>()
+                    {
+                        Estado = true,
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Objeto = null
+                    };
+
+                    var recurso = await baseDeDatos.Stocks
+                        .Include(s => s.Recurso)
+                            .ThenInclude(r => r.TipoMaterial)
+                        .Include(s => s.Recurso)
+                            .ThenInclude(r => r.UnidadMedida)
+                        .Where(s => s.DepositoId == DepositoId && s.RecursoId == RecursoId)
+                        .Select(s => new RecursosActualizarDTO()
+                        {
+                            Id = s.Recurso.Id,
+                            CodigoISO = s.Recurso.CodigoISO,
+                            Nombre = s.Recurso.Nombre,
+                            TipoMaterialId = s.Recurso.TipoMaterial.Id,
+                            UnidadDeMedidaId = s.Recurso.UnidadMedida.Id,
+                            StockId = s.Id,
+                            Cantidad = s.Cantidad
+                        })
+                        .FirstOrDefaultAsync();
+
+                    return new Response<RecursosActualizarDTO>
+                    {
+                        Estado = true,
+                        Mensaje = "¡Recurso cargado con éxito!",
+                        Objeto = recurso
+                    };
+                }
+                else
+                {
+                    var recurso = await baseDeDatos.Recursos
+                        .Include(r => r.TipoMaterial)
+                        .Include(r => r.UnidadMedida)
+                        .Select(r => new RecursosActualizarDTO()
+                        {
+                            Id = r.Id,
+                            CodigoISO = r.CodigoISO,
+                            Nombre = r.Nombre,
+                            TipoMaterialId = r.TipoMaterial.Id,
+                            UnidadDeMedidaId = r.UnidadMedida.Id
+                        })
+                        .FirstOrDefaultAsync(r => r.Id == RecursoId);
+
+                    if (recurso == null) return new Response<RecursosActualizarDTO>
+                    {
+                        Estado = true,
+                        Mensaje = "No existe un recurso con ese ID.",
+                        Objeto = null
+                    };
+
+                    return new Response<RecursosActualizarDTO>
+                    {
+                        Estado = true,
+                        Mensaje = "¡Recurso cargado con éxito!",
+                        Objeto = recurso
+                    };
+                }
+            }
+            catch (Exception ex) 
+            { 
+                Console.WriteLine("Error: " + ex.Message);
+                return new Response<RecursosActualizarDTO>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error al intentar cargar el recurso por su ID!",
+                    Objeto = null
+                };
+            }
         }
 
         public async Task<Response<string>> RecursoCrear(RecursosCrearDTO recursoDTO)
@@ -262,48 +338,97 @@ namespace Repositorios.Servicios
                     Objeto = null
                 };
             }
-        }       
+        }
 
-        //public async Task<Response<string>>RecursosActualizar(RecursosActualizarDTO recursoActualizarDTO, long recursoId)
-        //{
-        //    var recurso = await baseDeDatos.Recursos.FindAsync(recursoId);
-        //    if (recurso == null)
-        //        return new Response<string>
-        //        {
-        //            Estado = false,
-        //            Mensaje = "El recurso no existe.",
-        //            Objeto = null
-        //        };      
-        //    recurso.CodigoISO = recursoActualizarDTO.CodigoISO.ToUpper();
-        //    recurso.Nombre = recursoActualizarDTO.Nombre;
-        //    recurso.Descripcion = recursoActualizarDTO.Descripcion;
-        //    await baseDeDatos.SaveChangesAsync();
-        //    return new Response<string>
-        //    {
-        //        Estado = true,
-        //        Mensaje = "Recurso actualizado con éxito.",
-        //        Objeto = null
-        //    };               
-        //}
+        public async Task<Response<string>> RecursoActualizar(long? DepositoId, long RecursoId, RecursosActualizarDTO recursoDTO)
+        {
+            try
+            {
+                var recurso = await baseDeDatos.Recursos.FirstOrDefaultAsync(r => r.Id == RecursoId);
+                if (recurso == null) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "No existe un recurso con ese ID.",
+                    Objeto = null
+                };
 
-        //public async Task<Response<string>>RecursoEliminarStock(long StockId)
-        //{
-        //   var stock = await baseDeDatos.Stocks.FindAsync(StockId);
-        //   if (stock == null)
-        //     return new Response<string>
-        //     {
-        //          Estado = false,
-        //          Mensaje = "El stock no existe.",
-        //          Objeto = null
-        //     };
-        //   baseDeDatos.Stocks.Remove(stock);
-        //   await baseDeDatos.SaveChangesAsync();
-        //   return new Response<string>
-        //   {
-        //        Estado = true,
-        //        Mensaje = "Stock eliminado con éxito.",
-        //        Objeto = null
-        //   };
-        //}
+                var codigoISOExiste = await baseDeDatos.Recursos
+                    .AnyAsync(r => r.CodigoISO.ToUpper() == recursoDTO.CodigoISO.ToUpper()
+                    && r.Id != RecursoId);
+                if (codigoISOExiste) return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = "Ya existe un recurso con ese código ISO.",
+                    Objeto = null
+                };
+
+                var um = await baseDeDatos.UnidadMedidas
+                    .FirstOrDefaultAsync(u => u.Id == recursoDTO.UnidadDeMedidaId);
+
+                var tm = await baseDeDatos.TipoMateriales
+                    .FirstOrDefaultAsync(t => t.Id == recursoDTO.TipoMaterialId);
+
+                if (um == null || tm == null)
+                    return new Response<string>
+                    {
+                        Estado = true,
+                        Mensaje = "La unidad de medida o el tipo de material no existen.",
+                        Objeto = null
+                    };
+
+                recurso.CodigoISO = recursoDTO.CodigoISO.ToUpper();
+                recurso.Nombre = recursoDTO.Nombre;
+                recurso.TipoMaterialId = tm.Id;
+                recurso.UnidadMedidaId = um.Id;
+                await baseDeDatos.SaveChangesAsync();
+
+                if (DepositoId != null && DepositoId != 0)
+                {
+                    var existeDeposito = await baseDeDatos.Depositos.AnyAsync(d => d.Id == DepositoId);
+                    if (!existeDeposito) return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "No existe un depósito con ese ID.",
+                        Objeto = null
+                    };
+
+                    var stock = await baseDeDatos.Stocks
+                        .FirstOrDefaultAsync(s => s.Id == recursoDTO.StockId);
+
+                    if (stock == null) return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "No existe stock para ese recurso en el depósito indicado.",
+                        Objeto = null
+                    };
+
+                    stock.Cantidad = recursoDTO.Cantidad ?? 1;
+                    await baseDeDatos.SaveChangesAsync();
+
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = null,
+                        Objeto = "¡Recurso y stock actualizados con éxito!"
+                    };
+                }
+                else return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡Recurso actualizado con éxito!"
+                };
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error al intentar actualizar el recurso!",
+                    Objeto = null
+                };
+            }
+        }
     }
 }

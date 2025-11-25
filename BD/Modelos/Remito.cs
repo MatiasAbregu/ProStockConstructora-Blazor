@@ -29,6 +29,7 @@ namespace BD.Modelos
         public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
 
         public required DateTime FechaEmision { get; set; }
+        public DateTime? FechaLimite { get; set; }
         public DateTime? FechaRecepcion { get; set; }
 
         // HACER EN DTO

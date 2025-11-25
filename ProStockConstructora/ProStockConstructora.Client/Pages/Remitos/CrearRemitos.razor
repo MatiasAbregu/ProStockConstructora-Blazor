@@ -8,7 +8,7 @@
 <article class="p-4">
     <div class="cabecera">
         <p class="fw-bolder">Crear Remito</p>
-        <a class="btn btn-secondary me-2" href="/remito"><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+        <a class="btn btn-secondary" href=@($"/remito")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
     </div>
     <div class="card">
         @if (!string.IsNullOrEmpty(mensaje))
@@ -55,6 +55,11 @@
                     <ValidationMessage For="@(() => remito.FechaEmision)" />
                 </div>
                 <div class="my-3 px-4">
+                    <label class="form-label fw-semibold">Fecha Limite</label>
+                    <InputDate class="form-control" @bind-Value="remito.FechaLimite" />
+                    <ValidationMessage For="@(() => remito.FechaLimite)" />
+                </div>
+                <div class="my-3 px-4">
                     <label class="form-label fw-semibold">Fecha Recepción</label>
                     <InputDate class="form-control" @bind-Value="remito.FechaRecepcion" />
                     <ValidationMessage For="@(() => remito.FechaRecepcion)" />
@@ -88,10 +93,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (NotaDePedidoId != 0)
-        {
-            remito.NotaDePedidoId = NotaDePedidoId;
-        }
+        await base.OnInitializedAsync();
+        remito.NotaDePedidoId = NotaDePedidoId;
     }
     private async Task GuardarRemito()
     {

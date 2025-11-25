@@ -69,9 +69,6 @@
                                         <a class="btn btn-outline-warning" href=@($"/obras/{ObraId}/depositos/{DepositoId}/recursos/crear/editar/{recurso.Id}")>
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
-                                        <button class="btn btn-outline-danger" @onclick="() => {}"> @* Enviar a deposito "desechos" que usuario elija *@
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
                                     </td>
                                 }
                                 else
@@ -114,12 +111,13 @@ else
     private List<RecursosVerDTO> listaRecursos = new();
     private string Mensaje;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnParametersSetAsync()
     {
         if (datosSesion.Usuario != null)
         {
             usuario = datosSesion.Usuario;
             listaRecursos = new();
+            numeroPagina = 1;
             await CargarRecursos();
         }
         else navManager.NavigateTo("/");
@@ -128,12 +126,12 @@ else
 
     private async Task CargarRecursos()
     {
-        var res = (ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0)
+        var res = ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
                         ? await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/deposito/{DepositoId}")
                         : await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/empresa/{usuario.EmpresaId}");
 
         if (res.Respuesta != null)
-        {
+        {       
             Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
             listaRecursos = res.Respuesta.Objeto;
             StateHasChanged();

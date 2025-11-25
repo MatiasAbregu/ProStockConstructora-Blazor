@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
-namespace DTO.DTOs_MaterialesYmaquinarias
+namespace DTO.DTOs_Recursos
 {
     public class RecursosActualizarDTO
     {
@@ -24,10 +24,7 @@ namespace DTO.DTOs_MaterialesYmaquinarias
         public long TipoMaterialId { get; set; }
         [Required]
         public long UnidadDeMedidaId { get; set; }
-
-        [Required]
-        public long DepositoId { get; set; }
-        public long? StockId { get; set; }
+        public long? StockId { get; set; } = 0;
         public int? Cantidad { get; set; } = 0;
     }
 }

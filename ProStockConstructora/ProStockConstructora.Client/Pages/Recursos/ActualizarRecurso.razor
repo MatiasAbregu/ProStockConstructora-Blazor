@@ -26,7 +26,7 @@
                     @Mensaje
                 </div>
             }
-            <EditForm Model="recurso" class="d-flex flex-column">
+            <EditForm Model="recurso" class="d-flex flex-column" OnValidSubmit="ActualizarRecursoMetodo">
                 <DataAnnotationsValidator />
                 <div class="my-3 px-3">
                     <label class="form-label">Código ISO</label>
@@ -66,7 +66,7 @@
                         </a>
                     </div>
                 </div>
-               
+
                 @if (ObraId != null && ObraId != 0 && DepositoId != null && DepositoId != 0)
                 {
                     <div class="my-3 px-3">
@@ -112,8 +112,23 @@ else
             usuario = datosSesion.Usuario;
             await ObtenerTiposMaterial();
             await ObtenerUnidadesDeMedida();
+            await CargarRecursoPorIds();
         }
         else Autenticado = false;
+    }
+
+    private async Task CargarRecursoPorIds()
+    {
+        var res = DepositoId != null && DepositoId != 0
+            ? await http.Get<Response<RecursosActualizarDTO>>($"api/recursos/deposito/{DepositoId}/recurso/{RecursoId}")
+            : await http.Get<Response<RecursosActualizarDTO>>($"api/recursos/{RecursoId}");
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null) recurso = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
+            StateHasChanged();
+        }
     }
 
     private async Task ObtenerTiposMaterial()
@@ -122,7 +137,6 @@ else
         if (res.Respuesta != null)
         {
             listadoTipoMaterial = res.Respuesta.Objeto;
-            recurso.TipoMaterialId = listadoTipoMaterial.First().Id;
             StateHasChanged();
         }
     }
@@ -133,7 +147,23 @@ else
         if (res.Respuesta != null)
         {
             listadoUnidadDeMedida = res.Respuesta.Objeto;
-            recurso.UnidadDeMedidaId = listadoUnidadDeMedida.First().Id;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ActualizarRecursoMetodo()
+    {
+        var res = (DepositoId != null && DepositoId != 0)
+            ? await http.Put<RecursosActualizarDTO, Response<string>>($"api/recursos/deposito/{DepositoId}/recurso/{RecursoId}", recurso)
+            : await http.Put<RecursosActualizarDTO, Response<string>>($"api/recursos/{RecursoId}", recurso);
+   
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null) 
+                navManager.NavigateTo((ObraId != null && ObraId != 0 && DepositoId != null && DepositoId != 0)
+                              ? $"/obras/{ObraId}/depositos/{DepositoId}/recursos"
+                              : $"/recursos");
+            else Mensaje = res.Respuesta.Mensaje;
             StateHasChanged();
         }
     }

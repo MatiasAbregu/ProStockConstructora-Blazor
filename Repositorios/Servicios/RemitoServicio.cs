@@ -35,6 +35,7 @@ namespace Repositorios.Servicios
                     DepositoDestinoId = r.DepositoDestinoId,
                     EstadoRemito = r.EstadoRemito,
                     FechaEmision = r.FechaEmision,
+                    FechaLimite = (DateTime)r.FechaLimite,
                     FechaRecepcion = r.FechaRecepcion
                 }).ToList();
                 return new Response<List<VerRemitoDTO>>
@@ -82,6 +83,7 @@ namespace Repositorios.Servicios
                     DepositoDestinoId = remito.DepositoDestinoId,
                     EstadoRemito = remito.EstadoRemito,
                     FechaEmision = remito.FechaEmision,
+                    FechaLimite = (DateTime)remito.FechaLimite,
                     FechaRecepcion = remito.FechaRecepcion
                 };
                 return new Response<VerRemitoDTO>
@@ -127,6 +129,7 @@ namespace Repositorios.Servicios
                     DepositoDestinoId = remito.DepositoDestinoId,
                     EstadoRemito = remito.EstadoRemito,
                     FechaEmision = remito.FechaEmision,
+                    FechaLimite = (DateTime)remito.FechaLimite,
                     FechaRecepcion = remito.FechaRecepcion
                 };
                 return new Response<VerRemitoDTO>
@@ -170,6 +173,7 @@ namespace Repositorios.Servicios
                     DepositoDestinoId = e.DepositoDestinoId,
                     EstadoRemito = e.EstadoRemito,
                     FechaEmision = e.FechaEmision,
+                    FechaLimite = e.FechaLimite,
                     FechaRecepcion = e.FechaRecepcion
                 };
                 baseDeDatos.Remitos.Add(nuevoRemito);
@@ -213,6 +217,7 @@ namespace Repositorios.Servicios
                 remitoExistente.DepositoDestinoId = (long)remitoDTO.DepositoDestinoId;
                 remitoExistente.EstadoRemito = remitoDTO.EstadoRemito;
                 remitoExistente.FechaEmision = (DateTime)remitoDTO.FechaEmision;
+                remitoExistente.FechaLimite = (DateTime)remitoDTO.FechaLimite;
                 remitoExistente.FechaRecepcion = remitoDTO.FechaRecepcion;
                 await baseDeDatos.SaveChangesAsync();
                 return new Response<string>

@@ -11,6 +11,7 @@ namespace DTO.DTOs_Remitos
         public long Id { get; set; }
         public long RemitoId { get; set; }
         public long DetalleNotaDePedidoId { get; set; }
+        public string NombreTransportista { get; set; }
         public int CantidadDespachada { get; set; }
         public int CantidadRecibida { get; set; }
     }
