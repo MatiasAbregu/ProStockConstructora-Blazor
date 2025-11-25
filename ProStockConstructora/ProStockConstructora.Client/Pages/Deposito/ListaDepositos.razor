@@ -75,7 +75,7 @@
                                     <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{deposito.Id}/recursos")>
                                         <i class="bi bi-tools"></i>
                                     </a>
-                                    <a class="btn btn-outline-secondary mx-1" href=@($"/notadepedidos")>
+                                    <a class="btn btn-outline-secondary mx-1" href=@($"/obras/{ObraId}/depositos/{deposito.Id}/notadepedido")>
                                         <i class="bi bi-file-earmark-text"></i>
                                     </a>
                                     @if (usuario.Roles.Contains("ADMINISTRADOR") || usuario.Roles.Contains("JEFEDEOBRA"))
