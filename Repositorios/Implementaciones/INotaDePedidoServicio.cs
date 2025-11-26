@@ -1,4 +1,5 @@
 ﻿using DTO.DTOs_NotaDePedido;
+using DTO.DTOs_Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Repositorios.Implementaciones
         Task<(bool,string)> EliminarNotaDePedido(int id);
         Task<VerNotaDePedidoDTO?> ObtenerNotaDePedidoPorId(string NumeroNotaPedido);
         Task<List<VerNotaDePedidoDTO>> ObtenerNotasDePedido(int DepositoId);
+        Task<Response<string>> ObtenerNumeroNotadePedidoSiguiente();
     }
 }

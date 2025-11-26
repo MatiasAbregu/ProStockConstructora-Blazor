@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.DTOs_Response;
 
 namespace Repositorios.Servicios
 {
@@ -123,6 +124,47 @@ namespace Repositorios.Servicios
         public async Task<(bool,string)> EliminarNotaDePedido(int id)
         {
             throw new NotImplementedException();
+        }
+        private async Task<string> GenerarNumeroNotaPedidoAsync()
+        {  
+            var ultimoNumero = await context.NotaDePedidos
+                .OrderByDescending(np => np.Id)
+                .Select(np => np.Id)
+                .FirstOrDefaultAsync();
+            string numeroNotaPedido = $"NP-";
+            if (ultimoNumero != null && ultimoNumero != 0)
+            {
+                numeroNotaPedido += $"{ultimoNumero}";
+            }
+            else
+            {
+                numeroNotaPedido += "1";
+            }
+            return numeroNotaPedido;
+        }
+
+        public async Task<Response<string>> ObtenerNumeroNotadePedidoSiguiente()
+        {
+            try
+            {
+               return new Response<string>
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = await GenerarNumeroNotaPedidoAsync()
+                };
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine("Error" + e.Message);
+                return new Response<string>
+                {
+                    Estado = false,
+                    Mensaje = "Error al obtener el número de nota de pedido.",
+                    Objeto = null
+                };
+            }
         }
     }
 }

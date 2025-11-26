@@ -1,24 +1,49 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/crear"
+@inject IHttpServicio Http
 <h3>Agregar Nota de Pedido</h3>
 
-<EditForm Model="NotadePedido">
 
-    <DataAnnotationsValidator />
+<form>
+
+    
     <div class="my-3 px-4">
         <label for="emailInput" class="form-label">Numero Nota de Pedido</label>
-        <InputText @bind-Value="NotadePedido.NumeroNotaPedido" type="text" class="form-control" id="emailInput" />
-        <ValidationMessage For="@(() => NotadePedido.NumeroNotaPedido)" />
+        <input disabled @bind="NotadePedido.NumeroNotaPedido" type="text" class="form-control" id="emailInput" />
+       
     </div>
 
     @foreach (var renglon in renglones)
     {
-        <div class="my-3 px-4">
-
-        </div>
+        <EditForm Model="renglon" class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
+            <DataAnnotationsValidator />
+            <div class="flex-grow-1 my-3 px-4">
+                <label for="recursoSelect" class="form-label">Seleccione Deposito Destino</label>
+                <InputSelect @bind-Value="renglon.DepositoDestinoId" class="form-select" id="recursoSelect">
+                    <option value="1">Deposito 1</option>
+                    <option value="2">Deposito 2</option>
+                    <option value="3">Deposito 3</option>
+                </InputSelect>
+                <ValidationMessage For="@(() => renglon.DepositoDestinoId)" />
+                </div>
+           <div class="flex-grow-1 my-3 px-4">
+                <label for="recursoSelect" class="form-label">Seleccione un Recurso</label>
+                <InputSelect @bind-Value="renglon.RecursoId" class="form-select">
+                    <option value="1">Recurso 1</option>
+                    <option value="2">Recurso 2</option>
+                    <option value="3">Recurso 3</option>
+                </InputSelect>
+                <ValidationMessage For="@(() => renglon.RecursoId)" />
+           </div>
+            <div class="my-3 px-4">
+                <label for="cantidadInput" class="form-label">Cantidad</label>
+                <InputNumber @bind-Value="renglon.Cantidad" type="number" class="form-control" id="cantidadInput" />
+                <ValidationMessage For="@(() => renglon.Cantidad)" />
+            </div>
+        </EditForm>
     }
 
-    <button class="btn btn-primary">Añadir detalle</button>
-</EditForm>
+    <button class="btn btn-primary"type="button" @onclick="Agregarrenglon">Añadir detalle</button>
+</form>
 
 
 @code {
@@ -31,11 +56,23 @@
 
 
     private CrearNotaDePedidoDTO NotadePedido = new();
-
+    override protected async Task OnInitializedAsync()
+    {
+        await ObtenerNumeroNotadePedido();
+       
+    }
     private async Task Agregarrenglon()
     {
         DetalleNotaDePedidoDTO renglon = new() { EstadoNotaPedido = EnumEstadoNotaPedido.Pendiente };
         renglones.Add(renglon);
     }
+    private async Task ObtenerNumeroNotadePedido()
+    {
+        var numero = await Http.Get<Response<string>>("api/notadepedido/obtener-numero-nota");
 
+        if (numero.Respuesta != null)
+        {
+            NotadePedido.NumeroNotaPedido = numero.Respuesta.Objeto;
+        }
+    }
 }

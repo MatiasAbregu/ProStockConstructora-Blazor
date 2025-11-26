@@ -38,7 +38,14 @@ namespace ProStockConstructora.Controllers
 
         }
 
-
+        [HttpGet("obtener-numero-nota")]
+        public async Task<ActionResult> ObtenerNumeroNotaPedido()
+        {
+            var respuesta = await notaDePedidoServicio.ObtenerNumeroNotadePedidoSiguiente();
+            if (!respuesta.Estado)
+                return StatusCode(500, "Error al obtener el número de nota de pedido.");
+            return Ok(respuesta);
+        }
 
         // [HttpPost("crear-notapedido")]
         //public async Task<ActionResult> CrearNotaDePedido([FromBody] CrearNotaDePedidoDTO crearNotaDePedidoDTO)
@@ -82,9 +89,9 @@ namespace ProStockConstructora.Controllers
         //    }
         //}
 
-       
-        
-        
+
+
+
         [HttpDelete("eliminar-notapedido/{id:int}")]
         public async Task<ActionResult> EliminarNotaDePedido([FromRoute] int id)
         {
