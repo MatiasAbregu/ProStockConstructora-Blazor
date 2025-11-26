@@ -35,7 +35,7 @@ namespace Repositorios.Servicios
                     .Where(dnp => dnp.NotaDePedidoId == np.Id)
                     .Select(dnp => new DetalleNotaDePedidoDTO
                     {
-                        MaterialesyMaquinasId = dnp.MaterialesyMaquinasId,
+                        RecursoId = dnp.MaterialesyMaquinasId,
                         Cantidad = dnp.Cantidad
                     }).ToList()
 

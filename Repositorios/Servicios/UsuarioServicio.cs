@@ -242,11 +242,14 @@ namespace Repositorios.Servicios
                                 .Where(r => usuario.Roles.Contains(r.NombreRol))
                                 .ToListAsync();
 
+                Console.WriteLine("ROLES DE BBDD: " + string.Join(", ", roles.Select(r => r.NombreRol)));
+
                 baseDeDatos.RolesUsuarios.AddRange(roles.Select(r => new RolesUsuario()
                 {
                     UsuarioId = usuarioBD.Id,
                     RolId = r.Id
                 }));
+                await baseDeDatos.SaveChangesAsync();
 
                 if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
                 {
@@ -407,6 +410,7 @@ namespace Repositorios.Servicios
                     .ToListAsync();
 
                 baseDeDatos.RolesUsuarios.RemoveRange(registrosAEliminar);
+                await baseDeDatos.SaveChangesAsync();
             }
 
             var nombresRolesAAnadir = usuario.Roles.Except(rolesActuales).ToList();
@@ -419,6 +423,7 @@ namespace Repositorios.Servicios
                     baseDeDatos.RolesUsuarios
                         .Add(new RolesUsuario() { UsuarioId = usuarioBBDD.Id, RolId = rol.Id });
                 }
+                await baseDeDatos.SaveChangesAsync();
             }
         }
 
@@ -441,6 +446,7 @@ namespace Repositorios.Servicios
                             .Where(o => o.UsuarioId == usuarioBBDD.Id && obrasAEliminar.Contains(o.ObraId))
                             .ToListAsync()
                     );
+                    await baseDeDatos.SaveChangesAsync();
                 }
 
                 if (obrasAAnadir.Count > 0)
@@ -455,12 +461,14 @@ namespace Repositorios.Servicios
                               })
                               .ToListAsync()
                               );
+                    await baseDeDatos.SaveChangesAsync();
                 }
 
                 var depositosUsuario = await baseDeDatos.DepositosUsuario
                                             .Where(d => d.UsuarioId == usuarioBBDD.Id)
                                             .ToListAsync();
                 baseDeDatos.DepositosUsuario.RemoveRange(depositosUsuario);
+                await baseDeDatos.SaveChangesAsync();
             }
             else if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
             {
@@ -479,6 +487,7 @@ namespace Repositorios.Servicios
                             .Where(d => d.UsuarioId == usuarioBBDD.Id && depositosAEliminar.Contains(d.DepositoId))
                             .ToListAsync()
                     );
+                    await baseDeDatos.SaveChangesAsync();
                 }
 
                 if (depositosAAnadir.Count > 0)
@@ -492,12 +501,14 @@ namespace Repositorios.Servicios
                                 DepositoId = d.Id
                             }).ToListAsync()
                     );
+                    await baseDeDatos.SaveChangesAsync();
                 }
 
                 var obrasUsuario = await baseDeDatos.ObraUsuarios
                                             .Where(o => o.UsuarioId == usuarioBBDD.Id)
                                             .ToListAsync();
                 baseDeDatos.ObraUsuarios.RemoveRange(obrasUsuario);
+                await baseDeDatos.SaveChangesAsync();
             }
             else
             {
@@ -509,7 +520,9 @@ namespace Repositorios.Servicios
                                             .ToListAsync();
 
                 baseDeDatos.DepositosUsuario.RemoveRange(depositosUsuario);
+                await baseDeDatos.SaveChangesAsync();
                 baseDeDatos.ObraUsuarios.RemoveRange(obrasUsuario);
+                await baseDeDatos.SaveChangesAsync();
             }
         }
     }

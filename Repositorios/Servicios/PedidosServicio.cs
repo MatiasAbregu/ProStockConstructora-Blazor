@@ -1,5 +1,4 @@
 ﻿using BD;
-using DTO.DTOs_Pedidos;
 using Repositorios.Implementaciones;
 using System;
 using System.Collections.Generic;
@@ -19,29 +18,29 @@ namespace Repositorios.Servicios
             this.baseDeDatos = baseDeDatos;
         }
 
-        public Task<(bool, string)> ActualizarEstadoPedido()
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<(bool, string)> ActualizarEstadoPedido()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<(bool, string)> CrearNotaDePedido(CrearNotaDePedidoDTO crearNotaDePedidoDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<(bool, string)> CrearNotaDePedido(CrearNotaDePedidoDTO crearNotaDePedidoDTO)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<(bool, string)> CrearRemito(CrearRemitoDTO crearRemitoDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<(bool, string)> CrearRemito(CrearRemitoDTO crearRemitoDTO)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<(bool, List<DetalleRemitosDTO>)> ObtenerDetallesDeRemitos(int RemitoId)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<(bool, List<DetalleRemitosDTO>)> ObtenerDetallesDeRemitos(int RemitoId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<(bool, List<DetalleNotaDePedidoDTO>)> ObtenerDetallesNotaDePedido(int DetalleNotaDePedidoId)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<(bool, List<DetalleNotaDePedidoDTO>)> ObtenerDetallesNotaDePedido(int DetalleNotaDePedidoId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
