@@ -10,11 +10,7 @@ namespace Repositorios.Implementaciones
 {
     public interface INotaDePedidoServicio
     {
-        Task<(bool,string)> ActualizarNotaDePedido(ActualizarNotaDePedidoDTO actualizarNotaDePedidoDTO,int notaPedidoId);
-        //Task<(bool, string)> CrearNotaDePedido(CrearNotaDePedidoDTO nuevaNotaDePedidoDTO);
-        Task<(bool,string)> EliminarNotaDePedido(int id);
-        Task<VerNotaDePedidoDTO?> ObtenerNotaDePedidoPorId(string NumeroNotaPedido);
-        Task<List<VerNotaDePedidoDTO>> ObtenerNotasDePedido(int DepositoId);
+        Task<Response<string>> CrearNotaDePedido(CrearNotaDePedidoDTO NotadePedidoDTO);
         Task<Response<string>> ObtenerNumeroNotadePedidoSiguiente();
     }
 }

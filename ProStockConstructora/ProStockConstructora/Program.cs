@@ -40,7 +40,7 @@ builder.Services.AddScoped<IUnidadMedidaServicio, UnidadMedidaServicio>();
 builder.Services.AddScoped<ITipoMaterialServicio, TipoMaterialServicio>();  
 builder.Services.AddScoped<IHttpServicio, HttpServicio>();
 builder.Services.AddScoped<IRemitoServicio, RemitoServicio>();
-
+builder.Services.AddScoped<IStockServicio, StockServicio>();
 builder.Services.AddScoped<HttpClient>(sp =>
 {
     var navigationManager = sp.GetRequiredService<NavigationManager>();

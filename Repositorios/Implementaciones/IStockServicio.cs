@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DTO.DTOs_Response;
+using DTO.DTOs_Stock;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,6 @@ namespace Repositorios.Implementaciones
 {
     public interface IStockServicio
     {
+        Task<Response<List<VerStockDTO>>> ObtenerStockPorObrasId(List<long> ObrasId);
     }
 }

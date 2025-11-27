@@ -1,50 +1,103 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/crear"
 @inject IHttpServicio Http
+@inject NavigationManager Navigation
+@inject DatosSesion Sesion
 <h3>Agregar Nota de Pedido</h3>
 
 
-<form>
+<div class="p-4">
+    <form>
 
-    
-    <div class="my-3 px-4">
-        <label for="emailInput" class="form-label">Numero Nota de Pedido</label>
-        <input disabled @bind="NotadePedido.NumeroNotaPedido" type="text" class="form-control" id="emailInput" />
-       
-    </div>
 
-    @foreach (var renglon in renglones)
-    {
-        <EditForm Model="renglon" class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
-            <DataAnnotationsValidator />
-            <div class="flex-grow-1 my-3 px-4">
-                <label for="recursoSelect" class="form-label">Seleccione Deposito Destino</label>
-                <InputSelect @bind-Value="renglon.DepositoDestinoId" class="form-select" id="recursoSelect">
-                    <option value="1">Deposito 1</option>
-                    <option value="2">Deposito 2</option>
-                    <option value="3">Deposito 3</option>
-                </InputSelect>
-                <ValidationMessage For="@(() => renglon.DepositoDestinoId)" />
+        <div class="my-3 px-4">
+            <label for="emailInput" class="form-label">Numero Nota de Pedido</label>
+            <input disabled @bind="NotadePedido.NumeroNotaPedido" type="text" class="form-control" id="emailInput" />
+
+        </div>
+
+        @foreach (var renglon in renglones)
+        {
+            <EditForm Model="renglon" class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
+                <DataAnnotationsValidator />
+                <div class="flex-grow-1 my-3 px-4">
+                    <label for="recursoSelect" class="form-label">Seleccione Deposito Destino</label>
+                    <InputSelect TValue="long" Value="renglon.DepositoDestinoId"
+                                 ValueChanged="async(valor)=> await AsignarRenglon(renglon,valor)"
+                                 ValueExpression="@(()=>renglon.DepositoDestinoId)"
+                                 class="form-select" id="recursoSelect">
+
+                        @if (DetalleStockRenglones != null)
+                        {
+                            @foreach (var deposito in DetalleStockRenglones)
+                            {
+                                <option value="@deposito.DepositoDTO.Id">@deposito.DepositoDTO.NombreDeposito (@deposito.DepositoDTO.CodigoDeposito)</option>
+                            }
+                        }
+                        else
+                        {
+                            <option disabled>No hay depositos disponibles</option>
+                        }
+
+                    </InputSelect>
+                    <ValidationMessage For="@(() => renglon.DepositoDestinoId)" />
                 </div>
-           <div class="flex-grow-1 my-3 px-4">
-                <label for="recursoSelect" class="form-label">Seleccione un Recurso</label>
-                <InputSelect @bind-Value="renglon.RecursoId" class="form-select">
-                    <option value="1">Recurso 1</option>
-                    <option value="2">Recurso 2</option>
-                    <option value="3">Recurso 3</option>
-                </InputSelect>
-                <ValidationMessage For="@(() => renglon.RecursoId)" />
-           </div>
-            <div class="my-3 px-4">
-                <label for="cantidadInput" class="form-label">Cantidad</label>
-                <InputNumber @bind-Value="renglon.Cantidad" type="number" class="form-control" id="cantidadInput" />
-                <ValidationMessage For="@(() => renglon.Cantidad)" />
-            </div>
-        </EditForm>
-    }
+                <div class="flex-grow-1 my-3 px-4">
+                    <label for="recursoSelect" class="form-label">Seleccione un Recurso</label>
+                    <InputSelect @bind-Value="renglon.RecursoId" class="form-select">
+                        @if (DetalleStockRenglones != null)
+                        {
+                            if (DetalleStockRenglones.FirstOrDefault(dsr => dsr.DepositoDTO.Id == renglon.DepositoDestinoId) != null)
+                            {
+                                foreach (var recurso in DetalleStockRenglones.FirstOrDefault(dsr => dsr.DepositoDTO.Id == renglon.DepositoDestinoId).ListadeRecursos)
+                                {
 
-    <button class="btn btn-primary"type="button" @onclick="Agregarrenglon">Añadir detalle</button>
-</form>
+                                    if (recurso.Cantidad > 0)
+                                    {
+                                        <option value="@recurso.Id"> @recurso.Nombre (@recurso.CodigoISO) - Disponible: @recurso.Cantidad </option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <option disabled>No hay recursos disponibles en este deposito</option>
+                            }
 
+                        }
+                        else
+                        {
+                            <option disabled>No hay recursos disponibles</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => renglon.RecursoId)" />
+                </div>
+                <div class="my-3 px-4">
+                    <label for="cantidadInput" class="form-label">Cantidad</label>
+                    <InputNumber @bind-Value="renglon.Cantidad" type="number" 
+                    @oninput="@(e =>
+                    {
+                        if (renglon.Cantidad < 0)
+                        {
+                            renglon.Cantidad = 0;
+                        }
+                        else if(renglon.Cantidad>=Convert.ToInt32(e.Value)){
+                        renglon.Cantidad = Convert.ToInt32(e.Value);
+                       
+                        }
+                        else renglon.Cantidad = renglon.Cantidad;
+                    })"
+
+                    class="form-control" disabled=@(renglon.RecursoId==0? true:false) />
+                    <ValidationMessage For="@(() => renglon.Cantidad)" />
+                </div>
+                <button class="btn btn-danger" type="button" @onclick="() => renglones.Remove(renglon)">X</button>
+            </EditForm>
+        }
+
+        <button class="btn btn-primary" type="button" @onclick="Agregarrenglon">Añadir detalle</button>
+        <button class="btn btn-success" type="submit">Crear Nota</button>
+    </form>
+
+</div>
 
 @code {
     [Parameter]
@@ -52,14 +105,21 @@
     [Parameter]
     public long? DepositoId { get; set; }
 
+
     private List<DetalleNotaDePedidoDTO> renglones = new();
-
-
+    private List<VerStockDTO> DetalleStockRenglones = new();
+    private DatosUsuario Usuario;
     private CrearNotaDePedidoDTO NotadePedido = new();
     override protected async Task OnInitializedAsync()
     {
-        await ObtenerNumeroNotadePedido();
-       
+        if (Sesion.Usuario != null)
+        {
+            Usuario = Sesion.Usuario;
+            await ObtenerNumeroNotadePedido();
+            await ObtenerDetalleStockRenglones();
+        }
+
+
     }
     private async Task Agregarrenglon()
     {
@@ -74,5 +134,43 @@
         {
             NotadePedido.NumeroNotaPedido = numero.Respuesta.Objeto;
         }
+    }
+    private async Task ObtenerDetalleStockRenglones()
+    {
+        Console.WriteLine("Ids de obras del usuario: " + string.Join(", ", Usuario.ObrasId));
+        var detalleStock = await Http.Post<List<long>, Response<List<VerStockDTO>>>("api/stock/obtener-stock", Usuario.ObrasId);
+        if (detalleStock.Respuesta != null)
+        {
+            DetalleStockRenglones = detalleStock.Respuesta.Objeto;
+        }
+    }
+
+    private async Task AsignarRenglon(DetalleNotaDePedidoDTO renglon, long DepositoId)
+    {
+        renglon.DepositoDestinoId = DepositoId;
+        if(DetalleStockRenglones.FirstOrDefault(dsr=>dsr.DepositoDTO.Id==DepositoId)!= null)
+        {
+            var recursoDisponible = DetalleStockRenglones.FirstOrDefault(dsr => dsr.DepositoDTO.Id == DepositoId).ListadeRecursos;
+            if(recursoDisponible.Count >0)
+            {
+                renglon.RecursoId = recursoDisponible.First().Id;
+            }
+            else
+            {
+                renglon.RecursoId = 0;
+            }
+        }
+        else
+        {
+            renglon.RecursoId = 0;
+        }
+    }
+    private async Task CrearNotaPedido()
+    {
+        if (renglones.Count > 0)
+        {
+            
+        }
+
     }
 }

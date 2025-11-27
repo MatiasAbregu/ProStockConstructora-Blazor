@@ -20,11 +20,11 @@ namespace BD.Modelos
         public required long DepositoOrigenId { get; set; }
         public Deposito DepositoOrigen { get; set; }
 
-        public required long DepositoDestinoId { get; set; }
-        public Deposito DepositoDestino {  get; set; }
+        public required long UsuarioId { get; set; }
+        public Usuario Usuario {  get; set; }
 
         public required DateTime FechaEmision { get; set; }
-        public EstadoNotaPedido Estado { get; set; } = EstadoNotaPedido.Pendiente;
+       
 
         // HACER EN DTO
         //public List<DetalleNotaDePedido>? ListaDePedido { get; }

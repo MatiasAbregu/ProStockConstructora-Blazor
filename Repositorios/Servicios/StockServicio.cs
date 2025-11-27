@@ -4,6 +4,7 @@ using DTO.DTOs_Recursos;
 using DTO.DTOs_Response;
 using DTO.DTOs_Stock;
 using Microsoft.EntityFrameworkCore;
+using Repositorios.Implementaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Repositorios.Servicios
 {
-    public class StockServicio
+    public class StockServicio: IStockServicio
     {
         private readonly AppDbContext baseDeDatos;
         public StockServicio(AppDbContext BaseDeDatos)
@@ -32,7 +33,10 @@ namespace Repositorios.Servicios
                     };
 
                 var Depositos = await baseDeDatos.Depositos.Where(d => ObrasId.Contains(d.ObraId)).Select(d => d.Id).ToListAsync();
-                var Stocks = await baseDeDatos.Stocks.Where(s => Depositos.Contains(s.DepositoId)).ToListAsync();
+                var Stocks = await baseDeDatos.Stocks.Include(s=>s.Deposito)
+                    .Include(s=>s.Recurso).ThenInclude(r=>r.TipoMaterial)
+                    .Include(s=>s.Recurso).ThenInclude(r=>r.UnidadMedida)
+                    .Where(s => Depositos.Contains(s.DepositoId)).ToListAsync();
                 var Lista = Stocks.Select(s => new VerStockDTO
                 {
                     DepositoDTO = new VerDepositoDTO()
