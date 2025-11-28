@@ -12,6 +12,8 @@ namespace BD.Enums
     {
         Pendiente = 0,
         Aprobada = 1,
-        Rechazada = 2,
+        ParcialmenteAprobada = 2,
+        ParcialmenteRechazada = 3,
+        Rechazada = 4
     }
 }

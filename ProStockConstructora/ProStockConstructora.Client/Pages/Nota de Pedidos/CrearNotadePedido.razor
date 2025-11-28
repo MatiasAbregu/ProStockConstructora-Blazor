@@ -236,7 +236,18 @@ else
 
         if (tieneErrores) return;
 
-        Console.WriteLine("Acá código de crear...");
+        var respuesta = await Http.Post<CrearNotaDePedidoDTO, Response<string>>("api/notadepedido",NotadePedido); 
+        if (respuesta.Respuesta != null)
+        {
+            if (respuesta.Respuesta.Objeto!=null)
+            {
+                Navigation.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido");
+            }
+            else
+            {
+                MensajeErrorNota = respuesta.Respuesta.Mensaje;
+            }
+        }   
     }
 
     private void LimpiarErrores(DetalleNotaDePedidoDTO renglon) => mensajesDeError[renglon] = (false, false, false);

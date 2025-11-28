@@ -4,6 +4,7 @@ using Repositorios.Implementaciones;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProStockConstructora.Client.Pages.Deposito;
+using System.Data;
 
 namespace ProStockConstructora.Controllers
 {
@@ -31,9 +32,28 @@ namespace ProStockConstructora.Controllers
             return Ok(respuesta);
         }
 
+        [HttpGet("obtener/{DepositoId:long}")]
+        public async Task<ActionResult> ObtenerNotasDePedidoPorDepositoId(long DepositoId)
+        {
+           var respuesta = await notaDePedidoServicio.ObtenerNotasDePedidoPorDepositoId(DepositoId);
+            if (!respuesta.Estado)
+                return StatusCode(500, respuesta);
+            return Ok(respuesta);
+        }
+
         // HTTPGET para obtener todas las notas de pedido POR USUARIO ID
 
+
         // HTTPGET para obtener una nota de pedido POR SU ID
+        [HttpGet("obtener-detalles-nota/{NotaDePedidoId:long}")]
+        public async Task<ActionResult> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId)
+        {
+            var respuesta = await notaDePedidoServicio.ObtenerDetallesNotaDePedidoPorId(NotaDePedidoId);
+            if (!respuesta.Estado)
+                return StatusCode(500, respuesta);
+            return Ok(respuesta);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> CrearNotadePedido(CrearNotaDePedidoDTO CrearNota) 

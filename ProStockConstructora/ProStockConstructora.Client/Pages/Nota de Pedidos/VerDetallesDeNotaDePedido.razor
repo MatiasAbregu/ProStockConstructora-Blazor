@@ -1,5 +1,8 @@
-﻿@page "/ver-nota/{numero}"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/detalles"
+@inject IHttpServicio Http
 @inject NavigationManager Nav
+@inject DatosSesion Sesion
+
 
 <h3 class="mb-4">Ver Nota de Pedido</h3>
 
@@ -11,32 +14,36 @@ else
 {
     <div class="card p-4 shadow">
         <p><b>Nº de Nota:</b> @nota.NumeroNotaPedido</p>
-        <p><b>Depósito Origen:</b> @nota.DepositoOrigenId</p>
-        <p><b>Depósito Destino:</b> @nota.DepositoDestinoId</p>
         <p><b>Fecha Emisión:</b> @nota.FechaEmision.ToShortDateString()</p>
         <p><b>Estado:</b> @nota.Estado</p>
 
-        <button class="btn btn-secondary mt-3" @onclick="Volver">Volver</button>
+
     </div>
 }
 
 @code {
-    [Parameter] public string? numero { get; set; }
+    [Parameter] public long ObraId { get; set; }
+    [Parameter] public long DepositoId { get; set; }
+    [Parameter] public long NotaDePedidoId { get; set; }
+
 
     VerNotaDePedidoDTO? nota;
 
     protected override async Task OnInitializedAsync()
     {
-       
-        nota = new VerNotaDePedidoDTO
-        {
-            NumeroNotaPedido = numero!,
-            DepositoOrigenId = 10,
-            DepositoDestinoId = 20,
-            FechaEmision = DateTime.Now.AddDays(-3),
-            Estado = DTO.Enum.EnumEstadoNotaPedido.Pendiente
-        };
+        await CargarNotadePedido();
     }
 
-    void Volver() => Nav.NavigateTo("/notadepedidos");
+    private async Task CargarNotadePedido()
+    {
+        var Respuesta = await Http.Get<Response<VerNotaDePedidoDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
+        if (Respuesta.Respuesta != null)
+        {
+            nota = Respuesta.Respuesta.Objeto;
+        }
+        else
+        {
+            // Manejar error (mostrar mensaje, redirigir, etc.)
+        }
+    }
 }

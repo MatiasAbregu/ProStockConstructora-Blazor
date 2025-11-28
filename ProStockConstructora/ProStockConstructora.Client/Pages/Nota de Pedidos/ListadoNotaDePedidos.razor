@@ -1,5 +1,5 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido"
-@inject HttpClient Http
+@inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
 
@@ -19,24 +19,22 @@
                 <thead class="table-dark">
                     <tr>
                         <th>N° de Nota</th>
-                        <th>Depósito Origen</th>
-                        <th>Depósito Destino</th>
                         <th>Fecha Emisión</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (listaNotas == null)
                     {
                         <tr>
-                            <td colspan="6">Cargando notas de pedidos...</td>
+                            <td colspan="4">Cargando notas de pedidos...</td>
                         </tr>
                     }
                     else if (!listaNotas.Any())
                     {
                         <tr>
-                            <td colspan="6">No hay notas de pedidos disponibles.</td>
+                            <td colspan="4">No hay notas de pedidos disponibles.</td>
                         </tr>
                     }
                     else
@@ -46,10 +44,8 @@
                         {
                             <tr>
                                 <td>@nota.NumeroNotaPedido</td>
-                                <td>@nota.DepositoOrigenId</td>
-                                <td>@nota.DepositoDestinoId</td>
                                 <td>@nota.FechaEmision.ToShortDateString()</td>
-                                <td>@nota.Estado</td>
+                                <td>@nota.Estado.ToString()</td>
 
                                 <td>
                                     <button class="btn btn-outline-warning btn-sm me-2" title="Editar" @onclick="() => IrEditar(nota.NumeroNotaPedido)">✏️</button>
@@ -72,55 +68,6 @@
             </div>
         </div>
     </article>
-
-    @if (mostrarModalCargar)
-    {
-        <div class="modal-backdrop fade show"></div>
-        <div class="modal fade show d-block" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content p-4">
-                    <h5>Cargar Nota de Pedido</h5>
-
-                    <div class="mb-3">
-                        <label>Nº de Nota:</label>
-                        <input class="form-control" @bind="nuevaNota.NumeroNotaPedido" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Depósito Origen:</label>
-                        <select class="form-select" @bind="nuevaNota.DepositoOrigenId">
-                            @*  @foreach (var d in Deposito)
-                        {
-                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
-                        } *@
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Depósito Destino:</label>
-                        <select class="form-select" @bind="nuevaNota.DepositoDestinoId">
-                            @*  @foreach (var d in depositos)
-                        {
-                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
-                        } *@
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Estado:</label>
-                        <select class="form-select" @bind="nuevaNota.Estado">
-                            <option value="Pendiente">Pendiente</option>
-                        </select>
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-secondary me-2" @onclick="CerrarModalCargar">Volver</button>
-                        <button class="btn btn-success" @onclick="CargarNota">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 }
 else
 {
@@ -142,7 +89,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
+        await CargarNotas();
     }
 
     private async Task SiguientePagina()
@@ -170,8 +117,12 @@ else
     void AbrirModalCargar() => mostrarModalCargar = true;
     void CerrarModalCargar() { mostrarModalCargar = false; nuevaNota = new VerNotaDePedidoDTO(); }
 
-    private async Task CargarNota()
+    private async Task CargarNotas()
     {
-
+        var response = await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener/{DepositoId}");
+        if (response.Respuesta != null)
+        {
+            listaNotas = response.Respuesta.Objeto;
+        }
     }
 }
