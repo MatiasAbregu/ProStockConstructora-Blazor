@@ -1,0 +1,19 @@
+﻿.divBotonera {
+    display: flex;
+    width: 100%;
+    margin-bottom: .5%;
+}
+
+.cabecera {
+    margin: 0;
+    flex: 1;
+    font-size: 1.1rem;
+}
+
+.botonera .btn-add {
+    border: none;
+    padding: 3px 8px;
+    font-weight: 700 !important;
+    font-size: 1.8rem;
+    line-height: 25px;
+}
