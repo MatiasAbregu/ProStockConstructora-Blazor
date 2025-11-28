@@ -1,19 +1,21 @@
-﻿.divBotonera {
+﻿.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+}
+
+.cabecera {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     margin-bottom: .5%;
 }
 
-.cabecera {
-    margin: 0;
-    flex: 1;
-    font-size: 1.1rem;
-}
+    .cabecera p {
+        margin: 0;
+        font-size: 1.1rem;
+    }
 
-.botonera .btn-add {
-    border: none;
-    padding: 3px 8px;
-    font-weight: 700 !important;
-    font-size: 1.8rem;
-    line-height: 25px;
-}
+    .cabecera button {
+        display: flex;
+        align-items: center;
+    }

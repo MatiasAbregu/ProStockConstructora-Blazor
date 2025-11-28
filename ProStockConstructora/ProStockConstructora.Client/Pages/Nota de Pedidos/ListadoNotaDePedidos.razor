@@ -45,12 +45,15 @@
                             <tr>
                                 <td>@nota.NumeroNotaPedido</td>
                                 <td>@nota.FechaEmision.ToShortDateString()</td>
-                                <td>@nota.Estado.ToString()</td>
-
                                 <td>
-                                    <button class="btn btn-outline-warning btn-sm me-2" title="Editar" @onclick="() => IrEditar(nota.NumeroNotaPedido)">✏️</button>
-                                    <button class="btn btn-outline-primary btn-sm me-2" title="Ver" @onclick="() => IrVer(nota.NumeroNotaPedido)">👁️</button>
-                                    <button class="btn btn-outline-danger btn-sm" title="Eliminar" @onclick="() => IrEliminar(nota.NumeroNotaPedido)">🗑️</button>
+                                    <span class="badge @ObtenerEstadoClase(nota.Estado.ToString())">
+                                        @nota.Estado.ToString()
+                                    </span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles")>
+                                        <i class="bi bi-eye"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -124,5 +127,14 @@ else
         {
             listaNotas = response.Respuesta.Objeto;
         }
+    }
+
+    private string ObtenerEstadoClase(string estado)
+    {
+        if (estado == "Rechazada") return "text-bg-danger";
+        else if (estado == "Aprobada") return "text-bg-success";
+        else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
+        else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
+        else return "text-bg-warning";
     }
 }
