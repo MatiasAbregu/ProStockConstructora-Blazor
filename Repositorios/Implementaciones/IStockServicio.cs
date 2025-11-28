@@ -10,6 +10,7 @@ namespace Repositorios.Implementaciones
 {
     public interface IStockServicio
     {
-        Task<Response<List<VerStockDTO>>> ObtenerStockPorObrasId(List<long> ObrasId);
+        Task<Response<List<VerStockDTO>>> ObtenerStockPorObrasId(List<long> ObrasId, long DepositoOrigenId);
+        Task<Response<List<VerStockDTO>>> ObtenerStocksDeEmpresaPorIdAdministrador(long UsuarioId, long DepositoOrigenId);
     }
 }

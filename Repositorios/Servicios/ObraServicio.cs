@@ -103,7 +103,7 @@ namespace Repositorios.Servicios
                     {
                         Objeto = obras,
                         Estado = true,
-                        Mensaje = obras.Count > 0 ? "¡Obras cargadas con éxito!" : "¡Aún no hay obras cargadas en el sistema!"
+                        Mensaje = obras.Count > 0 ? "¡Obras cargadas con éxito!" : "¡Aún no estás asignado a una obra!"
                     };
                 }
                 else

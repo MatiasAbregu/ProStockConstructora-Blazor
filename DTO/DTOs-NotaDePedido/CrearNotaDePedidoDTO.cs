@@ -1,4 +1,5 @@
 ﻿using DTO.Enum;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,8 +20,6 @@ namespace DTO.DTOs_NotaDePedido
         [Required]
         public long DepositoOrigenId { get; set; }
 
-        [Required]
-
-        public List<DetalleNotaDePedidoDTO> ListaDePedido { get; set; }
+        public List<DetalleNotaDePedidoDTO> ListaDePedido { get; set; } = [];
     }
 }

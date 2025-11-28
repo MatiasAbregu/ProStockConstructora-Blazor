@@ -32,18 +32,6 @@ namespace BD
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<NotaDePedido>()
-                .HasOne(n => n.DepositoOrigen)
-                .WithMany()
-                .HasForeignKey(n => n.DepositoOrigenId)
-                .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<NotaDePedido>()
-                .HasOne(n => n.DepositoDestino)
-                .WithMany()
-                .HasForeignKey(n => n.DepositoDestinoId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { Id = -1, NombreRol = "ADMINISTRADOR"},
                 new Rol { Id = -2, NombreRol = "JEFEDEOBRA" },

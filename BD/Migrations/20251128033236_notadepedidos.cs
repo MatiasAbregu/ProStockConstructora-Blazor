@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class Remitos01 : Migration
+    public partial class notadepedidos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -309,25 +309,24 @@ namespace BD.Migrations
                     NumeroNotaPedido = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DepositoOrigenId = table.Column<long>(type: "bigint", nullable: false),
-                    DepositoDestinoId = table.Column<long>(type: "bigint", nullable: false),
-                    FechaEmision = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Estado = table.Column<int>(type: "int", nullable: false)
+                    UsuarioId = table.Column<long>(type: "bigint", nullable: false),
+                    FechaEmision = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NotaDePedidos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NotaDePedidos_Depositos_DepositoDestinoId",
-                        column: x => x.DepositoDestinoId,
-                        principalTable: "Depositos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_NotaDePedidos_Depositos_DepositoOrigenId",
                         column: x => x.DepositoOrigenId,
                         principalTable: "Depositos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NotaDePedidos_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -366,12 +365,20 @@ namespace BD.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     NotaDePedidoId = table.Column<long>(type: "bigint", nullable: false),
-                    MaterialesyMaquinasId = table.Column<long>(type: "bigint", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false)
+                    RecursoId = table.Column<long>(type: "bigint", nullable: false),
+                    DepositoDestinoId = table.Column<long>(type: "bigint", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    EstadoNotaPedido = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetalleNotaDePedidos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DetalleNotaDePedidos_Depositos_DepositoDestinoId",
+                        column: x => x.DepositoDestinoId,
+                        principalTable: "Depositos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DetalleNotaDePedidos_NotaDePedidos_NotaDePedidoId",
                         column: x => x.NotaDePedidoId,
@@ -379,8 +386,8 @@ namespace BD.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DetalleNotaDePedidos_Recursos_MaterialesyMaquinasId",
-                        column: x => x.MaterialesyMaquinasId,
+                        name: "FK_DetalleNotaDePedidos_Recursos_RecursoId",
+                        column: x => x.RecursoId,
                         principalTable: "Recursos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -402,6 +409,7 @@ namespace BD.Migrations
                     DestinoId = table.Column<long>(type: "bigint", nullable: false),
                     EstadoRemito = table.Column<int>(type: "int", nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    FechaLimite = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FechaRecepcion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -436,6 +444,8 @@ namespace BD.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RemitoId = table.Column<long>(type: "bigint", nullable: false),
                     DetalleNotaDePedidoId = table.Column<long>(type: "bigint", nullable: false),
+                    NombreTransportista = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CantidadDespachada = table.Column<int>(type: "int", nullable: false),
                     CantidadRecibida = table.Column<int>(type: "int", nullable: false)
                 },
@@ -490,14 +500,19 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetalleNotaDePedidos_MaterialesyMaquinasId",
+                name: "IX_DetalleNotaDePedidos_DepositoDestinoId",
                 table: "DetalleNotaDePedidos",
-                column: "MaterialesyMaquinasId");
+                column: "DepositoDestinoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleNotaDePedidos_NotaDePedidoId",
                 table: "DetalleNotaDePedidos",
                 column: "NotaDePedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetalleNotaDePedidos_RecursoId",
+                table: "DetalleNotaDePedidos",
+                column: "RecursoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleRemitos_DetalleNotaDePedidoId",
@@ -516,11 +531,6 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotaDePedidos_DepositoDestinoId",
-                table: "NotaDePedidos",
-                column: "DepositoDestinoId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_NotaDePedidos_DepositoOrigenId",
                 table: "NotaDePedidos",
                 column: "DepositoOrigenId");
@@ -530,6 +540,11 @@ namespace BD.Migrations
                 table: "NotaDePedidos",
                 column: "NumeroNotaPedido",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotaDePedidos_UsuarioId",
+                table: "NotaDePedidos",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Obras_CodigoObra",
@@ -684,9 +699,6 @@ namespace BD.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
-
-            migrationBuilder.DropTable(
                 name: "Recursos");
 
             migrationBuilder.DropTable(
@@ -700,6 +712,9 @@ namespace BD.Migrations
 
             migrationBuilder.DropTable(
                 name: "Depositos");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Obras");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251125202057_Remitos01")]
-    partial class Remitos01
+    [Migration("20251128033236_notadepedidos")]
+    partial class notadepedidos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,17 +96,25 @@ namespace BD.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<long>("MaterialesyMaquinasId")
+                    b.Property<long>("DepositoDestinoId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("EstadoNotaPedido")
+                        .HasColumnType("int");
 
                     b.Property<long>("NotaDePedidoId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("RecursoId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MaterialesyMaquinasId");
+                    b.HasIndex("DepositoDestinoId");
 
                     b.HasIndex("NotaDePedidoId");
+
+                    b.HasIndex("RecursoId");
 
                     b.ToTable("DetalleNotaDePedidos");
                 });
@@ -127,6 +135,10 @@ namespace BD.Migrations
 
                     b.Property<long>("DetalleNotaDePedidoId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("NombreTransportista")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<long>("RemitoId")
                         .HasColumnType("bigint");
@@ -185,14 +197,8 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("DepositoDestinoId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("DepositoOrigenId")
                         .HasColumnType("bigint");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaEmision")
                         .HasColumnType("datetime(6)");
@@ -201,14 +207,17 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id");
+                    b.Property<long>("UsuarioId")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("DepositoDestinoId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DepositoOrigenId");
 
                     b.HasIndex("NumeroNotaPedido")
                         .IsUnique();
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("NotaDePedidos");
                 });
@@ -333,6 +342,9 @@ namespace BD.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaLimite")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("FechaRecepcion")
@@ -571,9 +583,9 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Modelos.DetalleNotaDePedido", b =>
                 {
-                    b.HasOne("BD.Modelos.Recursos", "MaterialesyMaquinas")
+                    b.HasOne("BD.Modelos.Deposito", "DepositoDestino")
                         .WithMany()
-                        .HasForeignKey("MaterialesyMaquinasId")
+                        .HasForeignKey("DepositoDestinoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -583,9 +595,17 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("MaterialesyMaquinas");
+                    b.HasOne("BD.Modelos.Recursos", "Recurso")
+                        .WithMany()
+                        .HasForeignKey("RecursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DepositoDestino");
 
                     b.Navigation("NotaDePedido");
+
+                    b.Navigation("Recurso");
                 });
 
             modelBuilder.Entity("BD.Modelos.DetalleRemito", b =>
@@ -609,21 +629,21 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Modelos.NotaDePedido", b =>
                 {
-                    b.HasOne("BD.Modelos.Deposito", "DepositoDestino")
-                        .WithMany()
-                        .HasForeignKey("DepositoDestinoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("BD.Modelos.Deposito", "DepositoOrigen")
                         .WithMany()
                         .HasForeignKey("DepositoOrigenId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DepositoDestino");
+                    b.HasOne("BD.Modelos.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DepositoOrigen");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("BD.Modelos.Obra", b =>
