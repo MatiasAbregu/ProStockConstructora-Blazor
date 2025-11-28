@@ -13,6 +13,6 @@ namespace Repositorios.Implementaciones
         Task<Response<string>> CrearNotaDePedido(CrearNotaDePedidoDTO NotadePedidoDTO);
         Task<Response<string>> ObtenerNumeroNotadePedidoSiguiente();
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPorDepositoId(long DepositoId);
-        Task<Response<VerNotaDePedidoDTO>> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId);
+        Task<Response<VerNotadePedidoDetalladaDTO>> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId);
     }
 }

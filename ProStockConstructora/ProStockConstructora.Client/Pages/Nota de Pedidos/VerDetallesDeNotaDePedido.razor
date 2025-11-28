@@ -58,7 +58,7 @@ else
     [Parameter] public long DepositoId { get; set; }
     [Parameter] public long NotaDePedidoId { get; set; }
     private string MensajeError;
-    private VerNotaDePedidoDTO nota;
+    private VerNotadePedidoDetalladaDTO nota;
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,7 +67,7 @@ else
 
     private async Task CargarNotadePedido()
     {
-        var Respuesta = await Http.Get<Response<VerNotaDePedidoDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
+        var Respuesta = await Http.Get<Response<VerNotadePedidoDetalladaDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
         if (Respuesta.Respuesta != null)
         {
             if (Respuesta.Respuesta.Objeto != null) nota = Respuesta.Respuesta.Objeto;

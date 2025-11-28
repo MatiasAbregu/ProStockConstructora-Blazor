@@ -191,15 +191,16 @@ namespace Repositorios.Servicios
             else
                 return EnumEstadoNotaPedido.Pendiente;
         }
-        public async Task<Response<VerNotaDePedidoDTO>> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId)
+        public async Task<Response<VerNotadePedidoDetalladaDTO>> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId)
         {
             try
             {
                 var notaDePedido = await BasedeDatos.NotaDePedidos
+                    .Include(np=> np.Usuario).Include(np=> np.DepositoOrigen)
                     .FirstOrDefaultAsync(np => np.Id == NotaDePedidoId);
                 if (notaDePedido == null)
                 {
-                    return new Response<VerNotaDePedidoDTO>
+                    return new Response<VerNotadePedidoDetalladaDTO>
                     {
                         Estado = true,
                         Mensaje = "La nota de pedido no existe.",
@@ -207,23 +208,26 @@ namespace Repositorios.Servicios
                     };
                 }
                 var detalles = await BasedeDatos.DetalleNotaDePedidos
+                    .Include(dnp => dnp.DepositoDestino).Include(dnp => dnp.Recurso)
                     .Where(dnp => dnp.NotaDePedidoId == NotaDePedidoId)
                     .ToListAsync();
-                var verNotaDePedidoDTO = new VerNotaDePedidoDTO
+                var verNotaDePedidoDTO = new VerNotadePedidoDetalladaDTO
                 {
                     Id = notaDePedido.Id,
                     NumeroNotaPedido = notaDePedido.NumeroNotaPedido,
                     FechaEmision = notaDePedido.FechaEmision,
-                    Estado = DefinirEstadoNotaPedido(detalles),
-                    ListaDePedido = detalles.Select(d => new DetalleNotaDePedidoDTO
+                    DepositoOrigen = $"{notaDePedido.DepositoOrigen.NombreDeposito} ({notaDePedido.DepositoOrigen.CodigoDeposito})",
+                    Usuario = $"{notaDePedido.Usuario.NombreUsuario} ({notaDePedido.Usuario.Email})",
+                    Detalles = detalles.Select(d => new VerDetalleNotadePedidoDTO
                     {
+                        Id = d.Id,
+                        Recurso = $"{d.Recurso.Nombre} ({d.Recurso.CodigoISO})",
                         Cantidad = d.Cantidad,
-                        DepositoDestinoId = d.DepositoDestinoId,
-                        RecursoId = d.RecursoId,
-                        EstadoNotaPedido = (EnumEstadoNotaPedido)d.EstadoNotaPedido
+                        Deposito = $"{d.DepositoDestino.NombreDeposito} ({d.DepositoDestino.CodigoDeposito})",
+                        Estado = (EnumEstadoNotaPedido)d.EstadoNotaPedido
                     }).ToList()
                 };
-                return new Response<VerNotaDePedidoDTO>
+                return new Response<VerNotadePedidoDetalladaDTO>
                 {
                     Estado = true,
                     Mensaje = null,
@@ -233,7 +237,7 @@ namespace Repositorios.Servicios
             catch (Exception e)
             {
                 Console.WriteLine("Error" + e.Message);
-                return new Response<VerNotaDePedidoDTO>
+                return new Response<VerNotadePedidoDetalladaDTO>
                 {
                     Estado = false,
                     Mensaje = "Error al obtener los detalles de la nota de pedido.",
