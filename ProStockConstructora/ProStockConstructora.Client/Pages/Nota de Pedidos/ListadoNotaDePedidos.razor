@@ -1,0 +1,177 @@
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject DatosSesion Sesion
+
+
+@if (Sesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Notas de pedido</p>
+            <div class="botonera">
+                <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/crear")>+</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>N° de Nota</th>
+                        <th>Depósito Origen</th>
+                        <th>Depósito Destino</th>
+                        <th>Fecha Emisión</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (listaNotas == null)
+                    {
+                        <tr>
+                            <td colspan="6">Cargando notas de pedidos...</td>
+                        </tr>
+                    }
+                    else if (!listaNotas.Any())
+                    {
+                        <tr>
+                            <td colspan="6">No hay notas de pedidos disponibles.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var nota in listaNotas
+                                        .Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                        {
+                            <tr>
+                                <td>@nota.NumeroNotaPedido</td>
+                                <td>@nota.DepositoOrigenId</td>
+                                <td>@nota.DepositoDestinoId</td>
+                                <td>@nota.FechaEmision.ToShortDateString()</td>
+                                <td>@nota.Estado</td>
+
+                                <td>
+                                    <button class="btn btn-outline-warning btn-sm me-2" title="Editar" @onclick="() => IrEditar(nota.NumeroNotaPedido)">✏️</button>
+                                    <button class="btn btn-outline-primary btn-sm me-2" title="Ver" @onclick="() => IrVer(nota.NumeroNotaPedido)">👁️</button>
+                                    <button class="btn btn-outline-danger btn-sm" title="Eliminar" @onclick="() => IrEliminar(nota.NumeroNotaPedido)">🗑️</button>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@listaNotas?.Count registros totales</p>
+            </div>
+        </div>
+    </article>
+
+    @if (mostrarModalCargar)
+    {
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal fade show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content p-4">
+                    <h5>Cargar Nota de Pedido</h5>
+
+                    <div class="mb-3">
+                        <label>Nº de Nota:</label>
+                        <input class="form-control" @bind="nuevaNota.NumeroNotaPedido" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Depósito Origen:</label>
+                        <select class="form-select" @bind="nuevaNota.DepositoOrigenId">
+                            @*  @foreach (var d in Deposito)
+                        {
+                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
+                        } *@
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Depósito Destino:</label>
+                        <select class="form-select" @bind="nuevaNota.DepositoDestinoId">
+                            @*  @foreach (var d in depositos)
+                        {
+                            <option value="@d.Id">@d.Id (@d.Nombre)</option>
+                        } *@
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Estado:</label>
+                        <select class="form-select" @bind="nuevaNota.Estado">
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-secondary me-2" @onclick="CerrarModalCargar">Volver</button>
+                        <button class="btn btn-success" @onclick="CargarNota">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    Nav.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long? ObraId { get; set; }
+    [Parameter]
+    public long? DepositoId { get; set; }
+    private int numeroPagina = 1;
+
+    private List<VerNotaDePedidoDTO> listaNotas = new();
+
+    bool mostrarModalCargar = false;
+    VerNotaDePedidoDTO nuevaNota = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    private async Task SiguientePagina()
+    {
+        if (listaNotas.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
+    }
+
+    void IrEditar(string nro) => Nav.NavigateTo($"/editar-nota/{nro}");
+    void IrVer(string nro) => Nav.NavigateTo($"/ver-nota/{nro}");
+    void IrEliminar(string nro) => Nav.NavigateTo($"/eliminar-nota/{nro}");
+
+    void AbrirModalCargar() => mostrarModalCargar = true;
+    void CerrarModalCargar() { mostrarModalCargar = false; nuevaNota = new VerNotaDePedidoDTO(); }
+
+    private async Task CargarNota()
+    {
+
+    }
+}

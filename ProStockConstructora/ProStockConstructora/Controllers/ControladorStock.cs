@@ -14,15 +14,24 @@ namespace ProStockConstructora.Controllers
         {
             this.stockServicio = stockServicio;
         }
-        [HttpPost("obtener-stock")]
 
-        public async Task<ActionResult> ObtenerStockPorDeposito(List<long> ObrasId)
+        [HttpGet("obtener-stock/{UsuarioId:long}/{DepositoOrigenId:long}")]
+        public async Task<ActionResult> ObtenerStockPorUsuarioId(long UsuarioId, long DepositoOrigenId)
         {
-            var respuesta = await stockServicio.ObtenerStockPorObrasId(ObrasId);
+            var res = await stockServicio.ObtenerStocksDeEmpresaPorIdAdministrador(UsuarioId, DepositoOrigenId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+
+        [HttpPost("obtener-stock/{DepositoOrigenId:long}")]
+        public async Task<ActionResult> ObtenerStockPorDeposito(List<long> ObrasId, long DepositoOrigenId)
+        {
+            var respuesta = await stockServicio.ObtenerStockPorObrasId(ObrasId, DepositoOrigenId);
             if (!respuesta.Estado)
                 return StatusCode(500,respuesta);
             else
                 return Ok(respuesta);
         }
+        
     }
 }

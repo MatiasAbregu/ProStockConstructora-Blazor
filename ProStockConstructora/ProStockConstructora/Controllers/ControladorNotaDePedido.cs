@@ -31,6 +31,10 @@ namespace ProStockConstructora.Controllers
             return Ok(respuesta);
         }
 
+        // HTTPGET para obtener todas las notas de pedido POR USUARIO ID
+
+        // HTTPGET para obtener una nota de pedido POR SU ID
+
         [HttpPost]
         public async Task<ActionResult> CrearNotadePedido(CrearNotaDePedidoDTO CrearNota) 
         {
@@ -39,5 +43,7 @@ namespace ProStockConstructora.Controllers
                 return StatusCode(500, respuesta);
             return Ok(respuesta);
         }
+
+        // HTTPPUT para actualizar el estado de cada detalle de una nota de pedido
     }
 }
