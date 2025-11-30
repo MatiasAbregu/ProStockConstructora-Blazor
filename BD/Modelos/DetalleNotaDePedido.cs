@@ -24,5 +24,8 @@ namespace BD.Modelos
         public required int Cantidad { get; set; } 
 
         public EstadoNotaPedido EstadoNotaPedido { get; set; } = EstadoNotaPedido.Pendiente;
+
+        public long? UsuarioModificacionId { get; set; }
+        public Usuario? UsuarioModificacion { get; set; }
     }
 }

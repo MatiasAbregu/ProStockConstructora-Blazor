@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class notadepedidos : Migration
+    public partial class notadepedidodefinitiva : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -368,7 +368,8 @@ namespace BD.Migrations
                     RecursoId = table.Column<long>(type: "bigint", nullable: false),
                     DepositoDestinoId = table.Column<long>(type: "bigint", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
-                    EstadoNotaPedido = table.Column<int>(type: "int", nullable: false)
+                    EstadoNotaPedido = table.Column<int>(type: "int", nullable: false),
+                    UsuarioModificacionId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -391,6 +392,11 @@ namespace BD.Migrations
                         principalTable: "Recursos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DetalleNotaDePedidos_Usuarios_UsuarioModificacionId",
+                        column: x => x.UsuarioModificacionId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -513,6 +519,11 @@ namespace BD.Migrations
                 name: "IX_DetalleNotaDePedidos_RecursoId",
                 table: "DetalleNotaDePedidos",
                 column: "RecursoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetalleNotaDePedidos_UsuarioModificacionId",
+                table: "DetalleNotaDePedidos",
+                column: "UsuarioModificacionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleRemitos_DetalleNotaDePedidoId",

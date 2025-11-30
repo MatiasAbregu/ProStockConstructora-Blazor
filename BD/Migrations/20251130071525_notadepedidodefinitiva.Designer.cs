@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251128033236_notadepedidos")]
-    partial class notadepedidos
+    [Migration("20251130071525_notadepedidodefinitiva")]
+    partial class notadepedidodefinitiva
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +108,9 @@ namespace BD.Migrations
                     b.Property<long>("RecursoId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("UsuarioModificacionId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepositoDestinoId");
@@ -115,6 +118,8 @@ namespace BD.Migrations
                     b.HasIndex("NotaDePedidoId");
 
                     b.HasIndex("RecursoId");
+
+                    b.HasIndex("UsuarioModificacionId");
 
                     b.ToTable("DetalleNotaDePedidos");
                 });
@@ -601,11 +606,17 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BD.Modelos.Usuario", "UsuarioModificacion")
+                        .WithMany()
+                        .HasForeignKey("UsuarioModificacionId");
+
                     b.Navigation("DepositoDestino");
 
                     b.Navigation("NotaDePedido");
 
                     b.Navigation("Recurso");
+
+                    b.Navigation("UsuarioModificacion");
                 });
 
             modelBuilder.Entity("BD.Modelos.DetalleRemito", b =>

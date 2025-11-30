@@ -3,15 +3,30 @@
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
 
+<PageTitle>Notas de Pedido - ProStock</PageTitle>
 
 @if (Sesion.Usuario != null)
 {
     <article class="p-4">
         <div class="divBotonera">
             <p class="cabecera fw-bolder">Notas de pedido</p>
-            <div class="botonera">
-                <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/crear")>+</a>
-            </div>
+            @if(Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+            {
+                <select class="form-select" style="width: auto;" @onchange="async (e) => {
+                opcionNotas = Convert.ToInt32(e.Value);
+                numeroPagina = 1;
+                await CargarNotas(); }">
+                    <option value="0">Notas de pedido enviadas</option>
+                    <option value="1">Notas de pedido recibidas</option>
+                </select>  
+            }
+            &nbsp;
+            @if (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEOBRA"))
+            {
+                <div class="botonera">
+                    <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/crear")>+</a>
+                </div>
+            }
         </div>
 
         <div class="table-responsive">
@@ -25,16 +40,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (listaNotas == null)
+                    @if (!string.IsNullOrEmpty(Mensaje) || !listaNotas.Any())
                     {
                         <tr>
-                            <td colspan="4">Cargando notas de pedidos...</td>
-                        </tr>
-                    }
-                    else if (!listaNotas.Any())
-                    {
-                        <tr>
-                            <td colspan="4">No hay notas de pedidos disponibles.</td>
+                            <td colspan="4" class="text-center">@Mensaje</td>
                         </tr>
                     }
                     else
@@ -54,10 +63,17 @@
                                     <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles")>
                                         <i class="bi bi-eye"></i>
                                     </a>
+                                    &nbsp;
+                                    @if(opcionNotas == 1 && 
+                                    (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+                                    {
+                                        <a class="btn btn-outline-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles/editar")>
+                                            <i class="bi bi-check2-square"></i>
+                                        </a>
+                                    }
                                 </td>
                             </tr>
                         }
-
                     }
                 </tbody>
             </table>
@@ -82,17 +98,22 @@ else
     public long? ObraId { get; set; }
     [Parameter]
     public long? DepositoId { get; set; }
-    private int numeroPagina = 1;
+    private int numeroPagina = 1, opcionNotas = 0;
+    private DatosUsuario Usuario;
 
+    private string Mensaje;
     private List<VerNotaDePedidoDTO> listaNotas = new();
 
     bool mostrarModalCargar = false;
     VerNotaDePedidoDTO nuevaNota = new();
 
-
     protected override async Task OnInitializedAsync()
     {
-        await CargarNotas();
+        if(Sesion.Usuario != null)
+        {
+            Usuario = Sesion.Usuario;
+            await CargarNotas();
+        }
     }
 
     private async Task SiguientePagina()
@@ -113,19 +134,18 @@ else
         }
     }
 
-    void IrEditar(string nro) => Nav.NavigateTo($"/editar-nota/{nro}");
-    void IrVer(string nro) => Nav.NavigateTo($"/ver-nota/{nro}");
-    void IrEliminar(string nro) => Nav.NavigateTo($"/eliminar-nota/{nro}");
-
-    void AbrirModalCargar() => mostrarModalCargar = true;
-    void CerrarModalCargar() { mostrarModalCargar = false; nuevaNota = new VerNotaDePedidoDTO(); }
-
     private async Task CargarNotas()
     {
-        var response = await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener/{DepositoId}");
+        Mensaje = string.Empty;
+        var response = opcionNotas == 1 && (Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO")) 
+                       ? await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-pendiente/{DepositoId}") 
+                       : await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener/{DepositoId}");
+
         if (response.Respuesta != null)
         {
-            listaNotas = response.Respuesta.Objeto;
+            if(response.Respuesta.Objeto != null) listaNotas = response.Respuesta.Objeto;
+            else Mensaje = response.Respuesta.Mensaje.Contains("éxito") ? string.Empty : response.Respuesta.Mensaje;
+            StateHasChanged();
         }
     }
 

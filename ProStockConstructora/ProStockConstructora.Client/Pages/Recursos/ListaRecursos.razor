@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!string.IsNullOrEmpty(Mensaje))
+                    @if (!string.IsNullOrEmpty(Mensaje) || !listaRecursos.Any())
                     {
                         <tr>
                             <td colspan="@((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0) ? 5 : 4)" class="text-center">@Mensaje</td>
@@ -126,14 +126,15 @@ else
 
     private async Task CargarRecursos()
     {
+        Mensaje = string.Empty;
         var res = ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
                         ? await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/deposito/{DepositoId}")
                         : await http.Get<Response<List<RecursosVerDTO>>>($"/api/recursos/empresa/{usuario.EmpresaId}");
 
         if (res.Respuesta != null)
         {       
-            Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
-            listaRecursos = res.Respuesta.Objeto;
+            if (res.Respuesta.Objeto != null) listaRecursos = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;           
             StateHasChanged();
         }
     }
