@@ -245,37 +245,8 @@ namespace Repositorios.Servicios
 
                     notasDePedido = await BasedeDatos.DetalleNotaDePedidos
                         .Include(dnp => dnp.DepositoDestino).ThenInclude(d => d.Obra)
-                    .Where(np => np.DepositoDestino.Obra.EmpresaId == Usuario.EmpresaId)
+                    .Where(np => np.DepositoDestino.Obra.EmpresaId == Usuario.EmpresaId && np.EstadoNotaPedido == EstadoNotaPedido.Pendiente)
                     .Select(dnp => dnp.NotaDePedido).Distinct().ToListAsync();
-
-                    if (notasDePedido.Count > 0)
-                    {
-                        var DetallesNotaDePedido = await BasedeDatos.DetalleNotaDePedidos
-                            .Where(dnp => notasDePedido.Select(np => np.Id).Contains(dnp.NotaDePedidoId))
-                            .ToListAsync();
-
-                        return new Response<List<VerNotaDePedidoDTO>>
-                        {
-                            Estado = true,
-                            Mensaje = null,
-                            Objeto = notasDePedido.Select(np => new VerNotaDePedidoDTO
-                            {
-                                Id = np.Id,
-                                NumeroNotaPedido = np.NumeroNotaPedido,
-                                FechaEmision = np.FechaEmision,
-                                Estado = DefinirEstadoNotaPedido(DetallesNotaDePedido.Where(d => d.NotaDePedidoId == np.Id).ToList()),
-                            }).ToList()
-                        };
-                    }
-                }
-                else if (Usuario.Roles.Contains("JEFEDEOBRA"))
-                {
-                    var DepositosId = await BasedeDatos.Depositos.Where(d => Usuario.ObrasId.Contains(d.ObraId))
-                                                       .Select(d => d.Id).ToListAsync();
-
-                    notasDePedido = await BasedeDatos.DetalleNotaDePedidos
-                   .Where(np => DepositosId.Contains(np.DepositoDestinoId)).Select(dnp => dnp.NotaDePedido)
-                   .Distinct().ToListAsync();
 
                     if (notasDePedido.Count > 0)
                     {
@@ -300,7 +271,7 @@ namespace Repositorios.Servicios
                 else if (Usuario.Roles.Contains("JEFEDEDEPOSITO"))
                 {
                     notasDePedido = await BasedeDatos.DetalleNotaDePedidos
-                   .Where(np => Usuario.DepositosId.Contains(np.DepositoDestinoId)).Select(dnp => dnp.NotaDePedido)
+                   .Where(np => Usuario.DepositosId.Contains(np.DepositoDestinoId) && np.EstadoNotaPedido == EstadoNotaPedido.Pendiente).Select(dnp => dnp.NotaDePedido)
                    .Distinct().ToListAsync();
 
                     if (notasDePedido.Count > 0)
@@ -390,6 +361,54 @@ namespace Repositorios.Servicios
             }
         }
 
+        public async Task<Response<string>> ActualizarEstadosNotaDePedido(long NotaDePedidoId, List<VerDetalleNotadePedidoDTO> detalles)
+        {
+            try
+            {
+                var listadoIds = detalles.Select(d => d.Id);
+                var incosistencia = await BasedeDatos.DetalleNotaDePedidos
+                                    .AnyAsync(d => listadoIds.Contains(d.Id) && d.NotaDePedidoId != NotaDePedidoId);
+
+                if (incosistencia)
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "Un detalle no coincide con su nota de pedido ID.",
+                        Objeto = null
+                    };
+
+                var detallesBBDD = await BasedeDatos.DetalleNotaDePedidos
+                                    .Where(d => listadoIds.Contains(d.Id) && d.NotaDePedidoId == NotaDePedidoId).ToListAsync();
+
+                var dicDetalles = detalles.ToDictionary(d => d.Id);
+
+                foreach (var d in detallesBBDD)
+                {
+                    d.EstadoNotaPedido = (EstadoNotaPedido)dicDetalles[d.Id].Estado;
+                    d.UsuarioModificacionId = dicDetalles[d.Id].UsuarioQueModificadoId;
+                }
+
+                await BasedeDatos.SaveChangesAsync();
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡Estados actualizados con éxito!"
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Erorr: " + e.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error al actualizar los estados de la nota de pedido!",
+                    Objeto = null
+                };
+            }
+        }
+
         // Metódos internos
         private async Task<string> GenerarNumeroNotaPedidoAsync()
         {
@@ -408,20 +427,38 @@ namespace Repositorios.Servicios
             }
             return numeroNotaPedido;
         }
+
         private EnumEstadoNotaPedido DefinirEstadoNotaPedido(List<DetalleNotaDePedido> detalles)
         {
             var Estados = detalles.Select(d => d.EstadoNotaPedido).ToList();
 
-            if (Estados.All(e => e == (EstadoNotaPedido)EnumEstadoNotaPedido.Aprobada))
+            var aprobados = detalles.Count(d => d.EstadoNotaPedido == (EstadoNotaPedido)EnumEstadoNotaPedido.Aprobada);
+            var rechazados = detalles.Count(d => d.EstadoNotaPedido == (EstadoNotaPedido)EnumEstadoNotaPedido.Rechazada);
+            var pendientes = detalles.Count(d => d.EstadoNotaPedido == (EstadoNotaPedido)EnumEstadoNotaPedido.Pendiente);
+
+            if (aprobados == detalles.Count)
                 return EnumEstadoNotaPedido.Aprobada;
-            else if (Estados.All(e => e == (EstadoNotaPedido)EnumEstadoNotaPedido.Rechazada))
+
+            if (rechazados == detalles.Count)
                 return EnumEstadoNotaPedido.Rechazada;
-            else if (Estados.Any(e => e == (EstadoNotaPedido)EnumEstadoNotaPedido.Aprobada))
-                return EnumEstadoNotaPedido.ParcialmenteAprobada;
-            else if (Estados.Any(e => e == (EstadoNotaPedido)EnumEstadoNotaPedido.Rechazada))
-                return EnumEstadoNotaPedido.ParcialmenteRechazada;
-            else
+
+            if (pendientes == detalles.Count)
                 return EnumEstadoNotaPedido.Pendiente;
+
+            if (pendientes > 0)
+            {
+                if (aprobados > rechazados)
+                    return EnumEstadoNotaPedido.ParcialmenteAprobada;
+
+                if (rechazados > aprobados)
+                    return EnumEstadoNotaPedido.ParcialmenteRechazada;
+
+                return EnumEstadoNotaPedido.Pendiente;
+            }
+
+            return aprobados > rechazados
+                ? EnumEstadoNotaPedido.ParcialmenteAprobada
+                : EnumEstadoNotaPedido.ParcialmenteRechazada;
         }
     }
 }

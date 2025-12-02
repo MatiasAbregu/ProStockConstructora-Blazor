@@ -1,20 +1,21 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/detalles/editar"
 @page "/notadepedido/{NotaDePedidoId:long}/detalles/editar"
+@using System.Diagnostics
 @inject NavigationManager navManager
 @inject IHttpServicio http
 @inject DatosSesion DatosSesion
 
-<PageTitle>Notas de Pedido (Edición) - ProStock</PageTitle>
+<PageTitle>Notas de Pedido (Edición - Estados) - ProStock</PageTitle>
 
 @if (DatosSesion.Usuario != null &&
-    (DatosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || DatosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+(DatosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || DatosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
 {
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Notas de pedido (Detalles)</p>
             <a class="btn btn-secondary" href=@((ObraId != 0 && DepositoId != 0) ?
-                                                    $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido"
-                                                    : "/")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+                                                     $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido" : "/")><i class="fas fa-arrow-circle-left"></i>&ensp;
+                Atrás</a>
         </div>
         <div class="card p-3">
             @if (!string.IsNullOrEmpty(Mensaje))
@@ -66,7 +67,8 @@
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Estado actual:</label>
-                                <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                <InputSelect @bind-Value="renglon.Estado" class="form-select"
+                                    disabled="@EstaDeshabilitado(renglon.Id)">
                                     <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
                                     <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
                                     <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
@@ -74,7 +76,7 @@
                                     <option value="@EnumEstadoNotaPedido.Rechazada">Rechazada</option>
                                 </InputSelect>
                             </div>
-                        } 
+                        }
                         else
                         {
                             if (DatosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
@@ -93,7 +95,8 @@
                                 </div>
                                 <div class="my-3 px-4">
                                     <label class="form-label">Estado actual:</label>
-                                    <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                    <InputSelect @bind-Value="renglon.Estado" class="form-select"
+                                        disabled="@EstaDeshabilitado(renglon.Id)">
                                         <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
                                         <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
                                         <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
@@ -120,11 +123,10 @@
                                     </div>
                                     <div class="my-3 px-4">
                                         <label class="form-label">Estado actual:</label>
-                                        <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                        <InputSelect @bind-Value="renglon.Estado" class="form-select"
+                                            disabled="@EstaDeshabilitado(renglon.Id)">
                                             <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
                                             <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
-                                            <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
-                                            <option value="@EnumEstadoNotaPedido.ParcialmenteRechazada">Parcialmente rechazada</option>
                                             <option value="@EnumEstadoNotaPedido.Rechazada">Rechazada</option>
                                         </InputSelect>
                                     </div>
@@ -157,10 +159,11 @@ else
 
     private string Mensaje;
     private VerNotadePedidoDetalladaDTO nota;
+    private Dictionary<long, bool> listadoRenglonesDesactivado = [];
 
     protected override async Task OnInitializedAsync()
     {
-        if(DatosSesion.Usuario != null)
+        if (DatosSesion.Usuario != null)
         {
             Usuario = DatosSesion.Usuario;
             await CargarNotadePedido();
@@ -169,21 +172,54 @@ else
 
     private async Task CargarNotadePedido()
     {
-        var Respuesta = await http.Get<Response<VerNotadePedidoDetalladaDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
+        var Respuesta = await
+        http.Get<Response<VerNotadePedidoDetalladaDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
         if (Respuesta.Respuesta != null)
         {
-            if (Respuesta.Respuesta.Objeto != null) nota = Respuesta.Respuesta.Objeto;
+            if (Respuesta.Respuesta.Objeto != null)
+            {
+                nota = Respuesta.Respuesta.Objeto;
+                foreach (var renglon in nota.Detalles)
+                {
+                    listadoRenglonesDesactivado.Add(renglon.Id, renglon.Estado == EnumEstadoNotaPedido.Aprobada || renglon.Estado == EnumEstadoNotaPedido.Rechazada);
+                }
+            }
             else Mensaje = Respuesta.Respuesta.Mensaje;
         }
     }
 
     private async Task ActualizarEstados()
     {
-        foreach(var renglon in nota.Detalles)
+        List<VerDetalleNotadePedidoDTO> listadoAEnviar = [];
+        foreach (var renglon in nota.Detalles)
         {
-            Console.WriteLine($"ID({renglon.Id}) ESTADO: " + renglon.Estado.ToString() + $" USUARIO: {Usuario.Id}");
+            renglon.UsuarioQueModificadoId = Usuario.Id;
+            if (DepositoId != null && DepositoId != 0 && renglon.DepositoId == DepositoId) listadoAEnviar.Add(renglon);
+            else
+            {
+                if (Usuario.Roles.Contains("ADMINISTRADOR")) listadoAEnviar.Add(renglon);
+                else if (Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                    if (Usuario.DepositosId.Contains(renglon.DepositoId)) listadoAEnviar.Add(renglon);
+            }
         }
-        
+
+        if (listadoAEnviar.Count > 0)
+        {
+            var res = await http.Put<List<VerDetalleNotadePedidoDTO>, Response<string>>($"api/notadepedido/{nota.Id}",
+            listadoAEnviar);
+
+            Console.WriteLine("DESPUES DEL PUT 🗣️");
+
+            if (res.Respuesta != null)
+            {
+                if (res.Respuesta.Objeto != null)
+                {
+                    if (ObraId != 0 && DepositoId != 0) navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido");
+                    else navManager.NavigateTo("/inicio");
+                }
+                else Mensaje = res.Respuesta.Mensaje;
+            }
+        }
     }
 
     private string ObtenerEstadoClase(string estado)
@@ -193,5 +229,10 @@ else
         else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
         else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
         else return "text-bg-warning";
+    }
+
+    private bool EstaDeshabilitado(long id)
+    {
+        return listadoRenglonesDesactivado[id];
     }
 }

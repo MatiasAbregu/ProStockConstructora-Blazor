@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!string.IsNullOrEmpty(Mensaje) || !listaRecursos.Any())
+                    @if (!string.IsNullOrEmpty(Mensaje) || listaRecursos == null || !listaRecursos.Any())
                     {
                         <tr>
                             <td colspan="@((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0) ? 5 : 4)" class="text-center">@Mensaje</td>

@@ -56,7 +56,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @if (!listadoTipoMaterial.Any())
+                    @if (listadoTipoMaterial == null || !listadoTipoMaterial.Any())
                     {
                         <tr>
                             <td colspan="2" class="text-center text-muted">No hay tipos de material cargados aún.</td>

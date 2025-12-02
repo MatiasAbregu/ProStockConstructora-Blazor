@@ -9,7 +9,8 @@
 {
     <article class="p-4">
         <h5 class="mb-4 fst-italic">¡Bienvenido de vuelta @datosSesion.Usuario.NombreUsuario!</h5>
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        @if(datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")){
+            <div class="d-flex justify-content-between align-items-center mb-2">
             <h4 class="flex-grow-1">Documentos pendientes:</h4>
             <select class="form-select" style="width: auto;" @onchange="(e) => {
                 opcionDocumento = Convert.ToInt32(e.Value);
@@ -42,7 +43,7 @@
                 <tbody>
                     @if (opcionDocumento == 0)
                     {
-                        if (!listaNotas.Any())
+                        if (listaNotas == null || !listaNotas.Any())
                         {
                             <tr>
                                 <td colspan="4" class="text-center">¡Estás al día! No hay notas de pedido pendientes.</td>
@@ -75,12 +76,11 @@
                                     </td>
                                 </tr>
                             }
-
                         }
                     }
                     else
                     {
-                        if (!listaRemitos.Any())
+                        if (listaRemitos == null || !listaRemitos.Any())
                         {
                             <tr>
                                 <td colspan="4" class="text-center">¡Estás al día! No hay remitos pendientes.</td>
@@ -123,6 +123,7 @@
                 <p>@(opcionDocumento == 0 ? listaNotas?.Count : listaRemitos?.Count) registros totales</p>
             </div>
         </div>
+        }
     </article>
 }
 else
