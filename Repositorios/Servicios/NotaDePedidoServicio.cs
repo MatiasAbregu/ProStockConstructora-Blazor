@@ -445,20 +445,13 @@ namespace Repositorios.Servicios
             if (pendientes == detalles.Count)
                 return EnumEstadoNotaPedido.Pendiente;
 
-            if (pendientes > 0)
-            {
-                if (aprobados > rechazados)
-                    return EnumEstadoNotaPedido.ParcialmenteAprobada;
+            if (aprobados > 0)
+                return EnumEstadoNotaPedido.ParcialmenteAprobada;
 
-                if (rechazados > aprobados)
-                    return EnumEstadoNotaPedido.ParcialmenteRechazada;
+            if (aprobados == 0 && rechazados > 0)
+                return EnumEstadoNotaPedido.ParcialmenteRechazada;
 
-                return EnumEstadoNotaPedido.Pendiente;
-            }
-
-            return aprobados > rechazados
-                ? EnumEstadoNotaPedido.ParcialmenteAprobada
-                : EnumEstadoNotaPedido.ParcialmenteRechazada;
+            return EnumEstadoNotaPedido.Pendiente;
         }
     }
 }
