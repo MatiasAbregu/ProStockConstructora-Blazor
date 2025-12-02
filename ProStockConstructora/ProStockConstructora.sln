@@ -1,17 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-<<<<<<< HEAD
-<<<<<<< HEAD
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0
-=======
-# Visual Studio Version 18
-VisualStudioVersion = 18.3.11206.111
->>>>>>> 2755ec34114bc848453867f83d0e8e46cf5f646f
-=======
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
->>>>>>> a53faf3e6c54543de27e26ab69a3037fc77c7808
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProStockConstructora", "ProStockConstructora\ProStockConstructora.csproj", "{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}"
 EndProject

@@ -26,7 +26,7 @@ namespace BD.Modelos
         public required long DepositoDestinoId { get; set; }
         public Deposito Destino { get; set; }
 
-        public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
+        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.Pendiente;
 
         public required DateTime FechaEmision { get; set; }
         public DateTime? FechaLimite { get; set; }

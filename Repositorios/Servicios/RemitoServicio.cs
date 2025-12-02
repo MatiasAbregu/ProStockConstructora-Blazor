@@ -33,7 +33,7 @@ namespace Repositorios.Servicios
                     NotaDePedidoId = r.NotaDePedidoId,
                     DepositoOrigenId = r.DepositoOrigenId,
                     DepositoDestinoId = r.DepositoDestinoId,
-                    EstadoRemito = r.EstadoRemito,
+                    Estado = r.Estado,
                     FechaEmision = r.FechaEmision,
                     FechaLimite = (DateTime)r.FechaLimite,
                     FechaRecepcion = r.FechaRecepcion
@@ -81,7 +81,7 @@ namespace Repositorios.Servicios
                     NotaDePedidoId = remito.NotaDePedidoId,
                     DepositoOrigenId = remito.DepositoOrigenId,
                     DepositoDestinoId = remito.DepositoDestinoId,
-                    EstadoRemito = remito.EstadoRemito,
+                    Estado = remito.Estado,
                     FechaEmision = remito.FechaEmision,
                     FechaLimite = (DateTime)remito.FechaLimite,
                     FechaRecepcion = remito.FechaRecepcion
@@ -127,7 +127,7 @@ namespace Repositorios.Servicios
                     NotaDePedidoId = remito.NotaDePedidoId,
                     DepositoOrigenId = remito.DepositoOrigenId,
                     DepositoDestinoId = remito.DepositoDestinoId,
-                    EstadoRemito = remito.EstadoRemito,
+                    Estado = remito.Estado,
                     FechaEmision = remito.FechaEmision,
                     FechaLimite = (DateTime)remito.FechaLimite,
                     FechaRecepcion = remito.FechaRecepcion
@@ -171,7 +171,7 @@ namespace Repositorios.Servicios
                     NotaDePedidoId = e.NotaDePedidoId,
                     DepositoOrigenId = e.DepositoOrigenId,
                     DepositoDestinoId = e.DepositoDestinoId,
-                    EstadoRemito = e.EstadoRemito,
+                    Estado = e.EstadoRemito,
                     FechaEmision = e.FechaEmision,
                     FechaLimite = e.FechaLimite,
                     FechaRecepcion = e.FechaRecepcion
@@ -215,7 +215,7 @@ namespace Repositorios.Servicios
                 remitoExistente.NotaDePedidoId = (long)remitoDTO.NotaDePedidoId;
                 remitoExistente.DepositoOrigenId = (long)remitoDTO.DepositoOrigenId;
                 remitoExistente.DepositoDestinoId = (long)remitoDTO.DepositoDestinoId;
-                remitoExistente.EstadoRemito = remitoDTO.EstadoRemito;
+                remitoExistente.Estado = remitoDTO.EstadoRemito;
                 remitoExistente.FechaEmision = (DateTime)remitoDTO.FechaEmision;
                 remitoExistente.FechaLimite = (DateTime)remitoDTO.FechaLimite;
                 remitoExistente.FechaRecepcion = remitoDTO.FechaRecepcion;
