@@ -1,5 +1,6 @@
 ﻿using BD.Modelos;
 using DTO.DTOs_NotaDePedido;
+using DTO.DTOs_Remitos;
 using DTO.DTOs_Response;
 using DTO.DTOs_Usuarios;
 using System;
@@ -19,5 +20,6 @@ namespace Repositorios.Implementaciones
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientes(DatosUsuario Usuario);
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientesPorDepositoId(long DepositoId);
         Task<Response<string>> ActualizarEstadosNotaDePedido(long NotaDePedidoId, List<VerDetalleNotadePedidoDTO> detalles);
+        Task<Response<NotaDePedidoParaRemitoDTO>> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId, long DepositoId);
     }
 }
