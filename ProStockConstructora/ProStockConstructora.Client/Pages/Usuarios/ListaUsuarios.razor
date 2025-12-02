@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!usuarios.Any() || !string.IsNullOrEmpty(mensaje))
+                    @if (!string.IsNullOrEmpty(mensaje) || usuarios == null || !usuarios.Any())
                     {
                         <tr>
                             <td colspan="4" class="text-center">@mensaje</td>

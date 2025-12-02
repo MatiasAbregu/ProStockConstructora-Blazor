@@ -30,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!Obras.Any() || !string.IsNullOrEmpty(Mensaje))
+                    @if (!string.IsNullOrEmpty(Mensaje) || Obras == null || !Obras.Any())
                     {
                         <tr>
                             <td colspan="4" class="text-center">@Mensaje</td>

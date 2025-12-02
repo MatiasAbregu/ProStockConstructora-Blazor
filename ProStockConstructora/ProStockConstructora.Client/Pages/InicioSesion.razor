@@ -8,7 +8,7 @@
 @if (sesionUsuario.Usuario == null)
 {
     <article class="usuario-form container-fluid">
-        <EditForm Model="usuario" class="d-flex flex-column" OnValidSubmit="IniciarSesion">
+        <EditForm Model="usuario" class="d-flex flex-column" onValidSubmit="IniciarSesion" >
             <DataAnnotationsValidator />
             <h4 class="mb-5">Inicie sesión para continuar</h4>
             <div class="mb-3">

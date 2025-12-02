@@ -34,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!string.IsNullOrEmpty(mensaje) || !depositos.Any())
+                    @if (!string.IsNullOrEmpty(mensaje) || depositos == null || !depositos.Any())
                     {
                         <tr>
                             <td class="text-center" 

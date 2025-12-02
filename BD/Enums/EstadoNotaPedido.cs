@@ -14,6 +14,7 @@ namespace BD.Enums
         Aprobada = 1,
         ParcialmenteAprobada = 2,
         ParcialmenteRechazada = 3,
-        Rechazada = 4
+        Rechazada = 4,
+        Anulada = 5
     }
 }
