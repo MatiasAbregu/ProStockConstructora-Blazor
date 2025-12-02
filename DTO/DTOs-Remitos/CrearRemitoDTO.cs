@@ -10,13 +10,8 @@ namespace DTO.DTOs_Remitos
 {
     public class CrearRemitoDTO
     {
-        public required string NumeroRemito { get; set; }
-        public required long NotaDePedidoId { get; set; }
-        public required long DepositoOrigenId { get; set; }
-        public required long DepositoDestinoId { get; set; }
-        public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
-        public required DateTime FechaEmision { get; set; }
-        public DateTime? FechaLimite { get; set; }
-        public DateTime? FechaRecepcion { get; set; }
+        public string NumeroRemito { get; set; }
+        public long NotaDePedidoId { get; set; }
+        public DateTime FechaEmision { get; set; }
     }
 }

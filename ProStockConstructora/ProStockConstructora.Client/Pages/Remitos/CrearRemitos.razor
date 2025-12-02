@@ -1,4 +1,4 @@
-﻿@page "/remitos/crear"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/crear"
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 @inject DatosSesion Sesion
@@ -24,21 +24,25 @@
                 </div>
             }
             <div class="my-3 px-4">
-                <label class="form-label">Número Nota de Pedido:</label>
-                <input value="@remito.NumeroNotaPedido" type="text" class="form-control" disabled />
+                <label class="form-label">Número Nota de Remito:</label>
+                <input @bind="remito.NumeroRemito" type="text" class="form-control" disabled />
             </div>
             @if (nota != null)
             {
                 <div class="my-3 px-4">
                     <label class="form-label">Deposito que genera el remito:</label>
-                    <input value="@NotaDePedidoId." type="text" class="form-control" disabled />
+                    <input @bind="nota.DepositoDestino" type="text" class="form-control" disabled />
                 </div>
                 <h5>Detalle:</h5>
-                @foreach (var renglon in nota.Detalles)
+                @if(nota.detalle == null || !nota.detalle.Any())
                 {
-                    <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
-                        @if (DepositoId != null && DepositoId != 0 && renglon.DepositoId == DepositoId)
-                        {
+                    <p>No hay detalles para mostrar.</p>
+                }
+                else
+                {
+                    @foreach (var renglon in nota.detalle)
+                    {
+                        <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
                             <div class="flex-grow-1 my-3 px-4">
                                 <label class="form-label">Recurso que se enviara:</label>
                                 <input value="@renglon.Recurso" class="form-control" type="text" disabled />
@@ -55,11 +59,10 @@
                                 <label class="form-label">Cantidad a enviar:</label>
                                 <input value="@renglon.Cantidad" class="form-control" type="number" />
                             </div>
-                        }
-                        
-                    </div>
+                        </div>
+                    }
                 }
-                <button class="btn btn-success my-2 btn-submit" type="button" @onclick="">
+                <button class="btn btn-success my-2 btn-submit" type="button" @onclick="CrearRemito">
                     <i class="bi bi-check-lg me-1"></i> Guardar cambios
                 </button>
             }
@@ -80,7 +83,41 @@ else
     [Parameter]
     public long NotaDePedidoId { get; set; }
 
+    NotaDePedidoParaRemitoDTO nota = new();
+    CrearRemitoDTO remito = new();
+   
 
     private string Mensaje;
-   
+
+    override protected async Task OnInitializedAsync()
+    {
+        await ObtenerNumeroDeRemito();
+        await ObtenerNotaDePedido();
+    }
+
+    private async Task ObtenerNumeroDeRemito()
+    {
+        var res = await Http.Get<Response<string>>($"api/remito/obtener-numero-remito");
+        if (res.Respuesta != null)
+        {
+          remito = new CrearRemitoDTO
+            {
+                NumeroRemito = res.Respuesta.Objeto,
+                
+            };
+        }
+    }
+    private async Task ObtenerNotaDePedido()
+    {
+        var res = await Http.Get<Response<NotaDePedidoParaRemitoDTO>>($"api/notadepedido/obtener-nota-de-pedido/{NotaDePedidoId}/deposito/{DepositoId}");
+        if(res.Respuesta != null)
+        {
+            nota = res.Respuesta.Objeto;
+        }
+    }
+
+    private async Task CrearRemito()
+    {
+        
+    }
 }

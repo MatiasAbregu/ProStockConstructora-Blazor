@@ -21,222 +21,50 @@ namespace Repositorios.Servicios
         {
             baseDeDatos = BaseDeDatos;
         }
-        public async Task<Response<List<VerRemitoDTO>>> ObtenerRemitos()
+        public async Task<Response<string>> ObtenerNumeroRemitoSiguiente()
         {
             try
             {
-                var remitos = await baseDeDatos.Remitos.ToListAsync();
-                var remitosDTO = remitos.Select(r => new VerRemitoDTO
-                {
-                    Id = r.Id,
-                    NumeroRemito = r.NumeroRemito,
-                    NotaDePedidoId = r.NotaDePedidoId,
-                    DepositoOrigenId = r.DepositoOrigenId,
-                    DepositoDestinoId = r.DepositoDestinoId,
-                    Estado = r.Estado,
-                    FechaEmision = r.FechaEmision,
-                    FechaLimite = (DateTime)r.FechaLimite,
-                    FechaRecepcion = r.FechaRecepcion
-                }).ToList();
-                return new Response<List<VerRemitoDTO>>
-                {
-                    Objeto = remitosDTO,
-                    Mensaje = "Remitos obtenidos con éxito.",
-                    Estado = true
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return new Response<List<VerRemitoDTO>>
-                {
-                    Objeto = null,
-                    Mensaje = "Error al obtener los remitos.",
-                    Estado = false
-                };
-            }
-        }
-        public async Task<Response<VerRemitoDTO>> ObtenerRemitoPorId([FromRoute]long id)
-        {
-            try
-            {
-                var remito = await baseDeDatos.Remitos
-                    .Include(r => r.NotaDePedido)
-                    .Include(r => r.DepositoOrigenId)
-                    .Include(r => r.DepositoDestinoId)
-                    .FirstOrDefaultAsync(r => r.Id == id);
-                if (remito == null)
-                {
-                    return new Response<VerRemitoDTO>
-                    {
-                        Objeto = null,
-                        Mensaje = "No existe el remito con ese ID.",
-                        Estado = false
-                    };
-                }
-                var remitoDTO = new VerRemitoDTO()
-                {
-                    Id = remito.Id,
-                    NumeroRemito = remito.NumeroRemito,
-                    NotaDePedidoId = remito.NotaDePedidoId,
-                    DepositoOrigenId = remito.DepositoOrigenId,
-                    DepositoDestinoId = remito.DepositoDestinoId,
-                    Estado = remito.Estado,
-                    FechaEmision = remito.FechaEmision,
-                    FechaLimite = (DateTime)remito.FechaLimite,
-                    FechaRecepcion = remito.FechaRecepcion
-                };
-                return new Response<VerRemitoDTO>
-                {
-                    Objeto = remitoDTO,
-                    Mensaje = "Remito obtenido con éxito.",
-                    Estado = true
-                };
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return new Response<VerRemitoDTO>
-                {
-                    Objeto = null,
-                    Mensaje = "Error al obtener el remito.",
-                    Estado = false
-                };
-            }
-        }
-        public async Task<Response<VerRemitoDTO>> ObtenerRemitoPorNotaDePedidoId(long notaDePedidoId)
-            {
-            try
-            {
-                var remito = await baseDeDatos.Remitos
-                    .FirstOrDefaultAsync(r => r.NotaDePedidoId == notaDePedidoId);
-                if (remito == null)
-                {
-                    return new Response<VerRemitoDTO>
-                    {
-                        Objeto = null,
-                        Mensaje = "No se encontró el remito para la nota de pedido dada.",
-                        Estado = false
-                    };
-                }
-                var remitoDTO = new VerRemitoDTO
-                {
-                    Id = remito.Id,
-                    NumeroRemito = remito.NumeroRemito,
-                    NotaDePedidoId = remito.NotaDePedidoId,
-                    DepositoOrigenId = remito.DepositoOrigenId,
-                    DepositoDestinoId = remito.DepositoDestinoId,
-                    Estado = remito.Estado,
-                    FechaEmision = remito.FechaEmision,
-                    FechaLimite = (DateTime)remito.FechaLimite,
-                    FechaRecepcion = remito.FechaRecepcion
-                };
-                return new Response<VerRemitoDTO>
-                {
-                    Objeto = remitoDTO,
-                    Mensaje = "Remito obtenido con éxito.",
-                    Estado = true
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.InnerException.Message}");
-                return new Response<VerRemitoDTO>
-                {
-                    Objeto = null,
-                    Mensaje = "Error al obtener el remito.",
-                    Estado = false
-                };
-            }
-        }
-
-        public async Task<Response<string>> CrearRemito(CrearRemitoDTO e)
-        {
-            try
-            {
-                bool existe = await baseDeDatos.Remitos
-                    .AnyAsync(r => r.NumeroRemito == e.NumeroRemito);
-                if (existe) return new Response<string>
-                {
-
-                    Objeto = null,  
-                    Mensaje = "Ya existe un remito con ese número.",
-                    Estado = true
-
-                };
-                var nuevoRemito = new Remito
-                {
-                    NumeroRemito = e.NumeroRemito,
-                    NotaDePedidoId = e.NotaDePedidoId,
-                    DepositoOrigenId = e.DepositoOrigenId,
-                    DepositoDestinoId = e.DepositoDestinoId,
-                    Estado = e.EstadoRemito,
-                    FechaEmision = e.FechaEmision,
-                    FechaLimite = e.FechaLimite,
-                    FechaRecepcion = e.FechaRecepcion
-                };
-                baseDeDatos.Remitos.Add(nuevoRemito);
-                await baseDeDatos.SaveChangesAsync();
-
                 return new Response<string>
                 {
-                    Objeto = "Remito creado con éxito.",
+                    Estado = true,
                     Mensaje = null,
-                    Estado = true
+                    Objeto = await GenerarNumeroRemitoAsync()
                 };
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+
+                Console.WriteLine("Error" + e.Message);
                 return new Response<string>
                 {
-                    Objeto = null,
-                    Mensaje = "Error al crear el remito.",
-                    Estado = false
+                    Estado = false,
+                    Mensaje = "Error al obtener el número de nota de pedido.",
+                    Objeto = null
                 };
             }
         }
-        public async Task<Response<string>> ActualizarRemito(long id, ActualizarRemitoDTO remitoDTO)
+
+        private async Task<string> GenerarNumeroRemitoAsync()
         {
-            try
+            var ultimoNumero = await baseDeDatos.Remitos
+                .OrderByDescending(r => r.Id)
+                .Select(r => r.Id)
+                .FirstOrDefaultAsync();
+            string numeroRemito = $"R-";
+            if (ultimoNumero != null && ultimoNumero != 0)
             {
-                var remitoExistente = await baseDeDatos.Remitos.FirstOrDefaultAsync(r => r.Id == id);
-                if (remitoExistente == null)
-                {
-                    return new Response<string>
-                    {
-                        Objeto = null,
-                        Mensaje = "No existe un remito con ese ID.",
-                        Estado = false
-                    };
-                }
-                remitoExistente.NumeroRemito = remitoDTO.NumeroRemito;
-                remitoExistente.NotaDePedidoId = (long)remitoDTO.NotaDePedidoId;
-                remitoExistente.DepositoOrigenId = (long)remitoDTO.DepositoOrigenId;
-                remitoExistente.DepositoDestinoId = (long)remitoDTO.DepositoDestinoId;
-                remitoExistente.Estado = remitoDTO.EstadoRemito;
-                remitoExistente.FechaEmision = (DateTime)remitoDTO.FechaEmision;
-                remitoExistente.FechaLimite = (DateTime)remitoDTO.FechaLimite;
-                remitoExistente.FechaRecepcion = remitoDTO.FechaRecepcion;
-                await baseDeDatos.SaveChangesAsync();
-                return new Response<string>
-                {
-                    Objeto = null,
-                    Mensaje = "Remito actualizado con éxito.",
-                    Estado = true
-                };
+                numeroRemito += $"{ultimoNumero + 1}";
             }
-            catch (Exception ex)
+            else
             {
-                return new Response<string>
-                {
-                    Objeto = null,
-                    Mensaje = "Error al actualizar el remito.",
-                    Estado = false
-                };
+                numeroRemito += "1";
             }
+            return numeroRemito;
         }
+
+
+
     }
 
 }

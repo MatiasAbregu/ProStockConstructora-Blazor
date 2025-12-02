@@ -458,7 +458,7 @@ namespace Repositorios.Servicios
                     Estado = false,
                     Mensaje = "¡Hubo un error al obtener los datos de la nota de pedido para el remito!",
                     Objeto = null
-                }
+                };
             }
         }
 
