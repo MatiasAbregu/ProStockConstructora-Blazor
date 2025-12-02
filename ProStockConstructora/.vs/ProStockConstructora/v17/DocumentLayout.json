@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\ProStock Construcciones\\ProStockConstructora\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,7 +62,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "VerDetallesDeNotaDePedido.razor",
               "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
@@ -75,26 +75,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "CrearRemitos.razor",
               "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-28T20:53:17.812Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ListaRemitos.razor",
               "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
               "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAAAABwAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-28T20:53:11.836Z",
               "EditorCaption": ""

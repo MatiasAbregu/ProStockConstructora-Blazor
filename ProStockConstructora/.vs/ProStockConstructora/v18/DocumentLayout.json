@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\listadonotadepedidos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\listadonotadepedidos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\matia\\onedrive\\documentos\\prostockconstructorablazor\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,6 +47,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ListadoNotaDePedidos.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADAAAABhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-28T20:48:44.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VerDetallesDeNotaDePedido.razor",
+              "DocumentMoniker": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "ToolTip": "C:\\Users\\matia\\OneDrive\\Documentos\\ProStockConstructoraBlazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAAAGUAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-28T20:34:12.907Z",
+              "EditorCaption": ""
             }
           ]
         }

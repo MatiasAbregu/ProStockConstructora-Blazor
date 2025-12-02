@@ -72,17 +72,17 @@
                              </tr>
                         }
                     }
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-between">
-            <div class="botoneraTabla">
-                <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
-                <p class="btn-tabla-numero">@numeroPagina</p>
-                <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@remitos?.Count registros totales</p>
             </div>
-            <p>@remitos?.Count registros totales</p>
         </div>
-    </div>
     </article>
 }
 else
@@ -91,8 +91,8 @@ else
 }
 
 @code {
-    [Parameter]
-    public long? notaDePedidoId { get; set; }
+    // [Parameter]
+    // public long? notaDePedidoId { get; set; }
     private List<VerRemitoDTO> remitos = new();
     private DatosUsuario usuario = new();
     private string mensaje;
@@ -122,14 +122,14 @@ else
     private async Task SiguientePagina()
     {
         numeroPagina++;
-        await CargarRemitos();
+        StateHasChanged();
     }
     private async Task AnteriorPagina()
     {
         if (numeroPagina > 1)
         {
             numeroPagina--;
-            await CargarRemitos();
+            StateHasChanged();
         }
     }
 

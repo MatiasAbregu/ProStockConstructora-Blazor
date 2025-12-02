@@ -8,7 +8,7 @@
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Notas de pedido (Detalles)</p>
-            <a class="btn btn-secondary" href=@($"/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card p-3">
             @if (!string.IsNullOrEmpty(MensajeError))
@@ -17,33 +17,57 @@
                     @MensajeError
                 </div>
             }
+
             @if (nota != null)
             {
                 <div class="my-3 px-4">
-                    <label for="emailInput" class="form-label">Número Nota de Pedido</label>
-                    <input @bind="nota.NumeroNotaPedido" type="text" class="form-control" disabled />
+                    <label class="form-label">Número Nota de Pedido:</label>
+                    <input value="@nota.NumeroNotaPedido" type="text" class="form-control" disabled />
                 </div>
-                @foreach (var renglon in nota.ListaDePedido)
-                {
-                    <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
-                        <div class="flex-grow-1 my-3 px-4">
-                            <label class="form-label">Depósito destino:</label>
-                            @* <input @bind="renglon." type="text" class="form-control" disabled /> *@
-                        </div>
-                        <div class="flex-grow-1 my-3 px-4">
-                            <label class="form-label">Recurso solicitado:</label>
-                            @* <input @bind="renglon." type="text" class="form-control" disabled /> *@
-                        </div>
-                        <div class="my-3 px-4">
-                            <label for="cantidadInput" class="form-label">Cantidad solicitada:</label>
-                            @* <input @bind="renglon." type="number" class="form-control" disabled /> *@
-                        </div>
-                        <div class="my-3 px-4">
-                            <label for="cantidadInput" class="form-label">Estado:</label>
-                            @* <input @bind="renglon." type="number" class="form-control" disabled /> *@
-                        </div>
+
+                <div class="my-3 px-4 card">
+                    <div class="my-3 px-4">
+                        <label class="form-label">Depósito de origen:</label>
+                        <input value="@nota.DepositoOrigen" type="text" class="form-control" disabled />
                     </div>
-                }
+                    <div class="my-3 px-4">
+                        <label class="form-label">Generada por:</label>
+                        <input value="@nota.Usuario" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="my-3 px-4">
+                        <label class="form-label">Fecha de emisión:</label>
+                        <input value="@nota.FechaEmision" type="text" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <h5>Detalle:</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Depósito destino</th>
+                                <th>Recurso</th>
+                                <th>Cantidad solicitada</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var renglon in nota.Detalles)
+                            {
+                                <tr>
+                                    <td>@renglon.Deposito</td>
+                                    <td>@renglon.Recurso</td>
+                                    <td>@renglon.Cantidad</td>
+                                    <td>
+                                        <span class="badge @ObtenerEstadoClase(renglon.Estado.ToString())">
+                                            @renglon.Estado.ToString()
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
         </div>
     </article>
@@ -73,5 +97,14 @@ else
             if (Respuesta.Respuesta.Objeto != null) nota = Respuesta.Respuesta.Objeto;
             else MensajeError = Respuesta.Respuesta.Mensaje;
         }
+    }
+
+    private string ObtenerEstadoClase(string estado)
+    {
+        if (estado == "Rechazada") return "text-bg-danger";
+        else if (estado == "Aprobada") return "text-bg-success";
+        else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
+        else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
+        else return "text-bg-warning";
     }
 }
