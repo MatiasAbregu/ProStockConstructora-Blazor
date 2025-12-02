@@ -11,14 +11,14 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav bg-dark flex-column">
-        <div class="nav-item px-3"> 
-            <NavLink class="nav-link" href="/remito">
-                <i class="bi bi-file-earmark-text"></i>Remitos
-            </NavLink>
+        <div class="nav-item px-3">
             @if (datosUsuario.Usuario != null)
             {
                 <NavLink class="nav-link cerrarsesion" @onclick="CerrarSesion">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </NavLink>
+                <NavLink class="nav-link" href="/inicio">
+                    <i class="bi bi-house-fill"></i> Inicio
                 </NavLink>
                 <NavLink class="nav-link" href="/recursos">
                     <i class="bi bi-tools"></i> Recursos

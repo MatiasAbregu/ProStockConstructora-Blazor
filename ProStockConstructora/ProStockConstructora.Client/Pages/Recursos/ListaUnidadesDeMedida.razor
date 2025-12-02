@@ -61,7 +61,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (unidad == null && listadoUnidades.Count == 0)
+                    @if (!listadoUnidades.Any())
                     {
                         <tr>
                             <td colspan="2" class="text-center text-muted">No hay unidades de medida cargadas aún.</td>
@@ -139,6 +139,7 @@ else
 
     private async Task CargarUnidades()
     {
+        Mensaje = string.Empty;
         var res = await http.Get<Response<List<UnidadDeMedidaDTO>>>($"api/unidad-medida/empresa/{usuario.EmpresaId}");
 
         if (res.Respuesta != null)
@@ -150,6 +151,7 @@ else
 
     private async Task CrearUnidad()
     {
+        Mensaje = string.Empty;
         if (editContext.Validate())
         {
             unidad.EmpresaId = usuario.EmpresaId;
@@ -168,6 +170,7 @@ else
 
     private async Task ActualizarUnidad(long id)
     {
+        Mensaje = string.Empty;
         if (editContext.Validate())
         {
             unidad.EmpresaId = usuario.EmpresaId;
@@ -184,6 +187,7 @@ else
 
     private async Task CargarUnidadDeMedida(long id)
     {
+        Mensaje = string.Empty;
         var res = await http.Get<Response<UnidadDeMedidaDTO>>($"api/unidad-medida/{id}");
         if (res.Respuesta != null)
         {

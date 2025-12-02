@@ -3,6 +3,8 @@
 @inject NavigationManager Navigation
 @inject DatosSesion Sesion
 
+<PageTitle>Crear Nota de Pedido - ProStock</PageTitle>
+
 @if (Sesion.Usuario != null && (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEOBRA")))
 {
     <div class="p-4">
@@ -184,14 +186,18 @@ else
                 renglon.RecursoId = 0;
             }
         }
-        else
-        {
-            renglon.RecursoId = 0;
-        }
+        else renglon.RecursoId = 0;  
     }
 
     private async Task CrearNotaPedido()
     {
+        MensajeErrorNota = string.Empty;
+        if(NotadePedido.ListaDePedido?.Count <= 0)
+        {
+            MensajeErrorNota = "La nota de pedido debe tener al menos un detalle.";
+            return;
+        }
+
         bool tieneErrores = false;
         foreach(var renglon in NotadePedido.ListaDePedido)
         {
@@ -227,14 +233,16 @@ else
             }
             mensajesDeError[renglon] = errores;
         }
-
-        if(NotadePedido.ListaDePedido?.Count <= 0)
-        {
-            MensajeErrorNota = "La nota de pedido debe tener al menos un detalle.";
-            tieneErrores = true;
-        }
-
         if (tieneErrores) return;
+
+        bool rengloDuplicado = NotadePedido.ListaDePedido
+                               .GroupBy(d => new { d.DepositoDestinoId, d.RecursoId }).Any(g => g.Count() > 1);
+
+        if (rengloDuplicado)
+        {
+            MensajeErrorNota = "La nota de pedido no puede tener dos detalles que apuntan al mismo depósito y recurso.";
+            return;
+        }
 
         var respuesta = await Http.Post<CrearNotaDePedidoDTO, Response<string>>("api/notadepedido",NotadePedido); 
         if (respuesta.Respuesta != null)

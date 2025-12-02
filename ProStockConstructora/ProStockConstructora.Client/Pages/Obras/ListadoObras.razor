@@ -30,16 +30,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!string.IsNullOrEmpty(Mensaje) && Obras?.Count == 0)
+                    @if (!Obras.Any() || !string.IsNullOrEmpty(Mensaje))
                     {
                         <tr>
                             <td colspan="4" class="text-center">@Mensaje</td>
-                        </tr>
-                    }
-                    else if (Obras?.Count == 0)
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">No hay obras cargadas aún en el sistema.</td>
                         </tr>
                     }
                     else if (Obras?.Count > 0)
@@ -136,6 +130,7 @@ else
 
     private async Task CargarObras()
     {
+        Mensaje = string.Empty;
         var res = await http.Post<DatosUsuario, Response<List<VerObraDTO>>>("api/obra/obras-usuario", usuario);
 
         if (res.Respuesta != null)
@@ -150,6 +145,7 @@ else
 
     private async Task FinalizarObra(long id)
     {
+        Mensaje = string.Empty;
         MostraModal = false;
         var res = await http.Delete <Response<string>>($"api/obra/{id}");
         if (res.Respuesta != null)
@@ -162,7 +158,7 @@ else
                 await Task.Delay(2500);
                 mensajeEstado = "";
             }
-            else mensajeEstado = res.Respuesta.Mensaje;            
+            else mensajeEstado = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;         
         }     
     }
 

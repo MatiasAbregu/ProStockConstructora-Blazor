@@ -1,134 +1,197 @@
-﻿@* @page "/editar-nota/{numero}"
-@using BD.Modelos
-@inject NavigationManager Nav
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/detalles/editar"
+@page "/notadepedido/{NotaDePedidoId:long}/detalles/editar"
+@inject NavigationManager navManager
+@inject IHttpServicio http
+@inject DatosSesion DatosSesion
 
+<PageTitle>Notas de Pedido (Edición) - ProStock</PageTitle>
 
-
-@if (nota == null)
+@if (DatosSesion.Usuario != null &&
+    (DatosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || DatosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
 {
-    <p>Cargando...</p>
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Notas de pedido (Detalles)</p>
+            <a class="btn btn-secondary" href=@((ObraId != 0 && DepositoId != 0) ?
+                                                    $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido"
+                                                    : "/")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+        </div>
+        <div class="card p-3">
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Mensaje
+                </div>
+            }
+
+            @if (nota != null)
+            {
+                <div class="my-3 px-4">
+                    <label class="form-label">Número Nota de Pedido:</label>
+                    <input value="@nota.NumeroNotaPedido" type="text" class="form-control" disabled />
+                </div>
+
+                <div class="my-3 px-4 card">
+                    <div class="my-3 px-4">
+                        <label class="form-label">Depósito de origen:</label>
+                        <input value="@nota.DepositoOrigen" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="my-3 px-4">
+                        <label class="form-label">Generada por:</label>
+                        <input value="@nota.Usuario" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="my-3 px-4">
+                        <label class="form-label">Fecha de emisión:</label>
+                        <input value="@nota.FechaEmision" type="text" class="form-control" disabled />
+                    </div>
+                </div>
+                <hr />
+                <h5>Detalle:</h5>
+                @foreach (var renglon in nota.Detalles)
+                {
+                    <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
+                        @if (DepositoId != null && DepositoId != 0 && renglon.DepositoId == DepositoId)
+                        {
+                            <div class="flex-grow-1 my-3 px-4">
+                                <label class="form-label">Depósito al que se solicita:</label>
+                                <input value="@renglon.Deposito" class="form-control" type="text" disabled />
+                            </div>
+                            <div class="flex-grow-1 my-3 px-4">
+                                <label class="form-label">Recurso solicitado:</label>
+                                <input value="@renglon.Recurso" class="form-control" type="text" disabled />
+                            </div>
+                            <div class="my-3 px-4">
+                                <label class="form-label">Cantidad solicitada:</label>
+                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                            </div>
+                            <div class="my-3 px-4">
+                                <label class="form-label">Estado actual:</label>
+                                <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                    <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
+                                    <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
+                                    <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
+                                    <option value="@EnumEstadoNotaPedido.ParcialmenteRechazada">Parcialmente rechazada</option>
+                                    <option value="@EnumEstadoNotaPedido.Rechazada">Rechazada</option>
+                                </InputSelect>
+                            </div>
+                        } 
+                        else
+                        {
+                            if (DatosSesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+                            {
+                                <div class="flex-grow-1 my-3 px-4">
+                                    <label class="form-label">Depósito al que se solicita:</label>
+                                    <input value="@renglon.Deposito" class="form-control" type="text" disabled />
+                                </div>
+                                <div class="flex-grow-1 my-3 px-4">
+                                    <label class="form-label">Recurso solicitado:</label>
+                                    <input value="@renglon.Recurso" class="form-control" type="text" disabled />
+                                </div>
+                                <div class="my-3 px-4">
+                                    <label class="form-label">Cantidad solicitada:</label>
+                                    <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                                </div>
+                                <div class="my-3 px-4">
+                                    <label class="form-label">Estado actual:</label>
+                                    <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                        <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
+                                        <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
+                                        <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
+                                        <option value="@EnumEstadoNotaPedido.ParcialmenteRechazada">Parcialmente rechazada</option>
+                                        <option value="@EnumEstadoNotaPedido.Rechazada">Rechazada</option>
+                                    </InputSelect>
+                                </div>
+                            }
+                            else if (DatosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                            {
+                                if (DatosSesion.Usuario.DepositosId.Contains(renglon.DepositoId))
+                                {
+                                    <div class="flex-grow-1 my-3 px-4">
+                                        <label class="form-label">Depósito al que se solicita:</label>
+                                        <input value="@renglon.Deposito" class="form-control" type="text" disabled />
+                                    </div>
+                                    <div class="flex-grow-1 my-3 px-4">
+                                        <label class="form-label">Recurso solicitado:</label>
+                                        <input value="@renglon.Recurso" class="form-control" type="text" disabled />
+                                    </div>
+                                    <div class="my-3 px-4">
+                                        <label class="form-label">Cantidad solicitada:</label>
+                                        <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                                    </div>
+                                    <div class="my-3 px-4">
+                                        <label class="form-label">Estado actual:</label>
+                                        <InputSelect @bind-Value="renglon.Estado" class="form-select">
+                                            <option value="@EnumEstadoNotaPedido.Pendiente">Pendiente</option>
+                                            <option value="@EnumEstadoNotaPedido.Aprobada">Aprobada</option>
+                                            <option value="@EnumEstadoNotaPedido.ParcialmenteAprobada">Parcialmente aprobada</option>
+                                            <option value="@EnumEstadoNotaPedido.ParcialmenteRechazada">Parcialmente rechazada</option>
+                                            <option value="@EnumEstadoNotaPedido.Rechazada">Rechazada</option>
+                                        </InputSelect>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                }
+                <button class="btn btn-success my-2 btn-submit" type="button" @onclick="ActualizarEstados">
+                    <i class="bi bi-check-lg me-1"></i> Guardar cambios
+                </button>
+            }
+        </div>
+    </article>
 }
 else
 {
-    <div class="d-flex justify-content-center mt-4">
-        <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0 text-center">Editar Nota de Pedido</h5>
-            </div>
-
-            <div class="card-body">
-
-                <div class="mb-3">
-                    <label class="form-label">Número de nota</label>
-                    <input class="form-control" disabled value="@nota.NumeroNotaPedido" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Depósito Origen</label>
-                    <select class="form-select" @bind="nota.DepositoOrigenId">
-                        @foreach (var d in depositos)
-                        {
-                            <option value="@d.Id">@($"{d.Id} ({d.Nombre})")</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Depósito Destino</label>
-                    <select class="form-select" @bind="nota.DepositoDestinoId">
-                        @foreach (var d in depositos)
-                        {
-                            <option value="@d.Id">@($"{d.Id} ({d.Nombre})")</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Fecha de Emisión</label>
-                    <input type="date" class="form-control" @bind="fechaEmision" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Estado</label>
-                    <select class="form-select" @bind="nota.Estado">
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Aprobada">Aprobada</option>
-                        <option value="Rechazada">Rechazada</option>
-                    </select>
-                </div>
-
-                @if (mostrarConfirmacion)
-                {
-                    <div class="alert alert-success p-2">
-                        Cambios guardados correctamente ✔
-                    </div>
-                }
-
-                <div class="d-flex justify-content-center gap-2 mt-3">
-                    <button class="btn btn-primary btn-sm" @onclick="Guardar"> Guardar</button>
-                    <button class="btn btn-secondary btn-sm" @onclick="Volver"> Volver</button>
-                </div>
-
-            </div>
-        </div>
-    </div> 
+    navManager.NavigateTo("/");
 }
 
 @code {
-    [Parameter] public string? numero { get; set; }
+    [Parameter]
+    public long ObraId { get; set; }
+    [Parameter]
+    public long DepositoId { get; set; }
+    [Parameter]
+    public long NotaDePedidoId { get; set; }
 
-    VerNotaDePedidoDTO? nota;
+    private DatosUsuario Usuario;
+
+    private string Mensaje;
+    private VerNotadePedidoDetalladaDTO nota;
 
     protected override async Task OnInitializedAsync()
     {
-        nota = new VerNotaDePedidoDTO
+        if(DatosSesion.Usuario != null)
         {
-            NumeroNotaPedido = numero!,
-            DepositoOrigenId = 10,
-            DepositoDestinoId = 20,
-            FechaEmision = DateTime.Now.AddDays(-3),
-            Estado = DTO.Enum.EnumEstadoNotaPedido.Pendiente
-        };
+            Usuario = DatosSesion.Usuario;
+            await CargarNotadePedido();
+        }
     }
 
-    private async Task Guardar()
+    private async Task CargarNotadePedido()
     {
-        mostrarConfirmacion = true;
-        StateHasChanged();              
-        await Task.Delay(8000);        
-        mostrarConfirmacion = false;
-
-       
-        Nav.NavigateTo("/notadepedidos");
+        var Respuesta = await http.Get<Response<VerNotadePedidoDetalladaDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
+        if (Respuesta.Respuesta != null)
+        {
+            if (Respuesta.Respuesta.Objeto != null) nota = Respuesta.Respuesta.Objeto;
+            else Mensaje = Respuesta.Respuesta.Mensaje;
+        }
     }
 
-    void Volver() => Nav.NavigateTo("/notadepedidos");
-
-
-    private DateTime fechaEmision
+    private async Task ActualizarEstados()
     {
-        get => nota.FechaEmision;
-        set => nota.FechaEmision = value;
+        foreach(var renglon in nota.Detalles)
+        {
+            Console.WriteLine($"ID({renglon.Id}) ESTADO: " + renglon.Estado.ToString() + $" USUARIO: {Usuario.Id}");
+        }
+        
+    }
+
+    private string ObtenerEstadoClase(string estado)
+    {
+        if (estado == "Rechazada") return "text-bg-danger";
+        else if (estado == "Aprobada") return "text-bg-success";
+        else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
+        else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
+        else return "text-bg-warning";
     }
 }
- 
-
-@code {
-
-    List<DepositoDTO> depositos = new()
-{
-    new DepositoDTO { Id = 10, Nombre = "Depósito Central" },
-    new DepositoDTO { Id = 20, Nombre = "Depósito Norte" },
-    new DepositoDTO { Id = 12, Nombre = "Depósito Sur" },
-    new DepositoDTO { Id = 22, Nombre = "Depósito Oeste" }
-};
-
-    class DepositoDTO
-    {
-        public long Id { get; set; }
-        public string Nombre { get; set; } = "";
-    }
-
-    bool mostrarConfirmacion = false;
-   
-} *@

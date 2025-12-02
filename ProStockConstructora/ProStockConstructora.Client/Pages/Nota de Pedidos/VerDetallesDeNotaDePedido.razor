@@ -1,14 +1,19 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/detalles"
+@page "/notadepedido/{NotaDePedidoId:long}/detalles"
 @inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
+
+<PageTitle>Detalles de Nota de Pedido - ProStock</PageTitle>
 
 @if (Sesion.Usuario != null)
 {
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Notas de pedido (Detalles)</p>
-            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+            <a class="btn btn-secondary" href=@((ObraId != 0 && DepositoId != 0) ?
+                                                    $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido"
+                                                    : "/")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card p-3">
             @if (!string.IsNullOrEmpty(MensajeError))
@@ -49,6 +54,7 @@
                                 <th>Recurso</th>
                                 <th>Cantidad solicitada</th>
                                 <th>Estado</th>
+                                <th>Ultima modificación por</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,6 +69,7 @@
                                             @renglon.Estado.ToString()
                                         </span>
                                     </td>
+                                    <td>@renglon.UsuarioQueModifico</td>
                                 </tr>
                             }
                         </tbody>

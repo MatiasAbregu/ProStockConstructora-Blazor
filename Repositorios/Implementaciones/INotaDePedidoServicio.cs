@@ -1,5 +1,7 @@
-﻿using DTO.DTOs_NotaDePedido;
+﻿using BD.Modelos;
+using DTO.DTOs_NotaDePedido;
 using DTO.DTOs_Response;
+using DTO.DTOs_Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,7 @@ namespace Repositorios.Implementaciones
         Task<Response<string>> ObtenerNumeroNotadePedidoSiguiente();
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPorDepositoId(long DepositoId);
         Task<Response<VerNotadePedidoDetalladaDTO>> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId);
+        Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientes(DatosUsuario Usuario);
+        Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientesPorDepositoId(long DepositoId);
     }
 }

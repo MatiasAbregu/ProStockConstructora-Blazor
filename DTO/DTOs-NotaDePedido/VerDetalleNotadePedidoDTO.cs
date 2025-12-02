@@ -10,9 +10,13 @@ namespace DTO.DTOs_NotaDePedido
     public class VerDetalleNotadePedidoDTO
     {
         public long Id { get; set; }
+        public long? RecursoId { get; set; }
         public string Recurso { get; set; }
+        public long DepositoId { get; set; }
         public string Deposito { get; set; }
         public int Cantidad { get; set; }
         public EnumEstadoNotaPedido Estado { get; set; }
+        public long? UsuarioQueModificadoId { get; set; }
+        public string UsuarioQueModifico { get; set; }
     }
 }

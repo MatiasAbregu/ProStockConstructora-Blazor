@@ -56,7 +56,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @if (tipoMaterial == null && listadoTipoMaterial.Count == 0)
+                    @if (!listadoTipoMaterial.Any())
                     {
                         <tr>
                             <td colspan="2" class="text-center text-muted">No hay tipos de material cargados aún.</td>
@@ -132,6 +132,7 @@ else
 
     private async Task CargarTiposDeMaterial()
     {
+        Mensaje = string.Empty;
         var res = await http.Get<Response<List<TipoMaterialDTO>>>($"api/tipo-material/empresa/{usuario.EmpresaId}");
 
         if (res.Respuesta != null)
@@ -143,6 +144,7 @@ else
 
     private async Task CrearTipoMaterial()
     {
+        Mensaje = string.Empty;
         if (editContext.Validate())
         {
             tipoMaterial.EmpresaId = usuario.EmpresaId;
@@ -161,6 +163,7 @@ else
 
     private async Task CargarTipoMaterial(long id)
     {
+        Mensaje = string.Empty;
         var res = await http.Get<Response<TipoMaterialDTO>>($"api/tipo-material/tipoMaterial/{id}");
         if (res.Respuesta != null)
         {
@@ -172,6 +175,7 @@ else
 
     private async Task ActualizarTipoMaterial(long id)
     {
+        Mensaje = string.Empty;
         if (editContext.Validate())
         {
             var res = await http.Put<TipoMaterialDTO, Response<string>>($"api/tipo-material/{id}", tipoMaterial);

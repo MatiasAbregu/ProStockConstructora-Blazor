@@ -1,3 +1,4 @@
+@* 
 ﻿@page "/remito"
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
@@ -133,4 +134,140 @@ else
         }
     }
 
+=======
+﻿@page "/remito"
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+@inject DatosSesion datosSesion;
+<PageTitle>Remitos- ProStockConstructora</PageTitle>
+
+@if(datosSesion.Usuario != null)
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Remitos</p>
+            <div class="botonera">
+                <a class="btn btn-add btn-success" href=@($"/remitos/crear")>+</a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>N°Remito</th>
+                        <th>N°Pedido</th>
+                        <th>D-Origen</th>
+                        <th>D-Destino</th>
+                        <th>Estado</th>
+                        <th>Fecha Emision</th>
+                        <th>Fecha Limite</th>
+                        <th>Fecha Recibido</th>
+                        <th>Acciones</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (remitos?.Count == 0)
+                    {
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                No hay remitos para mostrar.
+                            </td>
+                        </tr>
+                    }
+                    else if (remitos?.Count > 0)
+                    {
+                        @foreach (var remito in remitos)
+                        {
+                            <tr>
+                                <td>@remito.NumeroRemito</td>
+                                <td>@remito.NotaDePedidoId</td>
+                                <td>@remito.DepositoOrigenId</td>
+                                <td>@remito.DepositoDestinoId</td>
+                                <td>
+                                    <span class="badge @(remito.EstadoRemito.ToString() == "Pendiente"
+                                           ? "bg-warning"
+                                           : remito.EstadoRemito.ToString() == "EnTransito"
+                                           ? "bg-primary"
+                                           : remito.EstadoRemito.ToString() == "Recibido"
+                                           ? "bg-success"
+                                           : "bg-danger")">
+                                     @remito.EstadoRemito
+                                    </span>
+                                </td>
+                                <td>@remito.FechaEmision.ToString("dd/MM/yyyy")</td>
+                                <td>@remito.FechaLimite.ToString("dd/MM/yyyy")</td>
+                                <td>@(remito.FechaRecepcion.HasValue? remito.FechaRecepcion.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                                <td>
+                                   <a class="btn btn-outline-info" href=@($"/remitos/detalles/{remito.Id}")>
+                                    <i class="bi bi-file-earmark-text"></i>
+                                   </a>
+                                  <a class="btn btn-outline-primary" href=@($"/remitos/editar/{remito.Id}")>
+                                  <i class="bi bi-pencil"></i>
+                                  </a>
+                                </td>
+                             </tr>
+                        }
+                    }
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-between">
+            <div class="botoneraTabla">
+                <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                <p class="btn-tabla-numero">@numeroPagina</p>
+                <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+            </div>
+            <p>@remitos?.Count registros totales</p>
+        </div>
+    </div>
+    </article>
 }
+else
+{
+    Navigation.NavigateTo("/");
+}
+
+@code {
+    [Parameter]
+    public long? notaDePedidoId { get; set; }
+    private List<VerRemitoDTO> remitos = new();
+    private DatosUsuario usuario = new();
+    private string mensaje;
+    private int numeroPagina = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        usuario = datosSesion.Usuario;
+        await CargarRemitos();
+    }
+
+    private async Task CargarRemitos()
+    {
+        var res = await Http.Get<Response<List<VerRemitoDTO>>>("api/remito");
+        if(res.Respuesta != null)
+        {
+            if(res.Respuesta.Estado)
+            {
+                remitos = res.Respuesta.Objeto;
+                mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje; ;
+            }  
+        }
+
+    }
+
+    private async Task SiguientePagina()
+    {
+        numeroPagina++;
+        await CargarRemitos();
+    }
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            await CargarRemitos();
+        }
+    }
+
+} *@

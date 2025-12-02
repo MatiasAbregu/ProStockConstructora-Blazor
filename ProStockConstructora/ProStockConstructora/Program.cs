@@ -10,12 +10,7 @@ using Servicios.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5037/") });
-
-
-builder.Services.AddScoped<IHttpServicio, HttpServicio>();
-
-// Estableciendo conexión 
+// Estableciendo conexiï¿½n 
 builder.Services.AddDbContext<AppDbContext>(options =>
        options.UseMySql(builder.Configuration.GetConnectionString("ConexionDB"),
        new MariaDbServerVersion(new Version(10, 4, 32))));
@@ -67,9 +62,15 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAntiforgery();
 app.MapControllers();
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

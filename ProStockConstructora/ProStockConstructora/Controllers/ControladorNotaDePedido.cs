@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProStockConstructora.Client.Pages.Deposito;
 using System.Data;
+using DTO.DTOs_Usuarios;
 
 namespace ProStockConstructora.Controllers
 {
@@ -21,7 +22,7 @@ namespace ProStockConstructora.Controllers
             this.baseDeDatos = baseDeDatos;
             this.notaDePedidoServicio = notaDePedidoServicio;
         }
-        
+
 
         [HttpGet("obtener-numero-nota")]
         public async Task<ActionResult> ObtenerNumeroNotaPedido()
@@ -35,16 +36,28 @@ namespace ProStockConstructora.Controllers
         [HttpGet("obtener/{DepositoId:long}")]
         public async Task<ActionResult> ObtenerNotasDePedidoPorDepositoId(long DepositoId)
         {
-           var respuesta = await notaDePedidoServicio.ObtenerNotasDePedidoPorDepositoId(DepositoId);
+            var respuesta = await notaDePedidoServicio.ObtenerNotasDePedidoPorDepositoId(DepositoId);
             if (!respuesta.Estado)
                 return StatusCode(500, respuesta);
             return Ok(respuesta);
         }
 
-        // HTTPGET para obtener todas las notas de pedido POR USUARIO ID
+        [HttpGet("obtener-pendiente/{DepositoId:long}")]
+        public async Task<ActionResult> ObtenerNotasDePedidoPendientesPorDepositoId(long DepositoId)
+        {
+            var res = await notaDePedidoServicio.ObtenerNotasDePedidoPendientesPorDepositoId(DepositoId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
+        [HttpPost("obtener-notas-pendientes")]
+        public async Task<ActionResult> ObtenerNotasDePedidoPendientes(DatosUsuario usuario)
+        {
+            var res = await notaDePedidoServicio.ObtenerNotasDePedidoPendientes(usuario);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
 
-        // HTTPGET para obtener una nota de pedido POR SU ID
         [HttpGet("obtener-detalles-nota/{NotaDePedidoId:long}")]
         public async Task<ActionResult> ObtenerDetallesNotaDePedidoPorId(long NotaDePedidoId)
         {
@@ -56,7 +69,7 @@ namespace ProStockConstructora.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CrearNotadePedido(CrearNotaDePedidoDTO CrearNota) 
+        public async Task<ActionResult> CrearNotadePedido(CrearNotaDePedidoDTO CrearNota)
         {
             var respuesta = await notaDePedidoServicio.CrearNotaDePedido(CrearNota);
             if (!respuesta.Estado)
@@ -64,6 +77,12 @@ namespace ProStockConstructora.Controllers
             return Ok(respuesta);
         }
 
-        // HTTPPUT para actualizar el estado de cada detalle de una nota de pedido
+        [HttpPut("{NotaDePedidoId:long}")]
+        public async Task<ActionResult> ModificarEstadosDeDetallesDeNotaDePedido(long NotaDePedidoId, [FromBody] List<VerDetalleNotadePedidoDTO> detalles)
+        {
+            var res = await notaDePedidoServicio.ActualizarEstadosNotaDePedido(NotaDePedidoId, detalles);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
     }
 }

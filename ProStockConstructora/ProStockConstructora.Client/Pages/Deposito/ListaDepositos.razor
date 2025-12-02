@@ -34,19 +34,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!String.IsNullOrEmpty(mensaje) && depositos?.Count == 0)
+                    @if (!string.IsNullOrEmpty(mensaje) || !depositos.Any())
                     {
                         <tr>
                             <td class="text-center" 
                             colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
-                            @mensaje</td>
-                        </tr>
-                    }
-                    else if (depositos?.Count == 0)
-                    {
-                        <tr>
-                            <td class="text-center" 
-                                colspan="@(usuario.Roles.Contains("JEFEDEDEPOSITO") && ObraId != null && ObraId != 0 ? 6 : 5)">
                             @mensaje</td>
                         </tr>
                     }
@@ -110,7 +102,7 @@ else
 @code {
     [Parameter]
     public long ObraId { get; set; }
-    private List<VerDepositoDTO>? depositos = new();
+    private List<VerDepositoDTO> depositos = new();
     private DatosUsuario usuario = new();
 
     private string mensaje;
@@ -125,16 +117,14 @@ else
 
     private async Task CargarDepositos()
     {
+        mensaje = string.Empty;
         var res = ObraId != null ? await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario/{ObraId}", usuario)
                                  : await Http.Post<DatosUsuario, Response<List<VerDepositoDTO>>>($"api/deposito/depositos-usuario", usuario);
 
         if (res.Respuesta != null)
         {
-            if (res.Respuesta.Estado)
-            {
-                depositos = res.Respuesta.Objeto;
-                mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;
-            }
+            if (res.Respuesta.Objeto != null) depositos = res.Respuesta.Objeto;
+            else mensaje = res.Respuesta.Mensaje.Contains("éxito") ? string.Empty : res.Respuesta.Mensaje;      
         }
     }
 

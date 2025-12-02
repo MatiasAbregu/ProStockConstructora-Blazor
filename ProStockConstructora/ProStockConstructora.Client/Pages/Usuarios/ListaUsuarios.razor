@@ -25,16 +25,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!String.IsNullOrEmpty(mensaje) && usuarios?.Count == 0)
+                    @if (!usuarios.Any() || !string.IsNullOrEmpty(mensaje))
                     {
                         <tr>
                             <td colspan="4" class="text-center">@mensaje</td>
-                        </tr>
-                    }
-                    else if (usuarios?.Count == 0)
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">@mensaje</td>
                         </tr>
                     }
                     else if (usuarios?.Count > 0)
@@ -239,6 +233,7 @@ else
 
     private async Task CargarUsuarios()
     {
+        mensaje = string.Empty;
         var res = await http.Get<Response<List<DatosUsuario>>>($"api/usuario/{datosDeUsuario.EmpresaId}");
 
         if (res.Respuesta != null)
