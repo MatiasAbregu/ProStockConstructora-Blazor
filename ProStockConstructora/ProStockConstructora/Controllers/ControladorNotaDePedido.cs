@@ -77,14 +77,12 @@ namespace ProStockConstructora.Controllers
             return Ok(respuesta);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> ModificarEstadosDeDetallesDeNotaDePedido(List<VerDetalleNotadePedidoDTO> detalles)
+        [HttpPut("{NotaDePedidoId:long}")]
+        public async Task<ActionResult> ModificarEstadosDeDetallesDeNotaDePedido(long NotaDePedidoId, [FromBody] List<VerDetalleNotadePedidoDTO> detalles)
         {
-            throw new NotImplementedException();
-            //var respuesta = await notaDePedidoServicio.ModificarNotaDePedido(ModificarNota);
-            //if (!respuesta.Estado)
-            //    return StatusCode(500, respuesta);
-            //return Ok(respuesta);
+            var res = await notaDePedidoServicio.ActualizarEstadosNotaDePedido(NotaDePedidoId, detalles);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
         }
     }
 }
