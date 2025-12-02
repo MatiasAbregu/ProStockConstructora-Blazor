@@ -1,109 +1,86 @@
 ﻿@page "/remitos/crear"
-@using BD.Enums
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
+@inject DatosSesion Sesion
 
 <PageTitle>Crear Remito - ProStockConstructora</PageTitle>
 
-<article class="p-4">
-    <div class="cabecera">
-        <p class="fw-bolder">Crear Remito</p>
-        <a class="btn btn-secondary" href=@($"/remito")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
+@if (Sesion.Usuario != null &&
+(Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+{
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Notas de pedido (Detalles)</p>
+            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos")>
+            <i class="fas fa-arrow-circle-left"></i>&ensp;
+            Atrás
+        </a>
     </div>
-    <div class="card">
-        @if (!string.IsNullOrEmpty(mensaje))
-        {
-            <div class="alert alert-danger text-center mx-2 mt-2">
-                @mensaje
+    <div class="card p-3">
+        @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Mensaje
+                </div>
+            }
+            <div class="my-3 px-4">
+                <label class="form-label">Número Nota de Pedido:</label>
+                <input value="@remito.NumeroNotaPedido" type="text" class="form-control" disabled />
             </div>
-        }
-        <EditForm Model="remito" OnValidSubmit="GuardarRemito">
-            <DataAnnotationsValidator />
-            <div>
+            @if (nota != null)
+            {
                 <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">N° Remito</label>
-                    <InputText class="form-control" @bind-Value="remito.NumeroRemito" />
-                    <ValidationMessage For="@(() => remito.NumeroRemito)" />
+                    <label class="form-label">Deposito que genera el remito:</label>
+                    <input value="@NotaDePedidoId." type="text" class="form-control" disabled />
                 </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">N° Pedido</label>
-                    <InputNumber class="form-control" @bind-Value="remito.NotaDePedidoId" />
-                    <ValidationMessage For="@(() => remito.NotaDePedidoId)" />
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Deposito Origen</label>
-                    <InputNumber class="form-control" @bind-Value="remito.DepositoOrigenId" />
-                    <ValidationMessage For="@(() => remito.DepositoOrigenId)" />
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Deposito Destino</label>
-                    <InputNumber class="form-control" @bind-Value="remito.DepositoDestinoId" />
-                    <ValidationMessage For="@(() => remito.DepositoDestinoId)" />
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Estado</label>
-                    <InputSelect class="form-select" @bind-Value="remito.EstadoRemito">
-                        <option value="@EnumEstadoRemito.Pendiente">Pendiente</option>
-                        <option value="@EnumEstadoRemito.EnTransito">En Tránsito</option>
-                        <option value="@EnumEstadoRemito.Recibido">Recibido</option>
-                        <option value="@EnumEstadoRemito.Anulado">Anulado</option>
-                    </InputSelect>
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Fecha Emisión</label>
-                    <InputDate class="form-control" @bind-Value="remito.FechaEmision" />
-                    <ValidationMessage For="@(() => remito.FechaEmision)" />
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Fecha Limite</label>
-                    <InputDate class="form-control" @bind-Value="remito.FechaLimite" />
-                    <ValidationMessage For="@(() => remito.FechaLimite)" />
-                </div>
-                <div class="my-3 px-4">
-                    <label class="form-label fw-semibold">Fecha Recepción</label>
-                    <InputDate class="form-control" @bind-Value="remito.FechaRecepcion" />
-                    <ValidationMessage For="@(() => remito.FechaRecepcion)" />
-                </div>
-                <div class="modal-footer">
-                    <div>
-                        <button class="btn btn-success mb-2 btn-submit" type="submit">
-                            <i class="bi bi-check-lg me-1"></i> Guardar
-                        </button>
+                <h5>Detalle:</h5>
+                @foreach (var renglon in nota.Detalles)
+                {
+                    <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
+                        @if (DepositoId != null && DepositoId != 0 && renglon.DepositoId == DepositoId)
+                        {
+                            <div class="flex-grow-1 my-3 px-4">
+                                <label class="form-label">Recurso que se enviara:</label>
+                                <input value="@renglon.Recurso" class="form-control" type="text" disabled />
+                            </div>
+                            <div class="my-3 px-4">
+                                <label class="form-label">Cantidad solicitada:</label>
+                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                            </div>
+                            <div class="my-3 px-4">
+                                <label class="form-label">Cantidad ya enviada:</label>
+                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                            </div>
+                            <div class="my-3 px-4">
+                                <label class="form-label">Cantidad a enviar:</label>
+                                <input value="@renglon.Cantidad" class="form-control" type="number" />
+                            </div>
+                        }
+                        
                     </div>
-                </div>
-            </div>
-        </EditForm>
-    </div>
-</article>
+                }
+                <button class="btn btn-success my-2 btn-submit" type="button" @onclick="">
+                    <i class="bi bi-check-lg me-1"></i> Guardar cambios
+                </button>
+            }
+        </div>
+    </article>
+}
+else
+{
+    Navigation.NavigateTo("/");
+}
+
 
 @code {
     [Parameter]
-    public long Id { get; set; }    
+    public long ObraId{ get; set; }
+    [Parameter]
+    public long DepositoId { get; set; }
+    [Parameter]
     public long NotaDePedidoId { get; set; }
-    private CrearRemitoDTO remito = new CrearRemitoDTO
-    {
-        NumeroRemito = string.Empty,
-        NotaDePedidoId = 0,
-        DepositoOrigenId = 0,
-        DepositoDestinoId = 0,
-        EstadoRemito = EnumEstadoRemito.Pendiente,
-        FechaEmision = DateTime.Now
-    };
-    private string mensaje = "";
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        remito.NotaDePedidoId = NotaDePedidoId;
-    }
-    private async Task GuardarRemito()
-    {
-        var res = await Http.Post<CrearRemitoDTO, Response<string>>("api/remito", remito);
-        if (res.Respuesta != null)
-        {
-            if(!string.IsNullOrEmpty(res.Respuesta.Objeto))Navigation.NavigateTo("/remito");
-            else mensaje = res.Respuesta.Mensaje;
-        }
-     
-    }
+
+    private string Mensaje;
+   
 }

@@ -9,7 +9,7 @@
     <div class="divBotonera">
         <p class="cabecera fw-bolder">Remitos</p>
         <div class="botonera">
-            <a class="btn btn-add btn-success" href=@($"/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/crear")>+</a>
+            <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/crear")>+</a>
         </div>
     </div>
     <div class="table-responsive">
@@ -46,7 +46,7 @@
                             </td>
                         </tr>
                     }
-                })
+                }
             </tbody>
         </table>
     </div>
