@@ -123,7 +123,7 @@ else
     private List<VerStockDTO> DetalleStockRenglones = new();
     private CrearNotaDePedidoDTO NotadePedido = new();
 
-    private Dictionary<DetalleNotaDePedidoDTO, (bool, bool, bool)> mensajesDeError = new();
+    private Dictionary<CrearDetalleNotaDePedidoDTO, (bool, bool, bool)> mensajesDeError = new();
     private string MensajeErrorNota;
 
     override protected async Task OnInitializedAsync()
@@ -141,7 +141,7 @@ else
 
     private async Task Agregarrenglon()
     {
-        DetalleNotaDePedidoDTO renglon = new() { EstadoNotaPedido = EnumEstadoNotaPedido.Pendiente };
+        CrearDetalleNotaDePedidoDTO renglon = new() { EstadoNotaPedido = EnumEstadoNotaPedido.Pendiente };
         NotadePedido.ListaDePedido.Add(renglon);
         mensajesDeError.Add(renglon, new());
     }
@@ -170,7 +170,7 @@ else
         }
     }
 
-    private async Task SeleccionarDepositoDeRenglon(DetalleNotaDePedidoDTO renglon, long DepositoId)
+    private async Task SeleccionarDepositoDeRenglon(CrearDetalleNotaDePedidoDTO renglon, long DepositoId)
     {
         LimpiarErrores(renglon);
         renglon.DepositoDestinoId = DepositoId;
@@ -258,6 +258,6 @@ else
         }   
     }
 
-    private void LimpiarErrores(DetalleNotaDePedidoDTO renglon) => mensajesDeError[renglon] = (false, false, false);
+    private void LimpiarErrores(CrearDetalleNotaDePedidoDTO renglon) => mensajesDeError[renglon] = (false, false, false);
     
 }

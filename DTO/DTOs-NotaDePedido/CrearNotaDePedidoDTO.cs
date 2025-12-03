@@ -20,6 +20,6 @@ namespace DTO.DTOs_NotaDePedido
         [Required]
         public long DepositoOrigenId { get; set; }
 
-        public List<DetalleNotaDePedidoDTO> ListaDePedido { get; set; } = [];
+        public List<CrearDetalleNotaDePedidoDTO> ListaDePedido { get; set; } = [];
     }
 }

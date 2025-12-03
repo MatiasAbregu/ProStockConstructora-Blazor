@@ -119,21 +119,33 @@ namespace Repositorios.Servicios
                 if (notasDePedido.Count > 0)
                 {
                     var DetallesNotaDePedido = await BasedeDatos.DetalleNotaDePedidos
-                        .Where(dnp => notasDePedido.Select(np => np.Id).Contains(dnp.NotaDePedidoId))
+                        .Where(dnp => notasDePedido.Select(np => np.Id).Contains(dnp.NotaDePedidoId) && dnp.EstadoNotaPedido != EstadoNotaPedido.Anulada)
                         .ToListAsync();
 
+                    var NotasDePedidoIds = DetallesNotaDePedido.Select(dnp => dnp.NotaDePedidoId).Distinct();
+                    notasDePedido = notasDePedido.Where(np => NotasDePedidoIds.Contains(np.Id)).ToList();
+                    var notasDePedidoParaElFront = notasDePedido.Select(np => new VerNotaDePedidoDTO
+                    {
+                        Id = np.Id,
+                        NumeroNotaPedido = np.NumeroNotaPedido,
+                        FechaEmision = np.FechaEmision,
+                        Estado = DefinirEstadoNotaPedido(DetallesNotaDePedido.Where(d => d.NotaDePedidoId == np.Id)
+                            .ToList()),
+                    }).ToList();
+
+                    if (notasDePedidoParaElFront.Count == 0)
+                        return new Response<List<VerNotaDePedidoDTO>>()
+                        {
+                            Estado = true,
+                            Mensaje = "No hay notas de pedido cargadas aún en este depósito.",
+                            Objeto = null
+                        };
+                    
                     return new Response<List<VerNotaDePedidoDTO>>
                     {
                         Estado = true,
                         Mensaje = null,
-                        Objeto = notasDePedido.Select(np => new VerNotaDePedidoDTO
-                        {
-                            Id = np.Id,
-                            NumeroNotaPedido = np.NumeroNotaPedido,
-                            FechaEmision = np.FechaEmision,
-                            Estado = DefinirEstadoNotaPedido(DetallesNotaDePedido.Where(d => d.NotaDePedidoId == np.Id).ToList()),
-
-                        }).ToList()
+                        Objeto = notasDePedidoParaElFront
                     };
                 }
                 else
@@ -141,7 +153,7 @@ namespace Repositorios.Servicios
                     return new Response<List<VerNotaDePedidoDTO>>
                     {
                         Estado = true,
-                        Mensaje = "No hay notas de pedido para el depósito especificado.",
+                        Mensaje = "o hay notas de pedido cargadas aún en este depósito.",
                         Objeto = null,
                     };
                 }
@@ -155,8 +167,6 @@ namespace Repositorios.Servicios
                     Mensaje = "Error al obtener nota de pedido por deposito.",
                     Objeto = null,
                 };
-
-
             }
         }
 
@@ -318,10 +328,10 @@ namespace Repositorios.Servicios
         public async Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientesPorDepositoId(long DepositoId)
         {
             try
-            {
+            { 
                 var notasDePedido = await BasedeDatos.DetalleNotaDePedidos
-               .Where(np => np.DepositoDestinoId == DepositoId).Select(dnp => dnp.NotaDePedido)
-               .Distinct().ToListAsync();
+               .Where(np => np.DepositoDestinoId == DepositoId && np.EstadoNotaPedido != EstadoNotaPedido.Anulada)
+               .Select(dnp => dnp.NotaDePedido).Distinct().ToListAsync();
 
                 if (notasDePedido.Count > 0)
                 {
@@ -457,6 +467,58 @@ namespace Repositorios.Servicios
                 {
                     Estado = false,
                     Mensaje = "¡Hubo un error al obtener los datos de la nota de pedido para el remito!",
+                    Objeto = null
+                };
+            }
+        }
+
+        public async Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId)
+        {
+            try
+            {
+                var notaDePedido = await BasedeDatos.NotaDePedidos.FirstOrDefaultAsync(np => np.Id == NotaDePedidoId);
+                if (notaDePedido == null)
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "La nota de pedido no existe",
+                        Objeto = null
+                    };
+                
+                var detalles = await BasedeDatos.DetalleNotaDePedidos
+                    .Where(dnp => dnp.NotaDePedidoId == notaDePedido.Id).ToListAsync();
+
+                var estados = detalles.Select(d => d.EstadoNotaPedido);
+
+                if (estados.Any(e => e != EstadoNotaPedido.Pendiente))
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "La nota de pedido ya no se puede anular porque un detalle ya fue modificado.",
+                        Objeto = null
+                    };
+
+                foreach (var detalle in detalles)
+                {
+                    detalle.EstadoNotaPedido = EstadoNotaPedido.Anulada;
+                }
+
+                await BasedeDatos.SaveChangesAsync();
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = "¡La nota de pedido fue anulada con éxito!"
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Hubo un error al anular la nota de pedido!",
                     Objeto = null
                 };
             }

@@ -92,5 +92,13 @@ namespace ProStockConstructora.Controllers
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }
+
+        [HttpDelete("{NotaDePedidoId:long}")]
+        public async Task<ActionResult> AnularNotaDePedido(long NotaDePedidoId)
+        {
+            var res = await notaDePedidoServicio.AnularNotaDePedido(NotaDePedidoId);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
     }
 }

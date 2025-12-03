@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DTO.DTOs_NotaDePedido
 {
-    public class DetalleNotaDePedidoDTO
+    public class CrearDetalleNotaDePedidoDTO
     {
         [Required(ErrorMessage = "Es obligatorio seleccionar un deposito")]
         public long DepositoDestinoId { get; set; }

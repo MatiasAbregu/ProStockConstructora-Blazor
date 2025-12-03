@@ -16,8 +16,6 @@ namespace DTO.DTOs_NotaDePedido
         
         public DateTime FechaEmision { get; set; } 
         public EnumEstadoNotaPedido Estado { get; set; }
-
-        public List<DetalleNotaDePedidoDTO> ListaDePedido { get; set; } = new();
     }
 }
 
