@@ -71,6 +71,15 @@
                                             <i class="bi bi-check2-square"></i>
                                         </a>
                                     }
+                                    &nbsp;
+                                    @if (opcionNotas == 1 &&
+                                    (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                                    && (nota.Estado == EnumEstadoNotaPedido.Aprobada || nota.Estado == EnumEstadoNotaPedido.ParcialmenteAprobada))
+                                    {
+                                        <a class="btn btn-outline-primary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/remitos")>
+                                            <i class="bi bi-card-checklist"></i>
+                                        </a>
+                                    }
                                 </td>
                             </tr>
                         }

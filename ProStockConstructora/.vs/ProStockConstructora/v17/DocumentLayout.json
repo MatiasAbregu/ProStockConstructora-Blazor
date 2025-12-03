@@ -1,40 +1,46 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\",
+  "WorkspaceRootPath": "C:\\ProStock Construcciones\\ProStockConstructora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostock construcciones\\repositorios\\servicios\\remitoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora\\controllers\\controladornotadepedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\crearremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladorremito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostock construcciones\\repositorios\\servicios\\notadepedidoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora\\controllers\\controladornotadepedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DB7ED94F-DE6E-4980-82D0-3DBEA8479768}|ProStockConstructora\\ProStockConstructora.csproj|solutionrelative:prostockconstructora\\controllers\\controladornotadepedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\repositorios\\implementaciones\\inotadepedidoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\listaderemitos-notadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\listaderemitos-notadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\repositorios\\servicios\\notadepedidoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24648C82-D0D1-4F0E-84BB-66EF5459D8B3}|..\\Repositorios\\Repositorios.csproj|c:\\prostock construcciones\\repositorios\\implementaciones\\iremitoservicio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\dto\\dtos-notadepedido\\vernotadepedidodetalladadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9ED0833F-600F-40E9-8442-3AA99CBD9FF6}|..\\BD\\BD.csproj|c:\\prostock construcciones\\bd\\modelos\\remito.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\dto\\dtos-stock\\verstockdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\dto\\dtos-recursos\\recursosactualizardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\listadonotadepedidos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\listadonotadepedidos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\listadonotadepedidos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\editarnotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\editarnotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\remitos\\listaremitos.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A0ECC4C2-09DB-343D-F9D0-7E792574663D}|..\\DTO\\DTO.csproj|c:\\users\\meli\\desktop\\back blazor\\prostockconstructora-blazor\\dto\\dtos-notadepedido\\vernotadepedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|c:\\prostock construcciones\\prostockconstructora\\prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B656B54-5CD6-47D4-A346-840C69F7CAAF}|ProStockConstructora.Client\\ProStockConstructora.Client.csproj|solutionrelative:prostockconstructora.client\\pages\\nota de pedidos\\verdetallesdenotadepedido.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -44,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 275,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Bookmark",
@@ -60,6 +66,22 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
@@ -67,136 +89,144 @@
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "VerNotadePedidoDetalladaDTO.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-NotaDePedido\\VerNotadePedidoDetalladaDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-NotaDePedido\\VerNotadePedidoDetalladaDTO.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-NotaDePedido\\VerNotadePedidoDetalladaDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-NotaDePedido\\VerNotadePedidoDetalladaDTO.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "Remito.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\BD\\Modelos\\Remito.cs",
+              "RelativeDocumentMoniker": "..\\BD\\Modelos\\Remito.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\BD\\Modelos\\Remito.cs",
+              "RelativeToolTip": "..\\BD\\Modelos\\Remito.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABcAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T20:20:26.287Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "VerStockDTO.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-Stock\\VerStockDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Stock\\VerStockDTO.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-Stock\\VerStockDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Stock\\VerStockDTO.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T20:15:28.101Z",
+              "WhenOpened": "2025-12-02T21:35:17.758Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "RecursosActualizarDTO.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\RecursosActualizarDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-Recursos\\RecursosActualizarDTO.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-Recursos\\RecursosActualizarDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-Recursos\\RecursosActualizarDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAPAAAAAAAAAA==",
+              "Title": "IRemitoServicio.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
+              "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
+              "RelativeToolTip": "..\\Repositorios\\Implementaciones\\IRemitoServicio.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T20:13:04.249Z",
+              "WhenOpened": "2025-12-02T21:30:17.048Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "VerDetallesDeNotaDePedido.razor",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
-              "ViewState": "AgIAABEAAAAAAAAAAAAAAEUAAABIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-28T19:35:22.306Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "EditarNotadePedido.razor",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\EditarNotadePedido.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\EditarNotadePedido.razor",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\EditarNotadePedido.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\EditarNotadePedido.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIAAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-28T19:34:48.978Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "INotaDePedidoServicio.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\Repositorios\\Implementaciones\\INotaDePedidoServicio.cs",
-              "RelativeDocumentMoniker": "..\\Repositorios\\Implementaciones\\INotaDePedidoServicio.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\Repositorios\\Implementaciones\\INotaDePedidoServicio.cs",
-              "RelativeToolTip": "..\\Repositorios\\Implementaciones\\INotaDePedidoServicio.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T19:26:56.343Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "VerNotaDePedidoDTO.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-NotaDePedido\\VerNotaDePedidoDTO.cs",
-              "RelativeDocumentMoniker": "..\\DTO\\DTOs-NotaDePedido\\VerNotaDePedidoDTO.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\DTO\\DTOs-NotaDePedido\\VerNotaDePedidoDTO.cs",
-              "RelativeToolTip": "..\\DTO\\DTOs-NotaDePedido\\VerNotaDePedidoDTO.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAABQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T18:47:04.241Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ListadoNotaDePedidos.razor",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
-              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
-              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-28T18:43:28.424Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "NotaDePedidoServicio.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
               "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
               "RelativeToolTip": "..\\Repositorios\\Servicios\\NotaDePedidoServicio.cs",
-              "ViewState": "AgIAANwAAAAAAAAAAAAAAO8AAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAAMQBAAAAAAAAAAAUwMwBAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T18:26:31.097Z",
+              "WhenOpened": "2025-12-02T21:27:39.73Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RemitoServicio.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "RelativeDocumentMoniker": "..\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "RelativeToolTip": "..\\Repositorios\\Servicios\\RemitoServicio.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAADUAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T21:27:04.152Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ControladorNotaDePedido.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
+              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAAACAAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T21:24:31.164Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ControladorRemito.cs",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorRemito.cs",
+              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorRemito.cs",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorRemito.cs",
+              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorRemito.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAABMAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T21:24:15.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ListaDeRemitos-NotaDePedido.razor",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaDeRemitos-NotaDePedido.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\ListaDeRemitos-NotaDePedido.razor",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaDeRemitos-NotaDePedido.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\ListaDeRemitos-NotaDePedido.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-02T19:09:55.556Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ControladorNotaDePedido.cs",
-              "DocumentMoniker": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
-              "RelativeDocumentMoniker": "ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
-              "ToolTip": "C:\\Users\\MELI\\Desktop\\back blazor\\ProStockConstructora-Blazor\\ProStockConstructora\\ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
-              "RelativeToolTip": "ProStockConstructora\\Controllers\\ControladorNotaDePedido.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAwwDQAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-28T18:22:20.009Z",
+              "Title": "CrearRemitos.razor",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\CrearRemitos.razor",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAG8AAABvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-28T20:53:17.812Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ListadoNotaDePedidos.razor",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\ListadoNotaDePedidos.razor",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAkwFMAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-02T18:39:26.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "VerDetallesDeNotaDePedido.razor",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Nota de Pedidos\\VerDetallesDeNotaDePedido.razor",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAABEAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-28T20:55:26.111Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ListaRemitos.razor",
+              "DocumentMoniker": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
+              "RelativeDocumentMoniker": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
+              "ToolTip": "C:\\ProStock Construcciones\\ProStockConstructora\\ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
+              "RelativeToolTip": "ProStockConstructora.Client\\Pages\\Remitos\\ListaRemitos.razor",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAAA8AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-28T20:53:11.836Z"
             }
           ]
         }

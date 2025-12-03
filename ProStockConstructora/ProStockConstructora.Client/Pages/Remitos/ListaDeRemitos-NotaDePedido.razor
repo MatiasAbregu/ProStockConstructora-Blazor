@@ -1,0 +1,78 @@
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos"
+@inject IHttpServicio Http
+@inject NavigationManager Nav
+@inject DatosSesion Sesion
+
+<PageTitle>Remitos de Nota de Pedido - ProStock</PageTitle>
+
+<article class="p-4">
+    <div class="divBotonera">
+        <p class="cabecera fw-bolder">Remitos</p>
+        <div class="botonera">
+            <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/crear")>+</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>N° De Remito</th>
+                    <th>Fecha Emisión</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!listaRemitos.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">No hay remitos para mostrar.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var remito in listaRemitos)
+                    {
+                        <tr>
+                            <td>@remito.NumeroRemito</td>
+                            <td>@remito.FechaEmision.ToShortDateString()</td>
+                            <td>
+                                <span class="badge @ObtenerEstadoClase(remito.Estado.ToString())">
+                                    @remito.Estado.ToString()
+                                </span>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{remito.Id}")>Ver Detalles</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</article>
+
+@code {
+    [Parameter]
+    public long ObraId { get; set; }
+    [Parameter]
+    public long DepositoId { get; set; }
+    [Parameter]
+    public long NotaDePedidoId { get; set; }
+
+    List<VerRemitoDTO> listaRemitos = new List<VerRemitoDTO>();
+
+    override protected async Task OnInitializedAsync()
+    {
+       
+    }
+
+    private string ObtenerEstadoClase(string estado)
+    {
+        if (estado == "Pendiente") return "text-bg-danger";
+        else if (estado == "En Transito") return "text-bg-success";
+        else if (estado == "Recibido") return "text-bg-primary";
+        else if (estado == "Anulado") return "text-bg-secondary";
+        else return "text-bg-warning";
+    }
+}

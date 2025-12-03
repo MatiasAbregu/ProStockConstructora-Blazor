@@ -15,7 +15,7 @@ namespace DTO.DTOs_Remitos
         public required long NotaDePedidoId { get; set; }
         public required long DepositoOrigenId { get; set; }
         public required long DepositoDestinoId { get; set; }
-        public EnumEstadoRemito EstadoRemito { get; set; } = EnumEstadoRemito.Pendiente;
+        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.Pendiente;
         public required DateTime FechaEmision { get; set; }
         public required DateTime FechaLimite { get; set; }
         public DateTime? FechaRecepcion { get; set; }
