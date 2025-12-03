@@ -132,17 +132,19 @@ namespace BD.Migrations
                     b.Property<int>("CantidadDespachada")
                         .HasColumnType("int");
 
-                    b.Property<int>("CantidadRecibida")
+                    b.Property<int?>("CantidadRecibida")
                         .HasColumnType("int");
 
                     b.Property<long>("DetalleNotaDePedidoId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("NombreTransportista")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
 
                     b.Property<long>("RemitoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("UsuarioQueRecibeId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -150,6 +152,8 @@ namespace BD.Migrations
                     b.HasIndex("DetalleNotaDePedidoId");
 
                     b.HasIndex("RemitoId");
+
+                    b.HasIndex("UsuarioQueRecibeId");
 
                     b.ToTable("DetalleRemitos");
                 });
@@ -189,6 +193,30 @@ namespace BD.Migrations
                         .IsUnique();
 
                     b.ToTable("Empresa");
+                });
+
+            modelBuilder.Entity("BD.Modelos.MovimientoStock", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<long>("DetalleRemitoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TipoDeMovimiento")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DetalleRemitoId");
+
+                    b.ToTable("MovimientoStocks");
                 });
 
             modelBuilder.Entity("BD.Modelos.NotaDePedido", b =>
@@ -328,28 +356,10 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("DepositoDestinoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("DepositoId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("DepositoOrigenId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("DestinoId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("EstadoRemito")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("FechaEmision")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("FechaLimite")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("FechaRecepcion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<long>("NotaDePedidoId")
@@ -359,16 +369,19 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<long>("UsuarioId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DepositoId");
-
-                    b.HasIndex("DestinoId");
+                    b.HasIndex("DepositoOrigenId");
 
                     b.HasIndex("NotaDePedidoId");
 
                     b.HasIndex("NumeroRemito")
                         .IsUnique();
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Remitos");
                 });
@@ -630,9 +643,26 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BD.Modelos.Usuario", "UsuarioQueRecibe")
+                        .WithMany()
+                        .HasForeignKey("UsuarioQueRecibeId");
+
                     b.Navigation("DetalleNotaDePedido");
 
                     b.Navigation("Remito");
+
+                    b.Navigation("UsuarioQueRecibe");
+                });
+
+            modelBuilder.Entity("BD.Modelos.MovimientoStock", b =>
+                {
+                    b.HasOne("BD.Modelos.DetalleRemito", "DetalleRemito")
+                        .WithMany()
+                        .HasForeignKey("DetalleRemitoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DetalleRemito");
                 });
 
             modelBuilder.Entity("BD.Modelos.NotaDePedido", b =>
@@ -709,15 +739,9 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Modelos.Remito", b =>
                 {
-                    b.HasOne("BD.Modelos.Deposito", "Deposito")
+                    b.HasOne("BD.Modelos.Deposito", "DepositoOrigen")
                         .WithMany()
-                        .HasForeignKey("DepositoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BD.Modelos.Deposito", "Destino")
-                        .WithMany()
-                        .HasForeignKey("DestinoId")
+                        .HasForeignKey("DepositoOrigenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -727,11 +751,17 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Deposito");
+                    b.HasOne("BD.Modelos.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Destino");
+                    b.Navigation("DepositoOrigen");
 
                     b.Navigation("NotaDePedido");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("BD.Modelos.RolesUsuario", b =>

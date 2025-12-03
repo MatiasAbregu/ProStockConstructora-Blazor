@@ -13,5 +13,6 @@ namespace DTO.DTOs_NotaDePedido
         public long RecursoId { get; set; }
         public string Recurso { get; set; }
         public int Cantidad { get; set; }
+        public int CantidadDespachada { get; set; }
     }
 }

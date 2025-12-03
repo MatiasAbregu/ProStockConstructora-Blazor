@@ -420,57 +420,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<NotaDePedidoParaRemitoDTO>> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId, long DepositoId)
-        {
-            try
-            {
-                var notaDePedido = await BasedeDatos.NotaDePedidos.FirstOrDefaultAsync(np => np.Id == NotaDePedidoId);
-                if(notaDePedido == null) return new Response<NotaDePedidoParaRemitoDTO>()
-                {
-                    Estado = true,
-                    Mensaje = "La nota de pedido no existe.",
-                    Objeto = null
-                };
-
-                var deposito = await BasedeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == DepositoId);
-                if(deposito == null) return new Response<NotaDePedidoParaRemitoDTO>()
-                {
-                    Estado = true,
-                    Mensaje = "El depósito no existe.",
-                    Objeto = null
-                };
-
-                var detalles = await BasedeDatos.DetalleNotaDePedidos.Include(dnp => dnp.Recurso).Where(dnp => dnp.NotaDePedidoId == notaDePedido.Id && dnp.DepositoDestinoId == DepositoId).ToListAsync();
-                
-                return new Response<NotaDePedidoParaRemitoDTO>()
-                {
-                    Estado = true,
-                    Mensaje = null,
-                    Objeto = new NotaDePedidoParaRemitoDTO()
-                    {
-                        NotaPedidoId = notaDePedido.Id,
-                        DepositoDestino = $"{deposito.NombreDeposito} ({deposito.CodigoDeposito})",
-                        detalle = detalles.Select(d => new VerDetalleNotaDePedidoParaRemitoDTO()
-                        {
-                            Id = d.Id,
-                            RecursoId = d.RecursoId,
-                            Recurso = $"{d.Recurso.Nombre} ({d.Recurso.CodigoISO})",
-                            Cantidad = d.Cantidad
-                        }).ToList()
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                return new Response<NotaDePedidoParaRemitoDTO>()
-                {
-                    Estado = false,
-                    Mensaje = "¡Hubo un error al obtener los datos de la nota de pedido para el remito!",
-                    Objeto = null
-                };
-            }
-        }
+        
 
         public async Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId)
         {

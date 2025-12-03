@@ -10,7 +10,7 @@
 {
     <article class="p-4">
         <div class="cabecera">
-            <p class="fw-bolder">Notas de pedido (Detalles)</p>
+            <p class="fw-bolder">Crear Remito</p>
             <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos")>
             <i class="fas fa-arrow-circle-left"></i>&ensp;
             Atrás
@@ -42,6 +42,7 @@
                 {
                     @foreach (var renglon in nota.detalle)
                     {
+                        var detalle = remito.DetallesDelRemito.FirstOrDefault(d => d.DetalleNotaDePedidoId == renglon.Id);
                         <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
                             <div class="flex-grow-1 my-3 px-4">
                                 <label class="form-label">Recurso que se enviara:</label>
@@ -53,11 +54,11 @@
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Cantidad ya enviada:</label>
-                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                                <input value="@renglon.CantidadDespachada" class="form-control" type="number" disabled />
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Cantidad a enviar:</label>
-                                <input value="@renglon.Cantidad" class="form-control" type="number" />
+                                <input @bind="detalle.CantidadDespachada" class="form-control" type="number" />
                             </div>
                         </div>
                     }
@@ -85,7 +86,7 @@ else
 
     NotaDePedidoParaRemitoDTO nota = new();
     CrearRemitoDTO remito = new();
-   
+
 
     private string Mensaje;
 
@@ -100,24 +101,44 @@ else
         var res = await Http.Get<Response<string>>($"api/remito/obtener-numero-remito");
         if (res.Respuesta != null)
         {
-          remito = new CrearRemitoDTO
+            remito = new CrearRemitoDTO
             {
                 NumeroRemito = res.Respuesta.Objeto,
-                
+
             };
         }
     }
     private async Task ObtenerNotaDePedido()
     {
-        var res = await Http.Get<Response<NotaDePedidoParaRemitoDTO>>($"api/notadepedido/obtener-nota-de-pedido/{NotaDePedidoId}/deposito/{DepositoId}");
+        var res = await Http.Get<Response<NotaDePedidoParaRemitoDTO>>($"api/remito/obtener-nota-de-pedido/{NotaDePedidoId}/deposito/{DepositoId}");
         if(res.Respuesta != null)
         {
             nota = res.Respuesta.Objeto;
+            remito.NotaDePedidoId = nota.NotaPedidoId;
+            remito.UsuarioId = Sesion.Usuario.Id;
+            remito.DepositoOrigenId = DepositoId;
+            remito.DetallesDelRemito = nota.detalle.Select(r => new CrearDetalleRemitoDTO()
+                {
+                    DetalleNotaDePedidoId = r.Id,
+                    CantidadDespachada = 0,
+                    Estado = BD.Enums.EnumEstadoRemito.EnTransito,
+                    RemitoId = 0
+                }).ToList();
         }
     }
 
     private async Task CrearRemito()
     {
-        
+        var res = await Http.Post<CrearRemitoDTO, Response<string>>("api/remito", remito);
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null)
+            Navigation.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos");
+            else
+            {
+                Mensaje = res.Respuesta.Mensaje;
+            }
+        }
+       
     }
 }

@@ -11,5 +11,7 @@ namespace Repositorios.Implementaciones
     public interface IRemitoServicio
     {
         Task<Response<string>> ObtenerNumeroRemitoSiguiente();
+        Task<Response<NotaDePedidoParaRemitoDTO>> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId, long DepositoId);
+        Task<Response<string>> CrearRemito(CrearRemitoDTO remitoDTO);
     }
 }

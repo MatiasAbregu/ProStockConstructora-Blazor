@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BD.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,6 +18,10 @@ namespace BD.Modelos
         public required long DetalleNotaDePedidoId { get; set; }
         public DetalleNotaDePedido DetalleNotaDePedido { get; set; }
         public required int CantidadDespachada { get; set; }
-        public int CantidadRecibida { get; set; }
+        public int? CantidadRecibida { get; set; }
+        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.EnTransito;
+        public long? UsuarioQueRecibeId { get; set; }
+        public Usuario? UsuarioQueRecibe { get; set; }
+
     }
 }

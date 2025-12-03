@@ -48,15 +48,7 @@ namespace ProStockConstructora.Controllers
             var res = await notaDePedidoServicio.ObtenerNotasDePedidoPendientesPorDepositoId(DepositoId);
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
-        }
-
-        [HttpGet("obtener-nota-de-pedido/{NotaDePedidoId:long}/deposito/{DepositoId:long}")]
-        public async Task<ActionResult> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId, long DepositoId)
-        {
-            var res = await notaDePedidoServicio.ObtenerNotaDePedidoParaRemito(NotaDePedidoId, DepositoId);
-            if (res.Estado) return StatusCode(200, res);
-            else return StatusCode(500, res);
-        }
+        }  
 
         [HttpPost("obtener-notas-pendientes")]
         public async Task<ActionResult> ObtenerNotasDePedidoPendientes(DatosUsuario usuario)

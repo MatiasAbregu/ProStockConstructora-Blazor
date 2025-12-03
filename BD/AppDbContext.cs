@@ -26,6 +26,7 @@ namespace BD
         public DbSet<NotaDePedido> NotaDePedidos { get; set; }
         public DbSet<DetalleRemito> DetalleRemitos { get; set; }
         public DbSet<Remito> Remitos { get; set; }
+        public DbSet<MovimientoStock> MovimientoStocks { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
