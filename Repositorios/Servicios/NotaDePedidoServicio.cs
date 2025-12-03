@@ -153,7 +153,7 @@ namespace Repositorios.Servicios
                     return new Response<List<VerNotaDePedidoDTO>>
                     {
                         Estado = true,
-                        Mensaje = "o hay notas de pedido cargadas aún en este depósito.",
+                        Mensaje = "No hay notas de pedido cargadas aún en este depósito.",
                         Objeto = null,
                     };
                 }
