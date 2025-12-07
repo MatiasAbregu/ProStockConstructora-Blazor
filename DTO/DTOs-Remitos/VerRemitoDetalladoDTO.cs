@@ -1,3 +1,5 @@
+using DTO.Enum;
+
 namespace DTO.DTOs_Remitos;
 
 public class VerRemitoDetalladoDTO

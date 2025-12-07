@@ -14,15 +14,12 @@ namespace ProStockConstructora.Controllers
 
     public class ControladorNotaDePedido : ControllerBase
     {
-        private readonly AppDbContext baseDeDatos;
         private readonly INotaDePedidoServicio notaDePedidoServicio;
 
-        public ControladorNotaDePedido(AppDbContext baseDeDatos, INotaDePedidoServicio notaDePedidoServicio)
+        public ControladorNotaDePedido(INotaDePedidoServicio notaDePedidoServicio)
         {
-            this.baseDeDatos = baseDeDatos;
             this.notaDePedidoServicio = notaDePedidoServicio;
         }
-
 
         [HttpGet("obtener-numero-nota")]
         public async Task<ActionResult> ObtenerNumeroNotaPedido()

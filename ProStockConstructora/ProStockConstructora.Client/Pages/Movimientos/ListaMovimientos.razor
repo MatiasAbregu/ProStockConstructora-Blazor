@@ -1,0 +1,93 @@
+@page "/historial-movimientos"
+@using DTO.DTOs_Movimientos
+@inject IHttpServicio http
+@inject DatosSesion Sesion
+@inject NavigationManager navManager
+
+<PageTitle>Historial movimientos - ProStock</PageTitle>
+
+@if (Sesion.Usuario != null && Sesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Historial de movimientos de los depósitos</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                <tr>
+                    <th>N° Remito</th>
+                    <th class="text-center">Depósito de origen</th>
+                    <th class="text-center">Recurso - Cantidad</th>
+                    <th class="text-center">Fecha</th>
+                    <th>Tipo de movimiento</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (!string.IsNullOrEmpty(Mensaje) || movimientosLista == null || !movimientosLista.Any())
+                {
+                    <tr>
+                        <td colspan="5">@Mensaje</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var movimiento in movimientosLista)
+                    {
+                        <tr>
+                            <td>@movimiento.NumeroRemito</td>
+                            <td class="text-center">@movimiento.Deposito</td>
+                            <td class="text-center">@movimiento.Recurso - @movimiento.Cantidad</td>
+                            <td class="text-center">@movimiento.Fecha.ToShortDateString() - @movimiento.Fecha.ToShortTimeString()</td>
+                            <td class="text-center">
+                                <span class="badge @DefinirEstado(movimiento.TipoDeMovimiento.ToString())">
+                                    @movimiento.TipoDeMovimiento.ToString()
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
+
+@code {
+    private string Mensaje;
+    private List<VerMovimientoDTO> movimientosLista = [];
+    private DatosUsuario Usuario;
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (Sesion.Usuario != null && Sesion.Usuario.Roles.Contains("ADMINISTRADOR"))
+        {
+            Usuario = Sesion.Usuario;
+            await ObtenerMovimientos();
+        }
+    }
+
+    private async Task ObtenerMovimientos()
+    {
+        var res = await http.Get<Response<List<VerMovimientoDTO>>>($"api/movimientos/{Usuario.EmpresaId}");
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null) movimientosLista = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje;
+        }
+    }
+
+    private string DefinirEstado(string Estado)
+    {
+        if (Estado == "Ingreso") return "text-bg-success";
+        else if (Estado == "Egreso") return "text-bg-warning";
+        else if (Estado == "Faltante") return "text-bg-danger";
+        else return "text-bg-secondary";
+    }
+    
+}

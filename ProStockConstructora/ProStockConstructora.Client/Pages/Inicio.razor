@@ -143,6 +143,7 @@ else
         {
             Usuario = datosSesion.Usuario;
             await CargarNotas();
+            StateHasChanged();
         }
     }
 
@@ -166,6 +167,7 @@ else
 
     private async Task CargarNotas()
     {
+        Mensaje = string.Empty;
         var res = await Http.Post<DatosUsuario, Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-notas-pendientes", Usuario);
 
         if (res.Respuesta != null)
@@ -177,6 +179,7 @@ else
 
     private async Task CargarRemitos()
     {
+        Mensaje = string.Empty;
         var res = await Http.Post<DatosUsuario, Response<List<VerRemitoDTO>>>($"api/remito/obtener-remitos-pendientes", Usuario);
 
         if (res.Respuesta != null)
@@ -188,9 +191,7 @@ else
 
     private string ObtenerEstadoClase(string estado)
     {
-        if (estado == "Rechazada") return "text-bg-danger";
-        else if (estado == "Aprobada") return "text-bg-success";
-        else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
+        if (estado == "ParcialmenteAprobada") return "text-bg-primary";
         else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
         else return "text-bg-warning";
     }
@@ -200,7 +201,7 @@ else
         opcionDocumento = Convert.ToInt32(e.Value);
         if (opcionDocumento == 0) await CargarNotas();
         else if (opcionDocumento == 1) await CargarRemitos();
+        StateHasChanged();
         numeroPagina = 1;
     }
-    
 }

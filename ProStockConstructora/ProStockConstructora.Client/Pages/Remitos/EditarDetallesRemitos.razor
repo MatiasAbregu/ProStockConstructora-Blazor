@@ -91,13 +91,18 @@ else
     [Parameter] public long NotaDePedidoId { get; set; }
     [Parameter] public long RemitoId { get; set; }
     [Parameter] public string tipoDeSolicitud { get; set; }
+    private DatosUsuario Usuario;
 
     VerRemitoDetalladoDTO remito;
     private string Mensaje;
 
     protected override  async Task OnInitializedAsync()
     {
-        await ObtenerNotaDePedido();
+        if (Sesion.Usuario != null && (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+        {
+            Usuario = Sesion.Usuario;
+            await ObtenerNotaDePedido();
+        }
     }
 
     private async Task ObtenerNotaDePedido()
@@ -116,6 +121,7 @@ else
         bool valido = true;
         foreach (var renglon in remito.Detalles)
         {
+            renglon.UsuarioQueRecibeId = Usuario.Id;
             if (renglon.CantidadRecibida == null || renglon.CantidadRecibida < 0)
             {
                 Mensaje = "Uno de los renglones tiene datos invalidos.";

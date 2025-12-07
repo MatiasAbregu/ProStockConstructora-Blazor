@@ -19,10 +19,12 @@ namespace Repositorios.Servicios
     public class RemitoServicio : IRemitoServicio
     {
         private readonly AppDbContext baseDeDatos;
+        private readonly IMovimientoServicio movimientoServicio;
 
-        public RemitoServicio(AppDbContext BaseDeDatos)
+        public RemitoServicio(AppDbContext BaseDeDatos, IMovimientoServicio movimientoServicio)
         {
             baseDeDatos = BaseDeDatos;
+            this.movimientoServicio = movimientoServicio;
         }
 
         public async Task<Response<string>> ObtenerNumeroRemitoSiguiente()
@@ -48,8 +50,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<NotaDePedidoParaRemitoDTO>> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId,
-            long DepositoId)
+        public async Task<Response<NotaDePedidoParaRemitoDTO>> ObtenerNotaDePedidoParaRemito(long NotaDePedidoId, long DepositoId)
         {
             try
             {
@@ -468,7 +469,7 @@ namespace Repositorios.Servicios
                         Cantidad = d.DetalleNotaDePedido.Cantidad,
                         CantidadDespachada = d.CantidadDespachada,
                         CantidadRecibida = d.CantidadRecibida ?? 0,
-                        Estado = d.Estado,
+                        Estado = (DTO.Enum.EnumEstadoRemito)d.Estado,
                         UsuarioQueRecibe = d.UsuarioQueRecibe != null
                             ? $"{d.UsuarioQueRecibe.NombreUsuario} ({d.UsuarioQueRecibe.Email})"
                             : "",
@@ -516,7 +517,7 @@ namespace Repositorios.Servicios
 
                 var dicDetalles = detalles.ToDictionary(d => d.Id);
                 var movimientos = await baseDeDatos.MovimientoStocks.Include(m => m.Stock)
-                    .Where(m => detallesBBDD.Select(d => d.Id).Contains(m.Id)).ToListAsync();
+                    .Where(m => detallesBBDD.Select(d => d.Id).Contains(m.DetalleRemitoId)).ToListAsync();
                 var depositoDestinoValidacion = await baseDeDatos.DetalleNotaDePedidos
                     .Where(dnp => detalles.Select(d => d.DetalleNotaDePedidoId).Contains(dnp.Id))
                     .Select(dnp => dnp.NotaDePedido).Distinct().Select(np => np.DepositoOrigen).ToListAsync();
@@ -538,10 +539,11 @@ namespace Repositorios.Servicios
                     d.Estado = d.CantidadDespachada == dicDetalles[d.Id].CantidadRecibida
                         ? EnumEstadoRemito.Recibido
                         : EnumEstadoRemito.ParcialmenteRecibido;
+                    d.CantidadRecibida = dicDetalles[d.Id].CantidadRecibida;
                     d.UsuarioQueRecibeId = dicDetalles[d.Id].UsuarioQueRecibeId;
 
                     var movimiento = movimientos.LastOrDefault(m => m.DetalleRemitoId == d.Id && m.TipoDeMovimiento == TipoDeMovimiento.Egreso);
-                    await MovimientoStockEntreDepositos(depositoDestino, movimiento, d.Estado, dicDetalles[d.Id].CantidadRecibida ?? 0);
+                    await movimientoServicio.MovimientoStockEntreDepositos(depositoDestino, movimiento, d.Estado, dicDetalles[d.Id].CantidadRecibida ?? 0);
                 }
                 await baseDeDatos.SaveChangesAsync();
                 await transaccion.CommitAsync();
@@ -628,7 +630,7 @@ namespace Repositorios.Servicios
                 return new Response<string>()
                 {
                     Estado = false,
-                    Mensaje = "¡Hubo un error al anular el remito!",
+                    Mensaje = "¡Hubo un error al anular el remito!" + (e.Message.Contains("Cantidad de stock insuficiente") ? $" Causa: {e.Message}" : ""),
                     Objeto = null
                 };
             }
@@ -654,7 +656,7 @@ namespace Repositorios.Servicios
             return numeroRemito;
         }
 
-        private EnumEstadoRemito DefinirEstadoRemito(List<DetalleRemito> detalles)
+        private DTO.Enum.EnumEstadoRemito DefinirEstadoRemito(List<DetalleRemito> detalles)
         {
             var Estados = detalles.Select(r => r.Estado).ToList();
 
@@ -664,103 +666,19 @@ namespace Repositorios.Servicios
             var emitido = detalles.Count(d => d.Estado == (EnumEstadoRemito)EnumEstadoRemito.Emitido);
 
             if (recibidos == detalles.Count)
-                return EnumEstadoRemito.Recibido;
+                return DTO.Enum.EnumEstadoRemito.Recibido;
 
             if (parcialmenteRecibido == detalles.Count)
-                return EnumEstadoRemito.ParcialmenteRecibido;
+                return DTO.Enum.EnumEstadoRemito.ParcialmenteRecibido;
 
             if (emitido == detalles.Count)
-                return EnumEstadoRemito.Emitido;
+                return DTO.Enum.EnumEstadoRemito.Emitido;
 
             if (parcialmenteRecibido > 0)
-                return EnumEstadoRemito.ParcialmenteRecibido;
+                return DTO.Enum.EnumEstadoRemito.ParcialmenteRecibido;
 
-            return EnumEstadoRemito.Emitido;
+            return DTO.Enum.EnumEstadoRemito.Emitido;
         }
-
-        private async Task<bool> MovimientoStockEntreDepositos(Deposito depositoDestino, MovimientoStock movimiento, EnumEstadoRemito estado, int cantidadRecibida)
-        {
-            var stock = await baseDeDatos.Stocks.FirstOrDefaultAsync(s => s.Id == movimiento.StockId);
-
-            if (depositoDestino == null) throw new Exception("Depósito destino no encontrado");
-            if(stock == null) throw new Exception("Stock de origen no encontrado");
-            if (cantidadRecibida < 0) throw new Exception("Cantidad recibida inválida");
-            if (stock.Cantidad < cantidadRecibida) throw new Exception("Cantidad de stock insuficiente. Movimiento ilegal.");
-            
-            var stockDestinoExiste = 
-                await baseDeDatos.Stocks.FirstOrDefaultAsync(s => s.DepositoId == depositoDestino.Id && s.RecursoId == stock.RecursoId);
-            
-            if (estado == EnumEstadoRemito.Recibido)
-            {
-                if (stockDestinoExiste == null)
-                {
-                    stock.Cantidad -= cantidadRecibida;
-                    stockDestinoExiste = new Stock()
-                    {
-                        DepositoId = depositoDestino.Id,
-                        RecursoId = stock.RecursoId,
-                        Cantidad = cantidadRecibida
-                    };
-                    baseDeDatos.Stocks.Add(stockDestinoExiste);
-                }
-                else
-                {
-                    stock.Cantidad -= cantidadRecibida;
-                    stockDestinoExiste.Cantidad += cantidadRecibida;
-                }
-                await baseDeDatos.SaveChangesAsync();
-
-                baseDeDatos.MovimientoStocks.Add(new MovimientoStock()
-                {
-                    DetalleRemitoId = movimiento.DetalleRemitoId,
-                    StockId = stockDestinoExiste.Id,
-                    TipoDeMovimiento =  TipoDeMovimiento.Ingreso,
-                    Cantidad = cantidadRecibida,
-                    Fecha = DateTime.Now,
-                });
-            
-                await baseDeDatos.SaveChangesAsync();
-            }
-            else if(estado == EnumEstadoRemito.ParcialmenteRecibido)
-            {
-                if (stockDestinoExiste == null)
-                {
-                    stock.Cantidad -= movimiento.Cantidad;
-                    stockDestinoExiste = new Stock()
-                    {
-                        DepositoId = depositoDestino.Id,
-                        RecursoId = stock.RecursoId,
-                        Cantidad = cantidadRecibida
-                    };
-                    baseDeDatos.Stocks.Add(stockDestinoExiste);
-                }
-                else
-                {
-                    stock.Cantidad -= movimiento.Cantidad;
-                    stockDestinoExiste.Cantidad += cantidadRecibida;
-                }
-                await baseDeDatos.SaveChangesAsync();
-
-                baseDeDatos.MovimientoStocks.Add(new MovimientoStock()
-                {
-                    DetalleRemitoId = movimiento.DetalleRemitoId,
-                    StockId = movimiento.StockId,
-                    TipoDeMovimiento =  TipoDeMovimiento.Faltante,
-                    Cantidad = movimiento.Cantidad - cantidadRecibida,
-                    Fecha = DateTime.Now,
-                });
-                baseDeDatos.MovimientoStocks.Add(new MovimientoStock()
-                {
-                    DetalleRemitoId = movimiento.DetalleRemitoId,
-                    StockId = stockDestinoExiste.Id,
-                    TipoDeMovimiento =  TipoDeMovimiento.Ingreso,
-                    Cantidad = cantidadRecibida,
-                    Fecha = DateTime.Now,
-                });
-                await baseDeDatos.SaveChangesAsync();
-            }
-            
-            return true;
-        }
+        
     }
 }

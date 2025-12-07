@@ -1,5 +1,4 @@
 ﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/{tipoDeSolicitud}"
-@using BD.Enums
 @inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
@@ -55,7 +54,7 @@
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 &nbsp;
-                                @if (tipoDeSolicitud == "recibidos" &&
+                                @if (tipoDeSolicitud == "recibidos" && remito.Estado == EnumEstadoRemito.Emitido &&
                                      (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
                                 {
                                     <a class="btn btn-outline-success"
@@ -153,6 +152,7 @@ else
 
     private async Task CargarRemitos()
     {
+        Mensaje = string.Empty;
         var res = tipoDeSolicitud == "enviados"
             ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/{NotaDePedidoId}")
             : tipoDeSolicitud == "recibidos"

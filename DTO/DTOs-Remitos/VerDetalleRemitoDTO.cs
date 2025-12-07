@@ -1,4 +1,4 @@
-using BD.Enums;
+using DTO.Enum;
 
 namespace DTO.DTOs_Remitos;
 

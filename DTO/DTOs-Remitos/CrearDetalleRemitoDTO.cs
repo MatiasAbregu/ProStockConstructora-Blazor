@@ -1,10 +1,9 @@
-﻿using BD.Enums;
-using BD.Modelos;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.Enum;
 
 namespace DTO.DTOs_Remitos
 {
