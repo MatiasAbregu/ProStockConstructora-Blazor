@@ -1,4 +1,4 @@
-﻿ @page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido"
 @inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
@@ -10,16 +10,16 @@
     <article class="p-4">
         <div class="divBotonera">
             <p class="cabecera fw-bolder">Notas de pedido</p>
-            @if(Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
-            {
-                <select class="form-select" style="width: auto;" @onchange="async (e) => {
-                                                                     opcionNotas = Convert.ToInt32(e.Value);
-                                                                     numeroPagina = 1;
-                                                                     await CargarNotas(); }">
-                    <option value="0">Notas de pedido enviadas</option>
+
+            <select class="form-select" style="width: auto;"
+                    @onchange="async (e) => { opcionNotas = Convert.ToInt32(e.Value); numeroPagina = 1; await CargarNotas(); }">
+                <option value="0">Notas de pedido enviadas</option>
+                @if (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                {
                     <option value="1">Notas de pedido recibidas</option>
-                </select>  
-            }
+                }
+            </select>
+
             &nbsp;
             @if (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEOBRA"))
             {
@@ -60,29 +60,34 @@
                                 </span>
                             </td>
                             <td>
-                                <a class="btn btn-outline-info" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles")>
+                                <a class="btn btn-outline-info"
+                                   href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles")>
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 &nbsp;
                                 @if (opcionNotas == 0 && nota.Estado == EnumEstadoNotaPedido.Pendiente)
                                 {
-                                    <button class="btn btn-outline-danger" @onclick="() => { MostraModal = true; notaModal = nota; }">
-                                        <i class="bi bi-x-circle"></i>   
+                                    <button class="btn btn-outline-danger"
+                                            @onclick="() => { MostraModal = true; notaModal = nota; }">
+                                        <i class="bi bi-x-circle"></i>
                                     </button>
                                 }
                                 @if (opcionNotas == 1 &&
                                      (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
                                 {
-                                    <a class="btn btn-outline-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles/editar")>
+                                    <a class="btn btn-outline-success"
+                                       href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/detalles/editar")>
                                         <i class="bi bi-check2-square"></i>
                                     </a>
                                 }
                                 &nbsp;
-                                @if (opcionNotas == 1 &&
-                                     (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                                @if ((Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
                                      && (nota.Estado == EnumEstadoNotaPedido.Aprobada || nota.Estado == EnumEstadoNotaPedido.ParcialmenteAprobada))
                                 {
-                                    <a class="btn btn-outline-primary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/remitos")>
+                                    <a class="btn btn-outline-primary"
+                                       href=@(opcionNotas == 1 
+                                            ?  $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/remitos/enviados"
+                                            : $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{nota.Id}/remitos/recibidos")>
                                         <i class="bi bi-card-checklist"></i>
                                     </a>
                                 }
@@ -102,16 +107,17 @@
             </div>
         </div>
     </article>
-    
+
     @if (!string.IsNullOrEmpty(mensajeEstado))
     {
         <p class="msg-estado">@mensajeEstado</p>
     }
-    
+
     @if (MostraModal)
     {
         <div class="modal-backdrop show"></div>
-        <div class="modal fade show" id="modalConfirmarEliminar" tabindex="-1" style="display: block" aria-labelledby="confirmarEliminar" aria-hidden="true">
+        <div class="modal fade show" id="modalConfirmarEliminar" tabindex="-1" style="display: block"
+             aria-labelledby="confirmarEliminar" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content rounded-3 shadow">
                     <div class="modal-header bg-danger text-white">
@@ -123,10 +129,12 @@
                                 }"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <p>¿Seguro que deseas anular la nota de pedido con código: <strong>@notaModal.NumeroNotaPedido</strong>?</p>
+                        <p>¿Seguro que deseas anular la nota de pedido con código:
+                            <strong>@notaModal.NumeroNotaPedido</strong>?</p>
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => { MostraModal = false; notaModal = null; }">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"
+                                @onclick="() => { MostraModal = false; notaModal = null; }">
                             Cancelar
                         </button>
                         <button class="btn btn-danger" data-bs-dismiss="modal"
@@ -148,13 +156,11 @@ else
 }
 
 @code {
-    [Parameter]
-    public long? ObraId { get; set; }
-    [Parameter]
-    public long? DepositoId { get; set; }
+    [Parameter] public long? ObraId { get; set; }
+    [Parameter] public long? DepositoId { get; set; }
     private int numeroPagina = 1, opcionNotas = 0;
     private DatosUsuario Usuario;
-    
+
     private string Mensaje, mensajeEstado;
     private List<VerNotaDePedidoDTO> listaNotas = new();
 
@@ -163,7 +169,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if(Sesion.Usuario != null)
+        if (Sesion.Usuario != null)
         {
             Usuario = Sesion.Usuario;
             await CargarNotas();
@@ -191,13 +197,13 @@ else
     private async Task CargarNotas()
     {
         Mensaje = string.Empty;
-        var response = opcionNotas == 1 && (Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO")) 
-                       ? await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-pendiente/{DepositoId}") 
-                       : await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener/{DepositoId}");
+        var response = opcionNotas == 1 && (Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+            ? await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-pendiente/{DepositoId}")
+            : await Http.Get<Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener/{DepositoId}");
 
         if (response.Respuesta != null)
         {
-            if(response.Respuesta.Objeto != null) listaNotas = response.Respuesta.Objeto;
+            if (response.Respuesta.Objeto != null) listaNotas = response.Respuesta.Objeto;
             else Mensaje = response.Respuesta.Mensaje.Contains("éxito") ? string.Empty : response.Respuesta.Mensaje;
             StateHasChanged();
         }
@@ -228,4 +234,5 @@ else
         else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
         else return "text-bg-warning";
     }
+
 }

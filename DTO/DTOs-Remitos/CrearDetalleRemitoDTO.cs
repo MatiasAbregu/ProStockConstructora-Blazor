@@ -13,7 +13,8 @@ namespace DTO.DTOs_Remitos
         public long Id { get; set; }
         public long RemitoId { get; set; }
         public long DetalleNotaDePedidoId { get; set; }
-        public int CantidadDespachada { get; set; }
-        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.EnTransito;
+        public long RecursoId { get; set; }
+        public int CantidadDespachada { get; set; } = 0;
+        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.Emitido;
     }
 }

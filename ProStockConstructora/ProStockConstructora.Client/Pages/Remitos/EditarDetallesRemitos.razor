@@ -1,0 +1,141 @@
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/{tipoDeSolicitud}/{RemitoId:long}/detalles/editar"
+@page "/remitos/{RemitoId:long}/detalles/editar"
+@inject IHttpServicio http
+@inject NavigationManager navManager
+@inject DatosSesion Sesion
+
+<PageTitle>Remito (Edición - Estados) - ProStock</PageTitle>
+
+@if (Sesion.Usuario != null &&
+     (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+{
+    <article class="p-4">
+        <div class="cabecera">
+            <p class="fw-bolder">Remito (Detalles)</p>
+            <a class="btn btn-secondary"
+               href=@(DepositoId != 0 && NotaDePedidoId != 0 && !string.IsNullOrEmpty(tipoDeSolicitud) ?
+                        $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}"
+                        : "/inicio")>
+                <i class="fas fa-arrow-circle-left"></i>&ensp;
+                Atrás
+            </a>
+        </div>
+        <div class="card p-3">
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Mensaje
+                </div>
+            }
+
+            @if (remito != null)
+            {
+                <div class="my-3 px-4">
+                    <label class="form-label">Número Remito:</label>
+                    <input value="@remito.NumeroRemito" type="text" class="form-control" disabled />
+                </div>
+
+                <div class="my-3 px-4 card">
+                    <div class="my-3 px-4">
+                        <label class="form-label">Depósito de origen:</label>
+                        <input value="@remito.DepositoOrigen" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="my-3 px-4">
+                        <label class="form-label">Generado por:</label>
+                        <input value="@remito.Usuario" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="my-3 px-4">
+                        <label class="form-label">Fecha de emisión:</label>
+                        <input value="@remito.FechaEmision" type="text" class="form-control" disabled />
+                    </div>
+                </div>
+                    
+                @foreach (var renglon in remito.Detalles)
+                {
+                    <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
+                        <div class="flex-grow-1 my-3 px-4">
+                            <label class="form-label">Recurso que se recibe:</label>
+                            <input value="@renglon.Recurso" class="form-control" type="text" disabled/>
+                        </div>
+                        <div class="my-3 px-4">
+                            <label class="form-label">Cantidad solicitada:</label>
+                            <input value="@renglon.Cantidad" class="form-control" type="number" disabled/>
+                        </div>
+                        <div class="my-3 px-4">
+                            <label class="form-label">Cantidad que se envió:</label>
+                            <input value="@renglon.CantidadDespachada" class="form-control" type="number" disabled/>
+                        </div>
+                        <div class="my-3 px-4">
+                            <label class="form-label">Cantidad que se recibe:</label>
+                            <input @bind="renglon.CantidadRecibida" class="form-control" type="number" />
+                        </div>
+                    </div>
+                }
+
+                <button class="btn btn-success my-2 btn-submit" type="button" @onclick="ActualizarEstados">
+                    <i class="bi bi-check-lg me-1"></i> Guardar cambios
+                </button>
+            }
+        </div>
+    </article>
+}
+else
+{
+    navManager.NavigateTo("/");
+}
+
+
+@code {
+    [Parameter] public long ObraId { get; set; }
+    [Parameter] public long DepositoId { get; set; }
+    [Parameter] public long NotaDePedidoId { get; set; }
+    [Parameter] public long RemitoId { get; set; }
+    [Parameter] public string tipoDeSolicitud { get; set; }
+
+    VerRemitoDetalladoDTO remito;
+    private string Mensaje;
+
+    protected override  async Task OnInitializedAsync()
+    {
+        await ObtenerNotaDePedido();
+    }
+
+    private async Task ObtenerNotaDePedido()
+    {
+        Mensaje = string.Empty;
+        var Respuesta = await http.Get<Response<VerRemitoDetalladoDTO>>($"api/remito/obtener-detalles-remito/{RemitoId}");
+        if (Respuesta.Respuesta != null)
+        {
+            if (Respuesta.Respuesta.Objeto != null) remito = Respuesta.Respuesta.Objeto;
+            else Mensaje = Respuesta.Respuesta.Mensaje;
+        }
+    }
+
+    private async Task ActualizarEstados()
+    {
+        bool valido = true;
+        foreach (var renglon in remito.Detalles)
+        {
+            if (renglon.CantidadRecibida == null || renglon.CantidadRecibida < 0)
+            {
+                Mensaje = "Uno de los renglones tiene datos invalidos.";
+                valido = false;
+            }
+        }
+        
+        if(!valido) return;
+        
+        var res = await http.Put<List<VerDetalleRemitoDTO>, Response<string>>($"api/remito/{remito.Id}", remito.Detalles);
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null)
+            {
+                if (DepositoId != 0 & NotaDePedidoId != 0 && !string.IsNullOrEmpty(tipoDeSolicitud)) 
+                    navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}");
+                else navManager.NavigateTo("/inicio");
+            }
+            else Mensaje = res.Respuesta.Mensaje;
+        }
+    }
+}

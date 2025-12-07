@@ -1,4 +1,4 @@
-﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/crear"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/{tipoDeSolicitud}/crear"
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
 @inject DatosSesion Sesion
@@ -6,18 +6,19 @@
 <PageTitle>Crear Remito - ProStockConstructora</PageTitle>
 
 @if (Sesion.Usuario != null &&
-(Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+     (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
 {
     <article class="p-4">
         <div class="cabecera">
             <p class="fw-bolder">Crear Remito</p>
-            <a class="btn btn-secondary" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos")>
-            <i class="fas fa-arrow-circle-left"></i>&ensp;
-            Atrás
-        </a>
-    </div>
-    <div class="card p-3">
-        @if (!string.IsNullOrEmpty(Mensaje))
+            <a class="btn btn-secondary"
+               href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}")>
+                <i class="fas fa-arrow-circle-left"></i>&ensp;
+                Atrás
+            </a>
+        </div>
+        <div class="card p-3">
+            @if (!string.IsNullOrEmpty(Mensaje))
             {
                 <div class="alert alert-danger" role="alert">
                     @Mensaje
@@ -25,16 +26,16 @@
             }
             <div class="my-3 px-4">
                 <label class="form-label">Número Nota de Remito:</label>
-                <input @bind="remito.NumeroRemito" type="text" class="form-control" disabled />
+                <input @bind="remito.NumeroRemito" type="text" class="form-control" disabled/>
             </div>
             @if (nota != null)
             {
                 <div class="my-3 px-4">
                     <label class="form-label">Deposito que genera el remito:</label>
-                    <input @bind="nota.DepositoDestino" type="text" class="form-control" disabled />
+                    <input @bind="nota.DepositoDestino" type="text" class="form-control" disabled/>
                 </div>
                 <h5>Detalle:</h5>
-                @if(nota.detalle == null || !nota.detalle.Any())
+                @if (nota.detalle == null || !nota.detalle.Any())
                 {
                     <p>No hay detalles para mostrar.</p>
                 }
@@ -46,23 +47,27 @@
                         <div class="my-3 px-4 card d-flex flex-row flex-nowrap align-items-center">
                             <div class="flex-grow-1 my-3 px-4">
                                 <label class="form-label">Recurso que se enviara:</label>
-                                <input value="@renglon.Recurso" class="form-control" type="text" disabled />
+                                <input value="@renglon.Recurso" class="form-control" type="text" disabled/>
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Cantidad solicitada:</label>
-                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled />
+                                <input value="@renglon.Cantidad" class="form-control" type="number" disabled/>
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Cantidad ya enviada:</label>
-                                <input value="@renglon.CantidadDespachada" class="form-control" type="number" disabled />
+                                <input value="@renglon.CantidadDespachada" class="form-control" type="number" disabled/>
                             </div>
                             <div class="my-3 px-4">
                                 <label class="form-label">Cantidad a enviar:</label>
-                                <input @bind="detalle.CantidadDespachada" class="form-control" type="number" />
+                                <input @bind="detalle.CantidadDespachada" class="form-control" type="number"
+                                       disabled=@(renglon.CantidadDespachada == renglon.Cantidad)/>
+                                <p style="font-size: 1rem; margin: 0; font-style: italic">(Si no desea enviar materiales
+                                    deje el valor en 0)</p>
                             </div>
                         </div>
                     }
                 }
+
                 <button class="btn btn-success my-2 btn-submit" type="button" @onclick="CrearRemito">
                     <i class="bi bi-check-lg me-1"></i> Guardar cambios
                 </button>
@@ -77,16 +82,13 @@ else
 
 
 @code {
-    [Parameter]
-    public long ObraId{ get; set; }
-    [Parameter]
-    public long DepositoId { get; set; }
-    [Parameter]
-    public long NotaDePedidoId { get; set; }
+    [Parameter] public long ObraId { get; set; }
+    [Parameter] public long DepositoId { get; set; }
+    [Parameter] public long NotaDePedidoId { get; set; }
+    [Parameter] public string tipoDeSolicitud { get; set; }
 
     NotaDePedidoParaRemitoDTO nota = new();
     CrearRemitoDTO remito = new();
-
 
     private string Mensaje;
 
@@ -101,44 +103,77 @@ else
         var res = await Http.Get<Response<string>>($"api/remito/obtener-numero-remito");
         if (res.Respuesta != null)
         {
-            remito = new CrearRemitoDTO
-            {
-                NumeroRemito = res.Respuesta.Objeto,
-
-            };
+            if (res.Respuesta.Objeto != null)
+                remito = new CrearRemitoDTO
+                {
+                    NumeroRemito = res.Respuesta.Objeto,
+                };
+            else Mensaje = res.Respuesta.Mensaje;
         }
     }
+
     private async Task ObtenerNotaDePedido()
     {
         var res = await Http.Get<Response<NotaDePedidoParaRemitoDTO>>($"api/remito/obtener-nota-de-pedido/{NotaDePedidoId}/deposito/{DepositoId}");
-        if(res.Respuesta != null)
+        if (res.Respuesta != null)
         {
             nota = res.Respuesta.Objeto;
             remito.NotaDePedidoId = nota.NotaPedidoId;
             remito.UsuarioId = Sesion.Usuario.Id;
             remito.DepositoOrigenId = DepositoId;
             remito.DetallesDelRemito = nota.detalle.Select(r => new CrearDetalleRemitoDTO()
-                {
-                    DetalleNotaDePedidoId = r.Id,
-                    CantidadDespachada = 0,
-                    Estado = BD.Enums.EnumEstadoRemito.EnTransito,
-                    RemitoId = 0
-                }).ToList();
+            {
+                DetalleNotaDePedidoId = r.Id,
+                RecursoId = r.RecursoId,
+                CantidadDespachada = 0,
+                Estado = BD.Enums.EnumEstadoRemito.Emitido,
+                RemitoId = 0
+            }).ToList();
         }
     }
 
     private async Task CrearRemito()
     {
+        Mensaje = string.Empty;
+        bool valido = true;
+        int cantNulos = 0;
+
+        foreach (var detalle in remito.DetallesDelRemito)
+        {
+            var detalleNP = nota.detalle.FirstOrDefault(np => np.Id == detalle.DetalleNotaDePedidoId);
+            if (detalleNP == null)
+            {
+                Mensaje = "Uno de los renglones del remito no está bien asociado. Por favor, contacte con un administrador.";
+                valido = false;
+            }
+
+            var CantidadYaEnviada = detalleNP.Cantidad - detalleNP.CantidadDespachada;
+            if (detalle.CantidadDespachada == null || detalle.CantidadDespachada < 0 || detalle.CantidadDespachada > CantidadYaEnviada)
+            {
+                Mensaje = "Uno de los detalles tiene una cantidad inválida";
+                valido = false;
+            }
+
+            if (detalle.CantidadDespachada == 0) cantNulos += 1;
+        }
+
+        if (remito.DetallesDelRemito.Count == cantNulos)
+        {
+            Mensaje = "Para generar un remito es necesario contar con un renglón que solicité una cantidad al menos.";
+            valido = false;
+        }
+
+        if (!valido) return;
+
         var res = await Http.Post<CrearRemitoDTO, Response<string>>("api/remito", remito);
         if (res.Respuesta != null)
         {
             if (res.Respuesta.Objeto != null)
-            Navigation.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos");
+                Navigation.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}");
             else
             {
                 Mensaje = res.Respuesta.Mensaje;
             }
         }
-       
     }
 }

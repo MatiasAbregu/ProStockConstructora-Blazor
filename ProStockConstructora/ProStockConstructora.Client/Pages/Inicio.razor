@@ -1,4 +1,4 @@
-﻿@page "/inicio";
+﻿@page "/inicio"
 @inject DatosSesion datosSesion;
 @inject NavigationManager navManager;
 @inject IHttpServicio Http;
@@ -9,40 +9,39 @@
 {
     <article class="p-4">
         <h5 class="mb-4 fst-italic">¡Bienvenido de vuelta @datosSesion.Usuario.NombreUsuario!</h5>
-        @if(datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")){
+        @if (datosSesion.Usuario.Roles.Contains("ADMINISTRADOR") || datosSesion.Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+        {
             <div class="d-flex justify-content-between align-items-center mb-2">
-            <h4 class="flex-grow-1">Documentos pendientes:</h4>
-            <select class="form-select" style="width: auto;" @onchange="(e) => {
-                opcionDocumento = Convert.ToInt32(e.Value);
-                numeroPagina = 1; }">
-                <option value="0">Ver notas de pedido</option>
-                <option value="1">Ver remitos</option>
-            </select>
-        </div>
+                <h4 class="flex-grow-1">Documentos pendientes:</h4>
+                <select class="form-select" style="width: auto;" @onchange="async (e) => await OnChangeOpcion(e)">
+                    <option value="0">Ver notas de pedido</option>
+                    <option value="1">Ver remitos</option>
+                </select>
+            </div>
 
-        <div class="table-responsive">
-            <table class="table">
-                <thead class="table-dark">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="table-dark">
                     <tr>
                         <th>N° de Nota</th>
                         <th>Fecha Emisión</th>
                         <th>Estado</th>
                         <th></th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @if (opcionDocumento == 0)
                     {
-                        if (listaNotas == null || !listaNotas.Any())
+                        if (!string.IsNullOrEmpty(Mensaje) || listaNotas == null || !listaNotas.Any())
                         {
                             <tr>
-                                <td colspan="4" class="text-center">¡Estás al día! No hay notas de pedido pendientes.</td>
+                                <td colspan="4" class="text-center">@Mensaje</td>
                             </tr>
                         }
                         else
                         {
                             @foreach (var nota in listaNotas
-                                            .Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                                          .Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
                             {
                                 <tr>
                                     <td>@nota.NumeroNotaPedido</td>
@@ -57,9 +56,10 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         &nbsp;
-                                        @if(Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                                        @if (Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO"))
                                         {
-                                            <a class="btn btn-outline-success" href=@($"/notadepedido/{nota.Id}/detalles/editar")>
+                                            <a class="btn btn-outline-success"
+                                               href=@($"/notadepedido/{nota.Id}/detalles/editar")>
                                                 <i class="bi bi-check2-square"></i>
                                             </a>
                                         }
@@ -70,16 +70,16 @@
                     }
                     else
                     {
-                        if (listaRemitos == null || !listaRemitos.Any())
+                        if (!string.IsNullOrEmpty(Mensaje) || listaRemitos == null || !listaRemitos.Any())
                         {
                             <tr>
-                                <td colspan="4" class="text-center">¡Estás al día! No hay remitos pendientes.</td>
+                                <td colspan="4" class="text-center">@Mensaje</td>
                             </tr>
                         }
                         else
                         {
                             @foreach (var remito in listaRemitos
-                                            .Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
+                                          .Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
                             {
                                 <tr>
                                     <td>@remito.NumeroRemito</td>
@@ -90,29 +90,36 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-info" href=@($"???")>
+                                        <a class="btn btn-outline-info" href=@($"/remitos/{remito.Id}/detalles")>
                                             <i class="bi bi-eye"></i>
                                         </a>
+                                        &nbsp;
+                                        @if (Usuario.Roles.Contains("ADMINISTRADOR") || Usuario.Roles.Contains("JEFEDEDEPOSITO"))
+                                        {
+                                            <a class="btn btn-outline-success"
+                                               href=@($"/remitos/{remito.Id}/detalles/editar")>
+                                                <i class="bi bi-check2-square"></i>
+                                            </a>
+                                        }
                                     </td>
                                 </tr>
                             }
-
                         }
                     }
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <div class="botoneraTabla">
-                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
-                    <p class="btn-tabla-numero">@numeroPagina</p>
-                    <p class="btn-tabla" @onclick="async() => {
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-between">
+                    <div class="botoneraTabla">
+                        <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                        <p class="btn-tabla-numero">@numeroPagina</p>
+                        <p class="btn-tabla" @onclick="async() => {
                     if (opcionDocumento == 0) await SiguientePagina(listaNotas);
                     else await SiguientePagina(listaRemitos);
                     }">Siguiente</p>
+                    </div>
+                    <p>@(opcionDocumento == 0 ? listaNotas?.Count : listaRemitos?.Count) registros totales</p>
                 </div>
-                <p>@(opcionDocumento == 0 ? listaNotas?.Count : listaRemitos?.Count) registros totales</p>
             </div>
-        </div>
         }
     </article>
 }
@@ -125,6 +132,7 @@ else
     private int opcionDocumento = 0;
     private int numeroPagina = 1;
     private DatosUsuario Usuario;
+    private string Mensaje;
 
     private List<VerNotaDePedidoDTO> listaNotas = new();
     private List<VerRemitoDTO> listaRemitos = new();
@@ -158,12 +166,23 @@ else
 
     private async Task CargarNotas()
     {
-        var response = await Http
-            .Post<DatosUsuario, Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-notas-pendientes", Usuario);
+        var res = await Http.Post<DatosUsuario, Response<List<VerNotaDePedidoDTO>>>($"api/notadepedido/obtener-notas-pendientes", Usuario);
 
-        if (response.Respuesta != null)
+        if (res.Respuesta != null)
         {
-            listaNotas = response.Respuesta.Objeto;
+            if (res.Respuesta.Objeto != null) listaNotas = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje;
+        }
+    }
+
+    private async Task CargarRemitos()
+    {
+        var res = await Http.Post<DatosUsuario, Response<List<VerRemitoDTO>>>($"api/remito/obtener-remitos-pendientes", Usuario);
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null) listaRemitos = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje;
         }
     }
 
@@ -175,4 +194,13 @@ else
         else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
         else return "text-bg-warning";
     }
+
+    private async Task OnChangeOpcion(ChangeEventArgs e)
+    {
+        opcionDocumento = Convert.ToInt32(e.Value);
+        if (opcionDocumento == 0) await CargarNotas();
+        else if (opcionDocumento == 1) await CargarRemitos();
+        numeroPagina = 1;
+    }
+    
 }

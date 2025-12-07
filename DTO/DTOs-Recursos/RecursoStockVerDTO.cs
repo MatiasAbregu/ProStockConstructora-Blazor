@@ -12,7 +12,6 @@ namespace DTO.DTOs_Recursos
         public long StockId { get; set; }
         public long IdMaterial { get; set; }
         public string CodigoISO { get; set; }
-        public EnumTipoMaterialoMaquina TipoRecurso { get; set; }
         public string Nombre { get; set; }
         public string? TipoMaterial { get; set; }
         public string? UnidadDeMedida { get; set; }

@@ -8,9 +8,9 @@ namespace BD.Enums
 {
     public enum EnumEstadoRemito
     {
-        Pendiente = 0,
-        EnTransito = 1,
+        Emitido = 1,
         Recibido = 2,
-        Anulado = 3,
+        ParcialmenteRecibido = 3,
+        Anulado = 4
     }
 }

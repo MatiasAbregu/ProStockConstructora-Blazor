@@ -19,7 +19,7 @@ namespace BD.Modelos
         public DetalleNotaDePedido DetalleNotaDePedido { get; set; }
         public required int CantidadDespachada { get; set; }
         public int? CantidadRecibida { get; set; }
-        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.EnTransito;
+        public EnumEstadoRemito Estado { get; set; } = EnumEstadoRemito.Emitido;
         public long? UsuarioQueRecibeId { get; set; }
         public Usuario? UsuarioQueRecibe { get; set; }
 

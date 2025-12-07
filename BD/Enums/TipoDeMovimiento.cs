@@ -10,6 +10,7 @@ namespace BD.Enums
     {
         Ingreso = 1,
         Egreso = 2,
-        Faltante = 3
+        Faltante = 3,
+        Cancelado = 4
     }
 }

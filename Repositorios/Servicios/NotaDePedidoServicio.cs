@@ -129,15 +129,14 @@ namespace Repositorios.Servicios
                         Id = np.Id,
                         NumeroNotaPedido = np.NumeroNotaPedido,
                         FechaEmision = np.FechaEmision,
-                        Estado = DefinirEstadoNotaPedido(DetallesNotaDePedido.Where(d => d.NotaDePedidoId == np.Id)
-                            .ToList()),
+                        Estado = DefinirEstadoNotaPedido(DetallesNotaDePedido.Where(d => d.NotaDePedidoId == np.Id).ToList()),
                     }).ToList();
 
                     if (notasDePedidoParaElFront.Count == 0)
                         return new Response<List<VerNotaDePedidoDTO>>()
                         {
                             Estado = true,
-                            Mensaje = "No hay notas de pedido cargadas aún en este depósito.",
+                            Mensaje = "¡No hay notas de pedido cargadas aún en este depósito!",
                             Objeto = null
                         };
                     
@@ -153,7 +152,7 @@ namespace Repositorios.Servicios
                     return new Response<List<VerNotaDePedidoDTO>>
                     {
                         Estado = true,
-                        Mensaje = "No hay notas de pedido cargadas aún en este depósito.",
+                        Mensaje = "¡No hay notas de pedido cargadas aún en este depósito!",
                         Objeto = null,
                     };
                 }
@@ -234,7 +233,7 @@ namespace Repositorios.Servicios
         {
             try
             {
-                var usuarioExiste = await BasedeDatos.Usuarios.AnyAsync(u => u.Id == u.Id && u.Email == u.Email);
+                var usuarioExiste = await BasedeDatos.Usuarios.AnyAsync(u => u.Id == Usuario.Id && u.Email == Usuario.Email);
                 if (!usuarioExiste) return new Response<List<VerNotaDePedidoDTO>>()
                 {
                     Estado = true,
@@ -419,8 +418,6 @@ namespace Repositorios.Servicios
                 };
             }
         }
-
-        
 
         public async Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId)
         {

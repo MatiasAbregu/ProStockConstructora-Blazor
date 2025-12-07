@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251203214740_Remitos")]
-    partial class Remitos
+    [Migration("20251205203410_StockEnMovimiento")]
+    partial class StockEnMovimiento
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -212,12 +212,20 @@ namespace BD.Migrations
                     b.Property<long>("DetalleRemitoId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("StockId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("TipoDeMovimiento")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DetalleRemitoId");
+
+                    b.HasIndex("StockId");
 
                     b.ToTable("MovimientoStocks");
                 });
@@ -665,7 +673,15 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BD.Modelos.Stock", "Stock")
+                        .WithMany()
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("DetalleRemito");
+
+                    b.Navigation("Stock");
                 });
 
             modelBuilder.Entity("BD.Modelos.NotaDePedido", b =>

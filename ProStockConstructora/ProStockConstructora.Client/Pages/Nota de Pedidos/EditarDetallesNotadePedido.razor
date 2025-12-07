@@ -206,13 +206,11 @@ else
             var res = await http.Put<List<VerDetalleNotadePedidoDTO>, Response<string>>($"api/notadepedido/{nota.Id}",
             listadoAEnviar);
 
-            Console.WriteLine("DESPUES DEL PUT 🗣️");
-
             if (res.Respuesta != null)
             {
                 if (res.Respuesta.Objeto != null)
                 {
-                    if (ObraId != 0 && DepositoId != 0) navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido");
+                    if (DepositoId != 0) navManager.NavigateTo($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido");
                     else navManager.NavigateTo("/inicio");
                 }
                 else Mensaje = res.Respuesta.Mensaje;

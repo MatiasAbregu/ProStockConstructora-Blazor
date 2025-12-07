@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class Remitos : Migration
+    public partial class StockEnMovimiento : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -480,8 +480,10 @@ namespace BD.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DetalleRemitoId = table.Column<long>(type: "bigint", nullable: false),
+                    StockId = table.Column<long>(type: "bigint", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
-                    TipoDeMovimiento = table.Column<int>(type: "int", nullable: false)
+                    TipoDeMovimiento = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -490,6 +492,12 @@ namespace BD.Migrations
                         name: "FK_MovimientoStocks_DetalleRemitos_DetalleRemitoId",
                         column: x => x.DetalleRemitoId,
                         principalTable: "DetalleRemitos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovimientoStocks_Stocks_StockId",
+                        column: x => x.StockId,
+                        principalTable: "Stocks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -572,6 +580,11 @@ namespace BD.Migrations
                 name: "IX_MovimientoStocks_DetalleRemitoId",
                 table: "MovimientoStocks",
                 column: "DetalleRemitoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovimientoStocks_StockId",
+                table: "MovimientoStocks",
+                column: "StockId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotaDePedidos_DepositoOrigenId",
@@ -730,10 +743,10 @@ namespace BD.Migrations
                 name: "RolesUsuarios");
 
             migrationBuilder.DropTable(
-                name: "Stocks");
+                name: "DetalleRemitos");
 
             migrationBuilder.DropTable(
-                name: "DetalleRemitos");
+                name: "Stocks");
 
             migrationBuilder.DropTable(
                 name: "Roles");

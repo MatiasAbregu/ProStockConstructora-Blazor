@@ -1,32 +1,40 @@
-﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/{tipoDeSolicitud}"
+@using BD.Enums
 @inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
 
 <PageTitle>Remitos de Nota de Pedido - ProStock</PageTitle>
 
-<article class="p-4">
-    <div class="divBotonera">
-        <p class="cabecera fw-bolder">Remitos</p>
-        <div class="botonera">
-            <a class="btn btn-add btn-success" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/crear")>+</a>
+@if (Sesion.Usuario != null && (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+{
+    <article class="p-4">
+        <div class="divBotonera">
+            <p class="cabecera fw-bolder">Remitos (@tipoDeSolicitud)</p>
+            &nbsp;
+            <div class="botonera">
+                @if (tipoDeSolicitud == "enviados")
+                {
+                    <a class="btn btn-add btn-success"
+                       href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}/crear")>+</a>
+                }
+            </div>
         </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table">
-            <thead class="table-dark">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
                 <tr>
                     <th>N° De Remito</th>
                     <th>Fecha Emisión</th>
                     <th>Estado</th>
                     <th></th>
                 </tr>
-            </thead>
-            <tbody>
-                @if(!listaRemitos.Any())
+                </thead>
+                <tbody>
+                @if (!string.IsNullOrEmpty(Mensaje) || listaRemitos == null || !listaRemitos.Any())
                 {
                     <tr>
-                        <td colspan="4" class="text-center">No hay remitos para mostrar.</td>
+                        <td colspan="4" class="text-center">@Mensaje</td>
                     </tr>
                 }
                 else
@@ -42,37 +50,166 @@
                                 </span>
                             </td>
                             <td>
-                                <a class="btn btn-primary btn-sm" href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{remito.Id}")>Ver Detalles</a>
+                                <a class="btn btn-outline-info"
+                                   href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}/{remito.Id}/detalles")>
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                &nbsp;
+                                @if (tipoDeSolicitud == "recibidos" &&
+                                     (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+                                {
+                                    <a class="btn btn-outline-success"
+                                       href=@($"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}/{remito.Id}/detalles/editar")>
+                                        <i class="bi bi-check2-square"></i>
+                                    </a>
+                                }
+                                &nbsp;
+                                @if (remito.Estado == EnumEstadoRemito.Emitido && tipoDeSolicitud == "enviados" &&
+                                     (Sesion.Usuario.Roles.Contains("ADMINISTRADOR") || Sesion.Usuario.Roles.Contains("JEFEDEDEPOSITO")))
+                                {
+                                    <button class="btn btn-outline-danger"
+                                            @onclick="() => { MostraModal = true; remitoModal = remito; }">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                }
                             </td>
                         </tr>
                     }
                 }
-            </tbody>
-        </table>
-    </div>
-</article>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between">
+                <div class="botoneraTabla">
+                    <p class="btn-tabla" @onclick="AnteriorPagina">Anterior</p>
+                    <p class="btn-tabla-numero">@numeroPagina</p>
+                    <p class="btn-tabla" @onclick="SiguientePagina">Siguiente</p>
+                </div>
+                <p>@listaRemitos?.Count registros totales</p>
+            </div>
+        </div>
+    </article>
+
+    @if (!string.IsNullOrEmpty(mensajeEstado))
+    {
+        <p class="msg-estado">@mensajeEstado</p>
+    }
+
+    @if (MostraModal)
+    {
+        <div class="modal-backdrop show"></div>
+        <div class="modal fade show" id="modalConfirmarEliminar" tabindex="-1" style="display: block"
+             aria-labelledby="confirmarEliminar" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Anular remito</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                @onclick="() => { MostraModal = false; remitoModal = null; }"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>¿Seguro que deseas anular el remito con código: <strong>@remitoModal.NumeroRemito</strong>?
+                        </p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"
+                                @onclick="() => { MostraModal = false; remitoModal = null; }">
+                            Cancelar
+                        </button>
+                        <button class="btn btn-danger" data-bs-dismiss="modal"
+                                @onclick="async() => {
+                                MostraModal = false; 
+                                await AnularRemito(remitoModal.Id); 
+                            }">
+                            Anular
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    Nav.NavigateTo("/");
+}
 
 @code {
-    [Parameter]
-    public long ObraId { get; set; }
-    [Parameter]
-    public long DepositoId { get; set; }
-    [Parameter]
-    public long NotaDePedidoId { get; set; }
+    [Parameter] public long ObraId { get; set; }
+    [Parameter] public long DepositoId { get; set; }
+    [Parameter] public long NotaDePedidoId { get; set; }
+    [Parameter] public string tipoDeSolicitud { get; set; }
 
+    private int numeroPagina = 1;
+    private string Mensaje, mensajeEstado;
+    private bool MostraModal = false;
+
+    VerRemitoDTO remitoModal = new();
     List<VerRemitoDTO> listaRemitos = new List<VerRemitoDTO>();
 
-    override protected async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-       
+        await CargarRemitos();
+    }
+
+    private async Task CargarRemitos()
+    {
+        var res = tipoDeSolicitud == "enviados"
+            ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/{NotaDePedidoId}")
+            : tipoDeSolicitud == "recibidos"
+                ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/obtener-pendiente/{NotaDePedidoId}")
+                : null;
+
+        if (res == null) Nav.NavigateTo("/");
+
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null) listaRemitos = res.Respuesta.Objeto;
+            else Mensaje = res.Respuesta.Mensaje;
+        }
+    }
+
+    private async Task AnularRemito(long Id)
+    {
+        var res = await Http.Delete<Response<string>>($"api/remito/{Id}");
+        if (res.Respuesta != null)
+        {
+            if (res.Respuesta.Objeto != null)
+            {
+                await CargarRemitos();
+                mensajeEstado = res.Respuesta.Objeto;
+                StateHasChanged();
+                await Task.Delay(2500);
+                mensajeEstado = "";
+            }
+            else mensajeEstado = res.Respuesta.Mensaje;
+        }
+    }
+
+    private async Task SiguientePagina()
+    {
+        if (listaRemitos.Count > numeroPagina * 10)
+        {
+            numeroPagina++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnteriorPagina()
+    {
+        if (numeroPagina > 1)
+        {
+            numeroPagina--;
+            StateHasChanged();
+        }
     }
 
     private string ObtenerEstadoClase(string estado)
     {
         if (estado == "Pendiente") return "text-bg-danger";
-        else if (estado == "En Transito") return "text-bg-success";
+        else if (estado == "EnTransito") return "text-bg-success";
         else if (estado == "Recibido") return "text-bg-primary";
         else if (estado == "Anulado") return "text-bg-secondary";
         else return "text-bg-warning";
     }
+
 }

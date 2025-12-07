@@ -12,7 +12,10 @@ namespace BD.Modelos
         public long Id { get; set; }
         public long DetalleRemitoId { get; set; }
         public DetalleRemito DetalleRemito { get; set; }
+        public long StockId { get; set; }
+        public Stock Stock { get; set; }
         public int Cantidad { get; set; }
         public TipoDeMovimiento TipoDeMovimiento { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }

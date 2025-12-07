@@ -1,18 +1,18 @@
-﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/detalles"
-@page "/notadepedido/{NotaDePedidoId:long}/detalles"
+﻿@page "/obras/{ObraId:long}/depositos/{DepositoId:long}/notadepedido/{NotaDePedidoId:long}/remitos/{tipoDeSolicitud}/{RemitoId:long}/detalles"
+@page "/remitos/{RemitoId:long}/detalles"
 @inject IHttpServicio Http
 @inject NavigationManager Nav
 @inject DatosSesion Sesion
 
-<PageTitle>Detalles de Nota de Pedido - ProStock</PageTitle>
+<PageTitle>Detalles de Remito - ProStock</PageTitle>
 
 @if (Sesion.Usuario != null)
 {
     <article class="p-4">
         <div class="cabecera">
-            <p class="fw-bolder">Notas de pedido (Detalles)</p>
-            <a class="btn btn-secondary" href=@(DepositoId != 0 ?
-                                                    $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido"
+            <p class="fw-bolder">Remito (Detalles)</p>
+            <a class="btn btn-secondary" href=@((DepositoId != 0 && NotaDePedidoId != 0) ?
+                                                    $"/obras/{ObraId}/depositos/{DepositoId}/notadepedido/{NotaDePedidoId}/remitos/{tipoDeSolicitud}"
                                                     : "/")><i class="fas fa-arrow-circle-left"></i>&ensp; Atrás</a>
         </div>
         <div class="card p-3">
@@ -23,25 +23,25 @@
                 </div>
             }
 
-            @if (nota != null)
+            @if (remito != null)
             {
                 <div class="my-3 px-4">
-                    <label class="form-label">Número Nota de Pedido:</label>
-                    <input value="@nota.NumeroNotaPedido" type="text" class="form-control" disabled />
+                    <label class="form-label">Número Remito:</label>
+                    <input value="@remito.NumeroRemito" type="text" class="form-control" disabled />
                 </div>
 
                 <div class="my-3 px-4 card">
                     <div class="my-3 px-4">
                         <label class="form-label">Depósito de origen:</label>
-                        <input value="@nota.DepositoOrigen" type="text" class="form-control" disabled />
+                        <input value="@remito.DepositoOrigen" type="text" class="form-control" disabled />
                     </div>
                     <div class="my-3 px-4">
-                        <label class="form-label">Generada por:</label>
-                        <input value="@nota.Usuario" type="text" class="form-control" disabled />
+                        <label class="form-label">Generado por:</label>
+                        <input value="@remito.Usuario" type="text" class="form-control" disabled />
                     </div>
                     <div class="my-3 px-4">
                         <label class="form-label">Fecha de emisión:</label>
-                        <input value="@nota.FechaEmision" type="text" class="form-control" disabled />
+                        <input value="@remito.FechaEmision" type="text" class="form-control" disabled />
                     </div>
                 </div>
 
@@ -50,26 +50,28 @@
                     <table class="table">
                         <thead class="table-dark">
                             <tr>
-                                <th>Depósito destino</th>
-                                <th>Recurso</th>
+                                <th>Recurso enviado</th>
                                 <th>Cantidad solicitada</th>
+                                <th>Cantidad despachada</th>
+                                <th>Cantidad recibida</th>
                                 <th>Estado</th>
-                                <th>Ultima modificación por</th>
+                                <th>Recibido por</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var renglon in nota.Detalles)
+                            @foreach (var renglon in remito.Detalles)
                             {
                                 <tr>
-                                    <td>@renglon.Deposito</td>
                                     <td>@renglon.Recurso</td>
                                     <td>@renglon.Cantidad</td>
+                                    <td>@renglon.CantidadDespachada</td>
+                                    <td>@renglon.CantidadRecibida</td>
                                     <td>
                                         <span class="badge @ObtenerEstadoClase(renglon.Estado.ToString())">
                                             @renglon.Estado.ToString()
                                         </span>
                                     </td>
-                                    <td>@renglon.UsuarioQueModifico</td>
+                                    <td>@renglon.UsuarioQueRecibe</td>
                                 </tr>
                             }
                         </tbody>
@@ -88,30 +90,32 @@ else
     [Parameter] public long ObraId { get; set; }
     [Parameter] public long DepositoId { get; set; }
     [Parameter] public long NotaDePedidoId { get; set; }
+    [Parameter] public long RemitoId { get; set; } 
+    [Parameter] public string tipoDeSolicitud { get; set; }
+    
     private string MensajeError;
-    private VerNotadePedidoDetalladaDTO nota;
+    private VerRemitoDetalladoDTO remito;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarNotadePedido();
+        await CargarRemito();
     }
 
-    private async Task CargarNotadePedido()
+    private async Task CargarRemito()
     {
-        var Respuesta = await Http.Get<Response<VerNotadePedidoDetalladaDTO>>($"api/notadepedido/obtener-detalles-nota/{NotaDePedidoId}");
+        MensajeError = string.Empty;
+        var Respuesta = await Http.Get<Response<VerRemitoDetalladoDTO>>($"api/remito/obtener-detalles-remito/{RemitoId}");
         if (Respuesta.Respuesta != null)
         {
-            if (Respuesta.Respuesta.Objeto != null) nota = Respuesta.Respuesta.Objeto;
+            if (Respuesta.Respuesta.Objeto != null) remito = Respuesta.Respuesta.Objeto;
             else MensajeError = Respuesta.Respuesta.Mensaje;
         }
     }
 
     private string ObtenerEstadoClase(string estado)
     {
-        if (estado == "Rechazada") return "text-bg-danger";
-        else if (estado == "Aprobada") return "text-bg-success";
-        else if (estado == "ParcialmenteAprobada") return "text-bg-primary";
-        else if (estado == "ParcialmenteRechazada") return "text-bg-secondary";
+        if (estado == "Recibido") return "text-bg-success";
+        else if (estado == "ParcialmenteRecibido") return "text-bg-primary";
         else return "text-bg-warning";
     }
 }

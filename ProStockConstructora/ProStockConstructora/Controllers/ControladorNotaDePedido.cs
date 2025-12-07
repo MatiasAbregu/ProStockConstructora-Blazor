@@ -67,7 +67,6 @@ namespace ProStockConstructora.Controllers
             return Ok(respuesta);
         }
 
-
         [HttpPost]
         public async Task<ActionResult> CrearNotadePedido(CrearNotaDePedidoDTO CrearNota)
         {
