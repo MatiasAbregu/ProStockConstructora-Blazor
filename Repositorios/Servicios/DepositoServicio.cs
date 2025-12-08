@@ -24,6 +24,38 @@ namespace Repositorios.Servicios
             this.baseDeDatos = BaseDeDatos;
         }
 
+        public async Task<Response<string>> ObtenerCodigoISO(long Id)
+        {
+            try
+            {
+                var deposito = await baseDeDatos.Depositos.FirstOrDefaultAsync(d => d.Id == Id);
+                if (deposito == null)
+                    return new Response<string>()
+                    {
+                        Estado = true,
+                        Mensaje = "¡No existe un depósito con ese código!",
+                        Objeto = null,
+                    };
+
+                return new Response<string>()
+                {
+                    Estado = true,
+                    Mensaje = null,
+                    Objeto = deposito.CodigoDeposito
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                return new Response<string>()
+                {
+                    Estado = false,
+                    Mensaje = "¡Error al cargar el código ISO!",
+                    Objeto = null
+                };
+            }
+        }
+
         public async Task<Response<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId)
         {
             try
@@ -34,7 +66,7 @@ namespace Repositorios.Servicios
                 if (depositos.Count == 0)
                 {
                     return new Response<List<DepositoEmpresaDTO>>()
-                    { Objeto = [], Mensaje = "Aún no existen depósitos para esta empresa.", Estado = true };
+                        { Objeto = [], Mensaje = "Aún no existen depósitos para esta empresa.", Estado = true };
                 }
 
                 return new Response<List<DepositoEmpresaDTO>>()
@@ -119,12 +151,13 @@ namespace Repositorios.Servicios
 
                 if (usuario.Roles.Contains("ADMINISTRADOR") || usuario.Roles.Contains("JEFEDEOBRA"))
                 {
-                    if (ObraId == null) return new Response<List<VerDepositoDTO>>()
-                    {
-                        Objeto = null,
-                        Estado = true,
-                        Mensaje = "Es obligatorio pasar una ID de obra en los roles administrador o jefe de obra."
-                    };
+                    if (ObraId == null)
+                        return new Response<List<VerDepositoDTO>>()
+                        {
+                            Objeto = null,
+                            Estado = true,
+                            Mensaje = "Es obligatorio pasar una ID de obra en los roles administrador o jefe de obra."
+                        };
 
                     var depositos = await baseDeDatos.Depositos.Include(d => d.Obra)
                         .Where(d => d.Obra.Id == ObraId)
@@ -141,13 +174,15 @@ namespace Repositorios.Servicios
                     {
                         Objeto = depositos,
                         Estado = true,
-                        Mensaje = depositos.Count > 0 ? "¡Depósitos cargados con exito!" : "¡Aún no hay depósitos cargados en el sistema!"
+                        Mensaje = depositos.Count > 0
+                            ? "¡Depósitos cargados con exito!"
+                            : "¡Aún no hay depósitos cargados en el sistema!"
                     };
                 }
                 else if (usuario.Roles.Contains("JEFEDEDEPOSITO"))
                 {
-                    var depositos = await baseDeDatos.Depositos.
-                        Where(d => usuario.DepositosId.Contains(d.Id)).Include(d => d.Obra)
+                    var depositos = await baseDeDatos.Depositos.Where(d => usuario.DepositosId.Contains(d.Id))
+                        .Include(d => d.Obra)
                         .Select(d => new VerDepositoDTO()
                         {
                             Id = d.Id,
@@ -163,7 +198,9 @@ namespace Repositorios.Servicios
                     {
                         Objeto = depositos,
                         Estado = true,
-                        Mensaje = depositos.Count > 0 ? "¡Depósitos cargados con exito!" : "¡Aún no hay depósitos cargados en el sistema!"
+                        Mensaje = depositos.Count > 0
+                            ? "¡Depósitos cargados con exito!"
+                            : "¡Aún no hay depósitos cargados en el sistema!"
                     };
                 }
                 else
@@ -175,7 +212,6 @@ namespace Repositorios.Servicios
                         Mensaje = "Acceso denegado."
                     };
                 }
-
             }
             catch (Exception ex)
             {
@@ -194,12 +230,13 @@ namespace Repositorios.Servicios
             try
             {
                 bool existe = await baseDeDatos.Depositos.AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito);
-                if (existe) return new Response<string>
-                {
-                    Objeto = null,
-                    Mensaje = "Ese código ya está en uso",
-                    Estado = true
-                };
+                if (existe)
+                    return new Response<string>
+                    {
+                        Objeto = null,
+                        Mensaje = "Ese código ya está en uso",
+                        Estado = true
+                    };
 
                 var nuevoDeposito = new Deposito
                 {
@@ -246,7 +283,7 @@ namespace Repositorios.Servicios
                     };
 
                 bool existeCodigo = await baseDeDatos.Depositos
-                            .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito && d.Id != e.Id);
+                    .AnyAsync(d => d.CodigoDeposito == e.CodigoDeposito && d.Id != e.Id);
                 if (existeCodigo)
                     return new Response<string>
                     {

@@ -419,7 +419,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId)
+        public async Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId, long UsuarioId)
         {
             try
             {
@@ -448,6 +448,7 @@ namespace Repositorios.Servicios
                 foreach (var detalle in detalles)
                 {
                     detalle.EstadoNotaPedido = EstadoNotaPedido.Anulada;
+                    detalle.UsuarioModificacionId = UsuarioId;
                 }
 
                 await BasedeDatos.SaveChangesAsync();

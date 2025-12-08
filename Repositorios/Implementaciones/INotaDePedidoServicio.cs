@@ -20,6 +20,6 @@ namespace Repositorios.Implementaciones
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientes(DatosUsuario Usuario);
         Task<Response<List<VerNotaDePedidoDTO>>> ObtenerNotasDePedidoPendientesPorDepositoId(long DepositoId);
         Task<Response<string>> ActualizarEstadosNotaDePedido(long NotaDePedidoId, List<VerDetalleNotadePedidoDTO> detalles);
-        Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId);
+        Task<Response<string>> AnularNotaDePedido(long NotaDePedidoId, long UsuarioId);
     }
 }

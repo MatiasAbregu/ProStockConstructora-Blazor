@@ -133,7 +133,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<List<VerRemitoDTO>>> ObtenerRemitosPorNotaDePedido(long NotaDePedidoId)
+        public async Task<Response<List<VerRemitoDTO>>> ObtenerRemitosPorNotaDePedido(long NotaDePedidoId, long DepositoId)
         {
             try
             {
@@ -147,9 +147,9 @@ namespace Repositorios.Servicios
                         Objeto = null
                     };
 
-                var DetallesRemito = await baseDeDatos.DetalleRemitos
-                    .Where(dr =>
-                        remitos.Select(r => r.Id).Contains(dr.RemitoId) && dr.Estado != EnumEstadoRemito.Anulado)
+                var DetallesRemito = await baseDeDatos.DetalleRemitos.Include(dr => dr.DetalleNotaDePedido)
+                    .Where(dr => remitos.Select(r => r.Id).Contains(dr.RemitoId) && dr.Estado != EnumEstadoRemito.Anulado
+                        && dr.DetalleNotaDePedido.DepositoDestinoId == DepositoId)
                     .ToListAsync();
 
                 var RemitosIds = DetallesRemito.Select(dr => dr.RemitoId).Distinct();
@@ -198,8 +198,7 @@ namespace Repositorios.Servicios
                 if (remitos.Count > 0)
                 {
                     var DetallesRemitos = await baseDeDatos.DetalleRemitos
-                        .Where(dr => remitos.Select(r => r.Id).Contains(dr.RemitoId))
-                        .ToListAsync();
+                        .Where(dr => remitos.Select(r => r.Id).Contains(dr.RemitoId)) .ToListAsync();
 
                     return new Response<List<VerRemitoDTO>>
                     {
@@ -567,7 +566,7 @@ namespace Repositorios.Servicios
             }
         }
 
-        public async Task<Response<string>> AnularRemito(long RemitoId)
+        public async Task<Response<string>> AnularRemito(long RemitoId, long UsuarioId)
         {
             try
             {
@@ -597,6 +596,7 @@ namespace Repositorios.Servicios
                 foreach (var detalle in detalles)
                 {
                     detalle.Estado = EnumEstadoRemito.Anulado;
+                    detalle.UsuarioQueRecibeId = UsuarioId;
                 }
 
                 await baseDeDatos.SaveChangesAsync();

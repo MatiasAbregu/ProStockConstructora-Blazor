@@ -11,6 +11,7 @@ namespace Repositorios.Implementaciones
 {
     public interface IDepositoServicio
     {
+        public Task<Response<string>> ObtenerCodigoISO(long Id);
         public Task<Response<List<DepositoEmpresaDTO>>> ObtenerDepositosDeEmpresa(long EmpresaId);
         public Task<Response<DepositoActualizarDTO>> ObtenerDepositoPorId(long id);
         public Task<Response<string>> CrearDeposito(DepositoAsociarDTO e);

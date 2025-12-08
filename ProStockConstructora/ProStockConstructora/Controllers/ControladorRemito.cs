@@ -35,10 +35,10 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpGet("{NotaDePedidoId:long}")]
-        public async Task<ActionResult> ObtenerRemitosPorNotaDePedidoId(long NotaDePedidoId)
+        [HttpGet("{NotaDePedidoId:long}/{DepositoId:long}")]
+        public async Task<ActionResult> ObtenerRemitosPorNotaDePedidoId(long NotaDePedidoId, long DepositoId)
         {
-            var res = await remitoServicio.ObtenerRemitosPorNotaDePedido(NotaDePedidoId);
+            var res = await remitoServicio.ObtenerRemitosPorNotaDePedido(NotaDePedidoId, DepositoId);
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);  
         }
@@ -83,10 +83,10 @@ namespace ProStockConstructora.Controllers
             else return StatusCode(500, res);
         }
 
-        [HttpDelete("{RemitoId:long}")]
-        public async Task<ActionResult> AnularRemito(long RemitoId)
+        [HttpDelete("{RemitoId:long}/{UsuarioId:long}")]
+        public async Task<ActionResult> AnularRemito(long RemitoId, long UsuarioId)
         {
-            var res = await remitoServicio.AnularRemito(RemitoId);
+            var res = await remitoServicio.AnularRemito(RemitoId, UsuarioId);
             if (res.Estado) return StatusCode(200, res);
             else return StatusCode(500, res);
         }

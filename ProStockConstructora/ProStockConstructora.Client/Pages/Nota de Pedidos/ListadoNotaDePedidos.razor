@@ -211,7 +211,7 @@ else
 
     private async Task AnularNotaDePedido(long Id)
     {
-        var res = await Http.Delete<Response<string>>($"api/notadepedido/{Id}");
+        var res = await Http.Delete<Response<string>>($"api/notadepedido/{Id}/{Usuario.Id}");
         if (res.Respuesta != null)
         {
             if (res.Respuesta.Objeto != null)

@@ -12,7 +12,7 @@
         <div class="divBotonera">
             <p class="cabecera fw-bolder">
                 @((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0)
-                            ? "Listado de recursos del depósito CODE-ISO" : "Listado de recursos general de la empresa")
+                            ? $"Listado de recursos del depósito {CodigoISO}" : "Listado de recursos general de la empresa")
             </p>
             <div class="botonera">
                 @if ((ObraId != null && ObraId != 0) && (DepositoId != null && DepositoId != 0))
@@ -109,21 +109,30 @@ else
 
     private int numeroPagina = 1;
     private List<RecursosVerDTO> listaRecursos = new();
-    private string Mensaje;
+    private string Mensaje, CodigoISO;
 
     protected async override Task OnParametersSetAsync()
     {
         if (datosSesion.Usuario != null)
         {
             usuario = datosSesion.Usuario;
-            listaRecursos = new();
-            numeroPagina = 1;
+            await CargarCodigo();
             await CargarRecursos();
         }
         else navManager.NavigateTo("/");
         StateHasChanged();
     }
 
+    private async Task CargarCodigo()
+    {
+        var res = await http.Get<Response<string>>($"/api/deposito/{DepositoId}/obtener-codigo-iso");
+        if (res.Respuesta != null)
+        {       
+            if (res.Respuesta.Objeto != null) CodigoISO = res.Respuesta.Objeto;
+            StateHasChanged();
+        }
+    }
+    
     private async Task CargarRecursos()
     {
         Mensaje = string.Empty;

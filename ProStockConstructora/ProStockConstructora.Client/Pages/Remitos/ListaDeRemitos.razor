@@ -38,7 +38,7 @@
                 }
                 else
                 {
-                    @foreach (var remito in listaRemitos)
+                    @foreach (var remito in listaRemitos.Skip(numeroPagina == 1 ? 0 : (numeroPagina - 1) * 10).Take(10))
                     {
                         <tr>
                             <td>@remito.NumeroRemito</td>
@@ -138,6 +138,7 @@ else
     [Parameter] public long NotaDePedidoId { get; set; }
     [Parameter] public string tipoDeSolicitud { get; set; }
 
+    private DatosUsuario Usuario;
     private int numeroPagina = 1;
     private string Mensaje, mensajeEstado;
     private bool MostraModal = false;
@@ -147,14 +148,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarRemitos();
+        if (Sesion.Usuario != null)
+        {
+            Sesion.Usuario = Usuario;
+            await CargarRemitos();
+        }
     }
 
     private async Task CargarRemitos()
     {
         Mensaje = string.Empty;
         var res = tipoDeSolicitud == "enviados"
-            ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/{NotaDePedidoId}")
+            ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/{NotaDePedidoId}/{DepositoId}")
             : tipoDeSolicitud == "recibidos"
                 ? await Http.Get<Response<List<VerRemitoDTO>>>($"api/remito/obtener-pendiente/{NotaDePedidoId}")
                 : null;
@@ -170,7 +175,7 @@ else
 
     private async Task AnularRemito(long Id)
     {
-        var res = await Http.Delete<Response<string>>($"api/remito/{Id}");
+        var res = await Http.Delete<Response<string>>($"api/remito/{Id}/{Usuario.Id}");
         if (res.Respuesta != null)
         {
             if (res.Respuesta.Objeto != null)

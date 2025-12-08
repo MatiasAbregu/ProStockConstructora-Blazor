@@ -22,6 +22,14 @@ namespace ProStockConstructora.Controllers
             this.depositoServicio = depositoServicio;
         }
 
+        [HttpGet("{Id:long}/obtener-codigo-iso")]
+        public async Task<IActionResult> ObtenerCodigoISODeDeposito([FromRoute] long Id)
+        {
+            var res = await depositoServicio.ObtenerCodigoISO(Id);
+            if (res.Estado) return StatusCode(200, res);
+            else return StatusCode(500, res);
+        }
+
         [HttpGet("empresa/{EmpresaId:long}")]
         public async Task<IActionResult> ObtenerDepositosDeEmpresa(long EmpresaId)
         {
